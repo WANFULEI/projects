@@ -27,6 +27,7 @@
 #include <QtGui/qcursor.h>
 #include <QtGui/QMouseEvent>
 #include "qt_widget_layer.h"
+#include "layerwidget_global.h"
 
 #ifndef CGAL_QT_WIDGET_ZOOMRECT_BUTTON
 #define CGAL_QT_WIDGET_ZOOMRECT_BUTTON Qt::LeftButton
@@ -35,7 +36,7 @@
 
 namespace layerwidget {
 
-class Qt_widget_zoomrect : public Qt_widget_layer
+class LAYERWIDGET_EXPORT Qt_widget_zoomrect : public Qt_widget_layer
 {
 public:
   int   first_x, first_y, x2, y2;

@@ -35,7 +35,7 @@ Qt_widget::Qt_widget(QWidget *parent, const char *name) :
   _pointSize(4), _pointStyle(DISC) 
 { 
   setObjectName(name);
-  setWindowTitle("CGAL::Qt_widget");
+  //setWindowTitle("CGAL::Qt_widget");
 
   // initialize ranges and scales
   xmin_old = xmin = -1;
@@ -64,9 +64,6 @@ Qt_widget::Qt_widget(QWidget *parent, const char *name) :
   painter->setPen(QPen(Qt::black,2));
 
   clear();
-
-  attach(new Qt_widget_zoomrect());
-  attach(new Qt_gird_layer);
 }
 
 void Qt_widget::set_scales()
@@ -148,8 +145,8 @@ void Qt_widget::resize_pixmap()
   QMatrix bm = painter->worldMatrix();
 
   painter->end();  // end painting on pixmap
-  pixmap->scaledToWidth(width());
-  pixmap->scaledToHeight(height());
+  delete pixmap;
+  pixmap = new QPixmap(rect().size());
   //pixmap->resize(size());
   painter->begin(pixmap); // begin again painting on pixmap
   clear();
@@ -193,7 +190,7 @@ void Qt_widget::paintEvent(QPaintEvent*)
   QMatrix bm = painter->worldMatrix();
 
   painter->end();  // end painting on pixmap
-  p1.drawPixmap(0,0,*pixmap);
+  p1.drawPixmap(rect(),*pixmap);
   //bitBlt(this, 0, 0, pixmap); // copy pixmap to the Qt_widget
   painter->begin(pixmap); // begin again painting on pixmap
   painter->setWorldMatrix(bm);
