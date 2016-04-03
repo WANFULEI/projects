@@ -98,6 +98,7 @@
   <ItemGroup>
     <ClInclude Include="layerwidget_global.h" />
     <ClInclude Include="Qt_gird_layer.h" />
+    <ClInclude Include="Qt_widget_handtool.h" />
     <ClInclude Include="Qt_widget_zoomrect.h" />
     <CustomBuild Include="Qt_widget_layer.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

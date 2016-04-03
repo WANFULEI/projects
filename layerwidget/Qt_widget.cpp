@@ -25,8 +25,7 @@
 
 #include "Qt_widget.h"
 #include "Qt_widget_layer.h"
-#include "Qt_gird_layer.h"
-#include "Qt_widget_zoomrect.h"
+#include "Qt_widget_handtool.h"
 
 namespace layerwidget {
 

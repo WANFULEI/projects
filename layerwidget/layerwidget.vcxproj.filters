@@ -67,6 +67,9 @@
     <ClInclude Include="layerwidget_global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Qt_widget_handtool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Qt_widget.h">
