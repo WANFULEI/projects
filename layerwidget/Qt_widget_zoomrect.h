@@ -36,7 +36,7 @@
 
 namespace layerwidget {
 
-class LAYERWIDGET_EXPORT Qt_widget_zoomrect : public Qt_widget_layer
+class Qt_widget_zoomrect : public Qt_widget_layer
 {
 public:
   int   first_x, first_y, x2, y2;

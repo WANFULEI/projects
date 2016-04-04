@@ -16,6 +16,10 @@ public:
 	mywidget * MyWidget() const { return m_pMyWidget; }
 	void MyWidget(mywidget * val) { m_pMyWidget = val; }
 
+protected slots:
+	void on_actionPan_triggered();
+	void on_actionZoomIn_triggered();
+
 private:
 	Ui::tt4Class ui;
 	mywidget * m_pMyWidget;

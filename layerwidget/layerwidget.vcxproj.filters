@@ -56,6 +56,9 @@
     <ClCompile Include="Qt_gird_layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Qt_geometry_layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Qt_gird_layer.h">
@@ -68,6 +71,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Qt_widget_handtool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Qt_geometry_layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

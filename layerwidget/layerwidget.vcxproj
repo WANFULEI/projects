@@ -94,12 +94,14 @@
     <ClCompile Include="Qt_gird_layer.cpp" />
     <ClCompile Include="Qt_widget.cpp" />
     <ClCompile Include="Qt_widget_layer.cpp" />
+    <ClCompile Include="Qt_geometry_layer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="layerwidget_global.h" />
     <ClInclude Include="Qt_gird_layer.h" />
     <ClInclude Include="Qt_widget_handtool.h" />
     <ClInclude Include="Qt_widget_zoomrect.h" />
+    <ClInclude Include="Qt_geometry_layer.h" />
     <CustomBuild Include="Qt_widget_layer.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing Qt_widget_layer.h...</Message>

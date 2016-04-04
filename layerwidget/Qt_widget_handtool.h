@@ -33,7 +33,7 @@
 
 namespace layerwidget {
 
-class LAYERWIDGET_EXPORT Qt_widget_handtool : public Qt_widget_layer
+class Qt_widget_handtool : public Qt_widget_layer
 {
 public:
   Qt_widget_handtool(QObject* parent = 0, const char* name = 0)

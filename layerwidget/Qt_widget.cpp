@@ -558,11 +558,11 @@ void Qt_widget::clear() {
         emit(redraw_on_back());
         std::list<Qt_widget_layer*>::iterator it;
           for(it = qt_layers.begin(); it!= qt_layers.end(); it++)
-            if((*it)->is_active())
+            //if((*it)->is_active())
               (*it)->draw();
         for(it = qt_standard_layers.begin();
             it!= qt_standard_layers.end(); it++)
-          if((*it)->is_active())
+          //if((*it)->is_active())
             (*it)->draw();
         emit(custom_redraw()); //deprecated, should use the following:
         emit(redraw_on_front());

@@ -13,3 +13,13 @@ tt4::~tt4()
 {
 
 }
+
+void tt4::on_actionPan_triggered()
+{
+	MyWidget()->Pan();
+}
+
+void tt4::on_actionZoomIn_triggered()
+{
+	MyWidget()->ZoomIn();
+}

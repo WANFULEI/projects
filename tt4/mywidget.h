@@ -9,5 +9,9 @@ class mywidget :
 public:
 	mywidget(QWidget * parent);
 	~mywidget(void);
+
+	void Pan();
+	void ZoomIn();
+
 };
 

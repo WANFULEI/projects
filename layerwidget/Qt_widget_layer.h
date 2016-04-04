@@ -54,6 +54,8 @@ public:
 
   bool    is_active(){return active;};	//return true if this layer is active
   bool    does_eat_events;
+  	bool Visible() const { return m_bVisible; }
+	void Visible(bool val) { m_bVisible = val; }
 public slots:
   virtual void draw(){};
   void    stateChanged(int);
@@ -71,6 +73,9 @@ protected:
   Qt_widget  *widget;//the pointer to the widget
   virtual void activating(){};
   virtual void deactivating(){};
+
+private:
+	bool m_bVisible;
 };
 
 } // namespace CGAL end

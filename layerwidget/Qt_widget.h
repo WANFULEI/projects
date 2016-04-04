@@ -165,6 +165,8 @@ public:
   // remove a layer from the list of displayable scenes
   void detach(Qt_widget_layer* s);
 
+  std::list<Qt_widget_layer *> get_layers() const { return qt_layers; }
+
 signals:
   void s_mousePressEvent(QMouseEvent *e);
   void s_mouseReleaseEvent(QMouseEvent *e);
@@ -515,240 +517,240 @@ void Qt_widget::setPointStyle(const PointStyle ps)
 //   return w;
 // }
 
-#ifdef CGAL_SEGMENT_2_H
-template <class R>
-Qt_widget& operator<<(Qt_widget& w, const Segment_2<R>& s)
-{
-  typedef Simple_cartesian<double> RT;
-
-  double xr1, yr1, xr2, yr2;
-  double scs_x, scs_y, sct_x, sct_y;
-  scs_x = layerwidget::to_double(s.source().x());
-  scs_y = layerwidget::to_double(s.source().y());
-  sct_x = layerwidget::to_double(s.target().x());
-  sct_y = layerwidget::to_double(s.target().y());
-
-  xr1 = w.x_real(0); xr2 = w.x_real(w.geometry().width());
-  //next condition true if is outside on the X axes
-  if((scs_x < xr1 && sct_x < xr1) ||
-     (scs_x > xr2 && sct_x > xr2))
-    return w;
-  else{
-    yr2 = w.y_real(0); yr1 = w.y_real(w.geometry().height());
-    //next condition true if is outside on the Y axes
-    if((scs_y < yr1 && sct_y < yr1) ||
-       (scs_y > yr2 && sct_y > yr2))
-      return w;
-  }
-  
-  //if is here, the segment intersect the screen boundaries or is inside
-  int x1, y1, x2, y2;
-  Segment_2<RT>  sr;
-  sr = Segment_2<RT>(Point_2<RT>(scs_x, scs_y), Point_2<RT>(sct_x, sct_y));
-  //next condition true if the segment is inside
-  if(!(scs_x >= xr1 && scs_x <= xr2 &&
-     sct_x >= xr1 && sct_x <= xr2 && 
-     scs_y >= yr1 && scs_y <= yr2 &&
-     sct_y >= yr1 && sct_y <= yr2))
-    {
-    Iso_rectangle_2<RT> r = Iso_rectangle_2<RT>(Point_2<RT>(xr1, yr1),
-                                              Point_2<RT>(xr2, yr2));
-    layerwidget::Object obj = layerwidget::intersection(r, sr);  
-    if (const Point_2<RT> *p = object_cast<Point_2<RT> >(&obj)){
-      return w << *p;
-    }
-    else if (const Segment_2<RT> *s = object_cast<Segment_2<RT> >(&obj)) {
-      sr = *s;
-    }
-    else {
-      CGAL_assertion(obj.is_empty());
-      return w;
-    }
-  }
-  x1 = w.x_pixel(layerwidget::to_double(sr.source().x()));
-  x2 = w.x_pixel(layerwidget::to_double(sr.target().x()));
-  y1 = w.y_pixel(layerwidget::to_double(sr.source().y()));
-  y2 = w.y_pixel(layerwidget::to_double(sr.target().y()));
-  w.get_painter().drawLine(x1, y1, x2, y2);
-  w.do_paint();
-  return w;
-}
-#endif // CGAL_SEGMENT_2_H
-
-#ifdef CGAL_LINE_2_H
-
-template <class R>
-Qt_widget& operator<<(Qt_widget& w, const Line_2<R>& l)
-{
-  typedef Simple_cartesian<double> Rep;
-  typedef Point_2<Rep> Point;
-
-  const Point_2<R>
-    p1=l.point(),
-    p2=p1+l.direction().vector();
-
-  const Point
-    p1d=Point(layerwidget::to_double(p1.x()),layerwidget::to_double(p1.y())),
-    p2d=Point(layerwidget::to_double(p2.x()),layerwidget::to_double(p2.y()));
-
-  double
-    x1=w.x_min(),
-    y1=w.y_min(),
-    x2=w.x_max(),
-    y2=w.y_max();
-
-  const double
-    dx=p1d.x()-p2d.x(),
-    dy=p1d.y()-p2d.y();
-
-  if (dx==0 && dy==0) return w;
-
-  if (layerwidget::abs(dx)>layerwidget::abs(dy))
-    {
-      y1=p1d.y()+(x1-p1d.x())*dy/dx;
-      y2=p1d.y()+(x2-p1d.x())*dy/dx;
-    }
-  else
-    {
-      x1=p1d.x()+(y1-p1d.y())*dx/dy;
-      x2=p1d.x()+(y2-p1d.y())*dx/dy;
-    }
-
-  w.get_painter().drawLine(w.x_pixel(x1),w.y_pixel(y1),
-		       w.x_pixel(x2),w.y_pixel(y2));
-  return w;
-}
-
-#endif // CGAL_LINE_2_H
-
-#ifdef CGAL_RAY_2_H
-template <class R>
-Qt_widget& operator<<(Qt_widget& w, const Ray_2<R>& r)
-{
-  typedef Simple_cartesian<double> Rep;
-  typedef Point_2<Rep> Point;
-
-  const Point_2<R>
-    p1=r.point(0),
-    p2=r.point(1);
-
-  const Point
-    p1d=Point(layerwidget::to_double(p1.x()),layerwidget::to_double(p1.y())),
-    p2d=Point(layerwidget::to_double(p2.x()),layerwidget::to_double(p2.y()));
-
-
-  const double
-    dx=p1d.x()-p2d.x(),
-    dy=p1d.y()-p2d.y();
-
-  if (dx==0 && dy==0) return w;
-
-  double x,y;
-
-  if (layerwidget::abs(dx)>layerwidget::abs(dy))
-    {
-      if (p1d.x()<p2d.x())
-	x = w.x_max();
-      else
-	x = w.x_min();
-      y=p1d.y()+(x-p1d.x())*dy/dx;
-    }
-  else
-    {
-      if (p1d.y()<p2d.y())
-	y = w.y_max();
-      else
-	y = w.y_min();
-      x=p1d.x()+(y-p1d.y())*dx/dy;
-    }
-  w.get_painter().drawLine(w.x_pixel(p1d.x()),w.y_pixel(p1d.y()),
-		       w.x_pixel(x),w.y_pixel(y));
-  return w;
-
-}
-#endif //CGAL_RAY_2_H
-
-#ifdef CGAL_TRIANGLE_2_H
-template< class R >
-Qt_widget&
-operator<<(Qt_widget& w, const Triangle_2<R>& t)
-{
-  layerwidget::Iso_rectangle_2<R> r( Point_2<R>(w.x_real(0), w.y_real(0)), 
-                              Point_2<R>(w.x_real(w.geometry().width()), 
-                              w.y_real(w.geometry().height())));
-  layerwidget::Object obj = layerwidget::intersection(t, r);
-  Point_2<R> pi;
-  Segment_2<R> si;
-  Triangle_2<R> ti;
-  typedef Point_2<R> Point;
-  std::vector<Point> vi;
-  if(layerwidget::assign(pi, obj))
-    w << pi;
-  if(layerwidget::assign(si, obj))
-    w << si;
-  if(layerwidget::assign(ti, obj))
-  {
-    QPointArray array(3);
-    array[0] = QPoint(w.x_pixel(layerwidget::to_double(t.vertex(0).x())), 
-                                w.y_pixel(layerwidget::to_double(t.vertex(0).y())));
-    array[1] = QPoint(w.x_pixel(layerwidget::to_double(t.vertex(1).x())), 
-                                w.y_pixel(layerwidget::to_double(t.vertex(1).y())));
-    array[2] = QPoint(w.x_pixel(layerwidget::to_double(t.vertex(2).x())), 
-                                w.y_pixel(layerwidget::to_double(t.vertex(2).y())));
-    w.get_painter().drawPolygon(array);
-  }   
-  if(layerwidget::assign(vi, obj)){
-    QPointArray array(int(vi.size()));
-    typename std::vector<Point>::const_iterator it = vi.begin();
-    int pos = 0;
-    while(it != vi.end()){
-      array[pos] = QPoint(w.x_pixel(layerwidget::to_double((*it).x())), 
-                          w.y_pixel(layerwidget::to_double((*it).y())));
-      pos++;
-      it++;
-    }  
-  w.get_painter().drawPolygon(array);
-  }
-  w.do_paint();
-
-  return w;}
-#endif
-
-#ifdef CGAL_CIRCLE_2_H
-template < class R>
-Qt_widget& operator<<(Qt_widget& w, const Circle_2<R>& c)
-{
-  int 
-    cx=w.x_pixel(layerwidget::to_double(c.center().x())),
-    cy=w.y_pixel(layerwidget::to_double(c.center().y())),
-    rx=w.x_pixel_dist((std::sqrt(layerwidget::to_double(c.squared_radius())))),
-    ry=w.y_pixel_dist((std::sqrt(layerwidget::to_double(c.squared_radius()))));
-
-  w.get_painter().drawEllipse(cx-rx,cy-ry,2*rx,2*ry);
-  w.do_paint();
-  return w;
-}
-#endif // CGAL_CIRCLE_2_H
-
-#ifdef CGAL_ISO_RECTANGLE_2_H
-template< class R >
-Qt_widget&
-operator<<(Qt_widget& w, const Iso_rectangle_2<R>& r)
-{
-  int xmin = w.x_pixel(layerwidget::to_double(r.xmin()));
-  int ymin = w.y_pixel(layerwidget::to_double(r.ymin()));
-  int xmax = w.x_pixel(layerwidget::to_double(r.xmax()));
-  int ymax = w.y_pixel(layerwidget::to_double(r.ymax()));
-  w.get_painter().drawRect(xmin,ymin,xmax-xmin,ymax-ymin);
-  w.do_paint();
-  return w;
-}
-#endif // CGAL_ISO_RECTANGLE_2_H
-
-#ifdef CGAL_BBOX_2_H
-Qt_widget& operator<<(Qt_widget& w, const Bbox_2& r);
-// see Qt_widget for the implementation of this non-template function
-#endif // CGAL_BBOX_2_H
+// #ifdef CGAL_SEGMENT_2_H
+// template <class R>
+// Qt_widget& operator<<(Qt_widget& w, const Segment_2<R>& s)
+// {
+//   typedef Simple_cartesian<double> RT;
+// 
+//   double xr1, yr1, xr2, yr2;
+//   double scs_x, scs_y, sct_x, sct_y;
+//   scs_x = layerwidget::to_double(s.source().x());
+//   scs_y = layerwidget::to_double(s.source().y());
+//   sct_x = layerwidget::to_double(s.target().x());
+//   sct_y = layerwidget::to_double(s.target().y());
+// 
+//   xr1 = w.x_real(0); xr2 = w.x_real(w.geometry().width());
+//   //next condition true if is outside on the X axes
+//   if((scs_x < xr1 && sct_x < xr1) ||
+//      (scs_x > xr2 && sct_x > xr2))
+//     return w;
+//   else{
+//     yr2 = w.y_real(0); yr1 = w.y_real(w.geometry().height());
+//     //next condition true if is outside on the Y axes
+//     if((scs_y < yr1 && sct_y < yr1) ||
+//        (scs_y > yr2 && sct_y > yr2))
+//       return w;
+//   }
+//   
+//   //if is here, the segment intersect the screen boundaries or is inside
+//   int x1, y1, x2, y2;
+//   Segment_2<RT>  sr;
+//   sr = Segment_2<RT>(Point_2<RT>(scs_x, scs_y), Point_2<RT>(sct_x, sct_y));
+//   //next condition true if the segment is inside
+//   if(!(scs_x >= xr1 && scs_x <= xr2 &&
+//      sct_x >= xr1 && sct_x <= xr2 && 
+//      scs_y >= yr1 && scs_y <= yr2 &&
+//      sct_y >= yr1 && sct_y <= yr2))
+//     {
+//     Iso_rectangle_2<RT> r = Iso_rectangle_2<RT>(Point_2<RT>(xr1, yr1),
+//                                               Point_2<RT>(xr2, yr2));
+//     layerwidget::Object obj = layerwidget::intersection(r, sr);  
+//     if (const Point_2<RT> *p = object_cast<Point_2<RT> >(&obj)){
+//       return w << *p;
+//     }
+//     else if (const Segment_2<RT> *s = object_cast<Segment_2<RT> >(&obj)) {
+//       sr = *s;
+//     }
+//     else {
+//       CGAL_assertion(obj.is_empty());
+//       return w;
+//     }
+//   }
+//   x1 = w.x_pixel(layerwidget::to_double(sr.source().x()));
+//   x2 = w.x_pixel(layerwidget::to_double(sr.target().x()));
+//   y1 = w.y_pixel(layerwidget::to_double(sr.source().y()));
+//   y2 = w.y_pixel(layerwidget::to_double(sr.target().y()));
+//   w.get_painter().drawLine(x1, y1, x2, y2);
+//   w.do_paint();
+//   return w;
+// }
+// #endif // CGAL_SEGMENT_2_H
+// 
+// #ifdef CGAL_LINE_2_H
+// 
+// template <class R>
+// Qt_widget& operator<<(Qt_widget& w, const Line_2<R>& l)
+// {
+//   typedef Simple_cartesian<double> Rep;
+//   typedef Point_2<Rep> Point;
+// 
+//   const Point_2<R>
+//     p1=l.point(),
+//     p2=p1+l.direction().vector();
+// 
+//   const Point
+//     p1d=Point(layerwidget::to_double(p1.x()),layerwidget::to_double(p1.y())),
+//     p2d=Point(layerwidget::to_double(p2.x()),layerwidget::to_double(p2.y()));
+// 
+//   double
+//     x1=w.x_min(),
+//     y1=w.y_min(),
+//     x2=w.x_max(),
+//     y2=w.y_max();
+// 
+//   const double
+//     dx=p1d.x()-p2d.x(),
+//     dy=p1d.y()-p2d.y();
+// 
+//   if (dx==0 && dy==0) return w;
+// 
+//   if (layerwidget::abs(dx)>layerwidget::abs(dy))
+//     {
+//       y1=p1d.y()+(x1-p1d.x())*dy/dx;
+//       y2=p1d.y()+(x2-p1d.x())*dy/dx;
+//     }
+//   else
+//     {
+//       x1=p1d.x()+(y1-p1d.y())*dx/dy;
+//       x2=p1d.x()+(y2-p1d.y())*dx/dy;
+//     }
+// 
+//   w.get_painter().drawLine(w.x_pixel(x1),w.y_pixel(y1),
+// 		       w.x_pixel(x2),w.y_pixel(y2));
+//   return w;
+// }
+// 
+// #endif // CGAL_LINE_2_H
+// 
+// #ifdef CGAL_RAY_2_H
+// template <class R>
+// Qt_widget& operator<<(Qt_widget& w, const Ray_2<R>& r)
+// {
+//   typedef Simple_cartesian<double> Rep;
+//   typedef Point_2<Rep> Point;
+// 
+//   const Point_2<R>
+//     p1=r.point(0),
+//     p2=r.point(1);
+// 
+//   const Point
+//     p1d=Point(layerwidget::to_double(p1.x()),layerwidget::to_double(p1.y())),
+//     p2d=Point(layerwidget::to_double(p2.x()),layerwidget::to_double(p2.y()));
+// 
+// 
+//   const double
+//     dx=p1d.x()-p2d.x(),
+//     dy=p1d.y()-p2d.y();
+// 
+//   if (dx==0 && dy==0) return w;
+// 
+//   double x,y;
+// 
+//   if (layerwidget::abs(dx)>layerwidget::abs(dy))
+//     {
+//       if (p1d.x()<p2d.x())
+// 	x = w.x_max();
+//       else
+// 	x = w.x_min();
+//       y=p1d.y()+(x-p1d.x())*dy/dx;
+//     }
+//   else
+//     {
+//       if (p1d.y()<p2d.y())
+// 	y = w.y_max();
+//       else
+// 	y = w.y_min();
+//       x=p1d.x()+(y-p1d.y())*dx/dy;
+//     }
+//   w.get_painter().drawLine(w.x_pixel(p1d.x()),w.y_pixel(p1d.y()),
+// 		       w.x_pixel(x),w.y_pixel(y));
+//   return w;
+// 
+// }
+// #endif //CGAL_RAY_2_H
+// 
+// #ifdef CGAL_TRIANGLE_2_H
+// template< class R >
+// Qt_widget&
+// operator<<(Qt_widget& w, const Triangle_2<R>& t)
+// {
+//   layerwidget::Iso_rectangle_2<R> r( Point_2<R>(w.x_real(0), w.y_real(0)), 
+//                               Point_2<R>(w.x_real(w.geometry().width()), 
+//                               w.y_real(w.geometry().height())));
+//   layerwidget::Object obj = layerwidget::intersection(t, r);
+//   Point_2<R> pi;
+//   Segment_2<R> si;
+//   Triangle_2<R> ti;
+//   typedef Point_2<R> Point;
+//   std::vector<Point> vi;
+//   if(layerwidget::assign(pi, obj))
+//     w << pi;
+//   if(layerwidget::assign(si, obj))
+//     w << si;
+//   if(layerwidget::assign(ti, obj))
+//   {
+//     QPointArray array(3);
+//     array[0] = QPoint(w.x_pixel(layerwidget::to_double(t.vertex(0).x())), 
+//                                 w.y_pixel(layerwidget::to_double(t.vertex(0).y())));
+//     array[1] = QPoint(w.x_pixel(layerwidget::to_double(t.vertex(1).x())), 
+//                                 w.y_pixel(layerwidget::to_double(t.vertex(1).y())));
+//     array[2] = QPoint(w.x_pixel(layerwidget::to_double(t.vertex(2).x())), 
+//                                 w.y_pixel(layerwidget::to_double(t.vertex(2).y())));
+//     w.get_painter().drawPolygon(array);
+//   }   
+//   if(layerwidget::assign(vi, obj)){
+//     QPointArray array(int(vi.size()));
+//     typename std::vector<Point>::const_iterator it = vi.begin();
+//     int pos = 0;
+//     while(it != vi.end()){
+//       array[pos] = QPoint(w.x_pixel(layerwidget::to_double((*it).x())), 
+//                           w.y_pixel(layerwidget::to_double((*it).y())));
+//       pos++;
+//       it++;
+//     }  
+//   w.get_painter().drawPolygon(array);
+//   }
+//   w.do_paint();
+// 
+//   return w;}
+// #endif
+// 
+// #ifdef CGAL_CIRCLE_2_H
+// template < class R>
+// Qt_widget& operator<<(Qt_widget& w, const Circle_2<R>& c)
+// {
+//   int 
+//     cx=w.x_pixel(layerwidget::to_double(c.center().x())),
+//     cy=w.y_pixel(layerwidget::to_double(c.center().y())),
+//     rx=w.x_pixel_dist((std::sqrt(layerwidget::to_double(c.squared_radius())))),
+//     ry=w.y_pixel_dist((std::sqrt(layerwidget::to_double(c.squared_radius()))));
+// 
+//   w.get_painter().drawEllipse(cx-rx,cy-ry,2*rx,2*ry);
+//   w.do_paint();
+//   return w;
+// }
+// #endif // CGAL_CIRCLE_2_H
+// 
+// #ifdef CGAL_ISO_RECTANGLE_2_H
+// template< class R >
+// Qt_widget&
+// operator<<(Qt_widget& w, const Iso_rectangle_2<R>& r)
+// {
+//   int xmin = w.x_pixel(layerwidget::to_double(r.xmin()));
+//   int ymin = w.y_pixel(layerwidget::to_double(r.ymin()));
+//   int xmax = w.x_pixel(layerwidget::to_double(r.xmax()));
+//   int ymax = w.y_pixel(layerwidget::to_double(r.ymax()));
+//   w.get_painter().drawRect(xmin,ymin,xmax-xmin,ymax-ymin);
+//   w.do_paint();
+//   return w;
+// }
+// #endif // CGAL_ISO_RECTANGLE_2_H
+// 
+// #ifdef CGAL_BBOX_2_H
+// Qt_widget& operator<<(Qt_widget& w, const Bbox_2& r);
+// // see Qt_widget for the implementation of this non-template function
+// #endif // CGAL_BBOX_2_H
 
 // templated x_real and y_real
 
