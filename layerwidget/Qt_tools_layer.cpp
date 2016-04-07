@@ -42,7 +42,8 @@ void Qt_pan_layer::mouseMoveEvent(QMouseEvent * event)
 	{
 		double offset_x = widget->x_real_dist(event->pos().x() - m_pt_down.x());
 		double offset_y = widget->y_real_dist(event->pos().y() - m_pt_down.y());
-		widget->move_center(offset_x,offset_y);
+		widget->move_center(-offset_x,offset_y);
+		m_pt_down = event->pos();
 	}
 }
 

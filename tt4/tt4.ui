@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>tt4</string>
   </property>
-  <widget class="mywidget" name="centralWidget"/>
+  <widget class="Qt_widget2" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -28,7 +28,7 @@
      <string>操作</string>
     </property>
     <addaction name="actionPan"/>
-    <addaction name="actionZoomIn"/>
+    <addaction name="actionSelect"/>
     <addaction name="actionZoomOut"/>
    </widget>
    <addaction name="menu"/>
@@ -42,16 +42,16 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionPan"/>
-   <addaction name="actionZoomIn"/>
+   <addaction name="actionSelect"/>
   </widget>
   <action name="actionPan">
    <property name="text">
     <string>Pan</string>
    </property>
   </action>
-  <action name="actionZoomIn">
+  <action name="actionSelect">
    <property name="text">
-    <string>ZoomIn</string>
+    <string>Select</string>
    </property>
   </action>
   <action name="actionZoomOut">
@@ -63,9 +63,10 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>mywidget</class>
+   <class>Qt_widget2</class>
    <extends>QWidget</extends>
-   <header>mywidget.h</header>
+   <header>..\layerwidget\qt_widget2.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

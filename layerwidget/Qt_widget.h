@@ -45,7 +45,7 @@
 namespace layerwidget {
 
 class Qt_widget_layer;
-enum PointStyle { PIXEL, CROSS, PLUS, CIRCLE, DISC, RECT, BOX };
+//enum PointStyle { PIXEL, CROSS, PLUS, CIRCLE, DISC, RECT, BOX };
 
 class LAYERWIDGET_EXPORT Qt_widget : public QWidget {
   Q_OBJECT
@@ -101,9 +101,9 @@ public:
   uint pointSize() const;
   void setPointSize(const uint i);
   // pointStyle
-  typedef layerwidget::PointStyle PointStyle;
-  PointStyle pointStyle() const;
-  void setPointStyle(const PointStyle s);
+  //typedef layerwidget::PointStyle PointStyle;
+//   PointStyle pointStyle() const;
+//   void setPointStyle(const PointStyle s);
   // rasterOp
   QPainter::CompositionMode rasterOp() {return painter->compositionMode();}
   void setRasterOp(QPainter::CompositionMode r) {painter->setCompositionMode(r);}
@@ -257,7 +257,7 @@ private:
   unsigned int Locked;
   // point style and size
   uint	      _pointSize;
-  PointStyle  _pointStyle;
+  //PointStyle  _pointStyle;
 
   QPixmap     *pixmap;	// the pixmap on which paints the painter
   QPainter    *painter;	// the painter
@@ -436,17 +436,17 @@ void Qt_widget::setPointSize(const unsigned int i)
   _pointSize=i;
 }
 
-inline
-PointStyle Qt_widget::pointStyle() const
-{
-  return _pointStyle;
-}
-
-inline
-void Qt_widget::setPointStyle(const PointStyle ps)
-{
-  _pointStyle=ps;
-}
+// inline
+// PointStyle Qt_widget::pointStyle() const
+// {
+//   return _pointStyle;
+// }
+// 
+// inline
+// void Qt_widget::setPointStyle(const PointStyle ps)
+// {
+//   _pointStyle=ps;
+// }
 
 // drawing methods
 // ~~~~~~~~~~~~~~~

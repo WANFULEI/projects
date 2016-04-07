@@ -31,7 +31,7 @@ namespace layerwidget {
 
 Qt_widget::Qt_widget(QWidget *parent, const char *name) :
   QWidget(parent), set_scales_to_be_done(false), Locked(0),
-  _pointSize(4), _pointStyle(DISC) 
+  _pointSize(4)/*, _pointStyle(DISC) */
 { 
   setObjectName(name);
   //setWindowTitle("CGAL::Qt_widget");

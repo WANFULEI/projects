@@ -19,12 +19,17 @@ public:
 	Qt_widget2(QWidget * parent = 0);
 	~Qt_widget2(void);
 
+	void keyPressEvent(QKeyEvent *e);
+	void keyReleaseEvent(QKeyEvent *e);
+
 	void select_tool(ToolType type);
+	ToolType get_tool();
 	Qt_geometry_layer * get_geometry_layer() const { return m_geometry_layer; }
 	
 	Qt_geometry_layer * m_geometry_layer;
 	Qt_pan_layer * m_pan_tool;
 	Qt_geometry_interaction_layer * m_select_tool;
+	bool m_is_select;
 };
 
 }

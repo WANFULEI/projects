@@ -6,7 +6,7 @@ tt4::tt4(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
-	MyWidget(dynamic_cast<mywidget *>(centralWidget()));
+	m_pMyWidget = dynamic_cast<Qt_widget2 *>(centralWidget());
 }
 
 tt4::~tt4()
@@ -16,10 +16,10 @@ tt4::~tt4()
 
 void tt4::on_actionPan_triggered()
 {
-	MyWidget()->Pan();
+	m_pMyWidget->select_tool(Pan);
 }
 
 void tt4::on_actionZoomIn_triggered()
 {
-	MyWidget()->ZoomIn();
+	m_pMyWidget->select_tool(Select);
 }
