@@ -1,5 +1,6 @@
 #pragma 
 
+
 template <typename T>
 QList<QPointF> convertv(T begin,T end)
 {
@@ -31,12 +32,13 @@ QList<QPointF> convert(T pt){
 }
 
 #define AW 	QApplication app(argc,argv);\
-			tt3::ShowPointWidget w;\
+			layerwidget::Qt_widget2 w;\
 			w.set_window(-5,5,-5,5);\
-			w.show();
+			w.show();\
+			w.redraw();
 #define APP AW
 
-#define AddPoints(pts,color,size)	w.Show_point_layer()->add_points(pts,color,size);\
+#define AddPoints(pts,color,size)	w.get_geometry_layer()->add_points(pts,color,size);\
 						w.redraw();
 #define AP AddPoints
 

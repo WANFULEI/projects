@@ -66,13 +66,14 @@ signals:
   void    activated(Qt_widget_layer*);
   void    deactivated(Qt_widget_layer*);
 private:
-  void    attach(Qt_widget *w);//attach Qt_widget to the tool
+  
   bool    active;	//true if this layers is active
   friend class Qt_widget;
 protected:
   Qt_widget  *widget;//the pointer to the widget
   virtual void activating(){};
   virtual void deactivating(){};
+  virtual void    attach(Qt_widget *w);//attach Qt_widget to the tool
 
 private:
 	bool m_bVisible;

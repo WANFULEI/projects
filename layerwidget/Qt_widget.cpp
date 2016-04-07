@@ -63,6 +63,8 @@ Qt_widget::Qt_widget(QWidget *parent, const char *name) :
   painter->setPen(QPen(Qt::black,2));
 
   clear();
+
+  setMouseTracking(true);
 }
 
 void Qt_widget::set_scales()

@@ -59,6 +59,21 @@
     <ClCompile Include="Qt_geometry_layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Qt_tools_layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_Qt_tools_layer.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_Qt_tools_layer.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Qt_widget2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Qt_geometry_interaction_layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Qt_gird_layer.h">
@@ -76,12 +91,21 @@
     <ClInclude Include="Qt_geometry_layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Qt_widget2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Qt_geometry_interaction_layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Qt_widget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Qt_widget_layer.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Qt_tools_layer.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

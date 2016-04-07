@@ -105,20 +105,27 @@ private:
     {
       int x = e->x();
       int y = e->y();
-      *widget << noFill;
-      QPainter::CompositionMode old = widget->rasterOp();	//save the initial raster mode
-      QColor old_color=widget->color();
-      widget->setRasterOp(QPainter::RasterOp_SourceXorDestination);
-      widget->lock();
-      widget->setColor(Qt::green);
+      //*widget << noFill;
+      //QPainter::CompositionMode old = widget->rasterOp();	//save the initial raster mode
+      //QColor old_color=widget->color();
+      widget->get_painter().save();
+	   widget->lock();
+
+	  widget->get_painter().setCompositionMode(QPainter::RasterOp_SourceXorDestination);
+     
+      widget->setColor(QColor(255,0,255,255));
       if(!widgetrepainted)
         widget->get_painter().drawRect(first_x, first_y, 
                                        x2 - first_x, y2 - first_y);
+	  
       widget->get_painter().drawRect(first_x, first_y, x - first_x,
                                      y - first_y);
+
+	 // widget->setRasterOp(old);
       widget->unlock();
-      widget->setColor(old_color);
-      widget->setRasterOp(old);
+     // widget->setColor(old_color);
+	  widget->get_painter().restore();
+      
 
       //save the last coordinates to redraw the screen
       x2 = x;

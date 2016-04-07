@@ -50,7 +50,7 @@ namespace layerwidget
 	int Qt_geometry_layer::add_geometry(Geometry geo, const Style & style)
 	{
 		int id = get_next_geometry_id();
-		m_geometries[id] = QPair<Geometry,Style>(geo,style);
+		m_geometries[id] = Feature(geo,style);
 		return id;
 	}
 
@@ -69,28 +69,28 @@ namespace layerwidget
 		while (iter != m_geometries.end())
 		{
 			auto & geo = iter.value();
-			if (geo.first.type == Geometry::Point)
+			if (geo.geo.type == Geometry::Point)
 			{
-				drawer.setPen(geo.second.border_color);
-				drawer.setBrush(geo.second.fill_color);
-				drawer.drawEllipse(convert(geo.first.pt),geo.second.size,geo.second.size);
+				drawer.setPen(geo.style.border_color);
+				drawer.setBrush(geo.style.fill_color);
+				drawer.drawEllipse(convert(geo.geo.pt),geo.style.size,geo.style.size);
 			}
-			else if (geo.first.type == Geometry::Polyline)
-			{
-
-			}
-			else if (geo.first.type == Geometry::Ellipse)
-			{
-				drawer.setPen(QPen(geo.second.border_color,geo.second.border_width,
-							geo.second.border_type));
-				drawer.setBrush(geo.second.fill_color);
-				drawer.drawEllipse(convert(geo.first.pt),convert(geo.first.width),convert(geo.first.length));
-			}
-			else if (geo.first.type == Geometry::Rect)
+			else if (geo.geo.type == Geometry::Polyline)
 			{
 
 			}
-			else if (geo.first.type == Geometry::Polygon)
+			else if (geo.geo.type == Geometry::Ellipse)
+			{
+				drawer.setPen(QPen(geo.style.border_color,geo.style.border_width,
+							geo.style.border_type));
+				drawer.setBrush(geo.style.fill_color);
+				drawer.drawEllipse(convert(geo.geo.pt),convert(geo.geo.width),convert(geo.geo.length));
+			}
+			else if (geo.geo.type == Geometry::Rect)
+			{
+
+			}
+			else if (geo.geo.type == Geometry::Polygon)
 			{
 
 			}
