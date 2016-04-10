@@ -47,6 +47,15 @@ namespace layerwidget
 		return add_geometry(geo, style);
 	}
 
+	int Qt_geometry_layer::add_polygon(const QList<QPointF> & pts,const Style & style /*= Style()*/)
+	{
+		Geometry geo;
+		geo.pts = pts;
+		geo.type = Geometry::Polygon;
+
+		return add_geometry(geo, style);
+	}
+
 	int Qt_geometry_layer::add_geometry(Geometry geo, const Style & style)
 	{
 		int id = get_next_geometry_id();
@@ -69,10 +78,13 @@ namespace layerwidget
 		while (iter != m_geometries.end())
 		{
 			auto & geo = iter.value();
+
+			drawer.setPen(QPen(geo.style.border_color,geo.style.border_width,
+				geo.style.border_type));
+			drawer.setBrush(geo.style.fill_color);
+			
 			if (geo.geo.type == Geometry::Point)
 			{
-				drawer.setPen(geo.style.border_color);
-				drawer.setBrush(geo.style.fill_color);
 				drawer.drawEllipse(convert(geo.geo.pt),geo.style.size,geo.style.size);
 			}
 			else if (geo.geo.type == Geometry::Polyline)
@@ -81,18 +93,16 @@ namespace layerwidget
 			}
 			else if (geo.geo.type == Geometry::Ellipse)
 			{
-				drawer.setPen(QPen(geo.style.border_color,geo.style.border_width,
-							geo.style.border_type));
-				drawer.setBrush(geo.style.fill_color);
+
 				drawer.drawEllipse(convert(geo.geo.pt),convert(geo.geo.width),convert(geo.geo.length));
 			}
 			else if (geo.geo.type == Geometry::Rect)
 			{
-
+				
 			}
 			else if (geo.geo.type == Geometry::Polygon)
 			{
-
+				drawer.drawPolygon(convert(geo.geo.pts));
 			}
 			else
 			{
@@ -112,6 +122,16 @@ namespace layerwidget
 	double Qt_geometry_layer::convert(double dis)
 	{
 		return widget->x_pixel_dist(dis);
+	}
+
+	QVector<QPointF> Qt_geometry_layer::convert(const QList<QPointF> & pts)
+	{
+		QVector<QPointF> res;
+		for (int i=0;i<pts.size();++i)
+		{
+			res << convert(pts[i]);
+		}
+		return res;
 	}
 
 }

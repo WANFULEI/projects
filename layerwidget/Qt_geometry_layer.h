@@ -57,6 +57,7 @@ namespace layerwidget
 
 		void add_points(const QList<QPointF> & pts, const QColor & color,int size = 3);
 		int add_ellipse(const QPointF & pt, double length, double width, const Style & style = Style());
+		int add_polygon(const QList<QPointF> & pts,const Style & style = Style());
 
 		int add_geometry(Geometry geo, const Style & style);
 		QMap<int,Feature> & get_geometries() { return m_geometries; }
@@ -66,6 +67,7 @@ namespace layerwidget
 		void draw();
 
 		QPointF convert(const QPointF & pt);
+		QVector<QPointF> convert(const QList<QPointF> & pts);
 		double convert(double dis);
 
 		QMap<int,Feature> m_geometries;

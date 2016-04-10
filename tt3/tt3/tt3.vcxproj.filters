@@ -21,7 +21,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="G:\projects\algorithm\cgal\Spatial_searching\examples\Spatial_searching\circular_query.cpp">
+    <ClCompile Include="G:\projects\algorithm\cgal\Partition_2\examples\Partition_2\greene_approx_convex_partition_2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

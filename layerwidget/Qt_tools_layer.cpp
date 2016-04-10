@@ -74,8 +74,9 @@ void Qt_select_layer::mouseMoveEvent(QMouseEvent * event)
 	pt = event->pos();
 	isdrawed = true;
 
-	widget->unlock();
 	widget->get_painter().restore();
+	widget->unlock();
+	
 }
 
 void Qt_select_layer::attach(Qt_widget *w)
