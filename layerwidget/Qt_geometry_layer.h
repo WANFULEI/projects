@@ -80,11 +80,9 @@ namespace layerwidget
 	};
 
 	class LAYERWIDGET_EXPORT Qt_geometry_layer_manager :
-		public baseset::list_manager<Qt_geometry_layer>
+		public baseset::list_vector_manager<Qt_geometry_layer,Qt_geometry_layer_manager/*,QList<Qt_geometry_layer *>*/>
 	{
 	public:
-
-		static Qt_geometry_layer_manager * GetInstance();
 		Feature * get_feature(int id);
 		int get_feature_id(Feature * feature);
 	};

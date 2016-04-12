@@ -161,11 +161,6 @@ namespace layerwidget
 		return res;
 	}
 
-	Qt_geometry_layer_manager * Qt_geometry_layer_manager::GetInstance()
-	{
-		static Qt_geometry_layer_manager manager;
-		return &manager;
-	}
 
 	Feature * Qt_geometry_layer_manager::get_feature(int id)
 	{

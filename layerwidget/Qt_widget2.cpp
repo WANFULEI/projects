@@ -11,7 +11,7 @@ Qt_widget2::Qt_widget2(QWidget * parent)
 	m_image_layer = new Qt_image_layer;
 	attach(m_image_layer);
 	attach(new Qt_gird_layer);
-	m_geometry_layer = Qt_geometry_layer_manager::GetInstance()->create_entry();
+	m_geometry_layer = Qt_geometry_layer_manager::get_instance()->create_entry();
 	attach(m_geometry_layer);
 	m_select_tool = new Qt_geometry_interaction_layer;
 	attach(m_select_tool);
