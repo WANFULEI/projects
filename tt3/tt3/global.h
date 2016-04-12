@@ -62,6 +62,13 @@ QList<QPointF> convert_list_vector(Iter begin,Iter end){
 
 #define AP AddPoints
 
+#define AddEllipse(pt,width,height) w.get_geometry_layer()->add_ellipse(pt,width,height);
+
 #define EXEC app.exec();
 
 #define CVV int argc,char ** argv
+
+inline void test(){
+	vector<int> vec;
+	back_inserter(vec)++ = 1;
+}

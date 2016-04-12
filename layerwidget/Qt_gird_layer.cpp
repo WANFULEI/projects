@@ -64,4 +64,9 @@ namespace layerwidget
 		widget->get_painter().restore();
 	}
 
+	void Qt_image_layer::draw()
+	{
+		widget->get_painter().drawPixmap(widget->rect(),m_image);
+	}
+
 }

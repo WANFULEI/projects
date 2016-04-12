@@ -2,12 +2,11 @@
 #include "Qt_geometry_layer.h"
 #include "..\..\layerwidget\Qt_widget.h"
 
-
+int Qt_geometry_layer::m_next_geometry_id = 1;
 namespace layerwidget
 {
 	Qt_geometry_layer::Qt_geometry_layer(void)
 	{
-		m_next_geometry_id = 1;
 	}
 
 
@@ -59,8 +58,36 @@ namespace layerwidget
 	int Qt_geometry_layer::add_geometry(Geometry geo, const Style & style)
 	{
 		int id = get_next_geometry_id();
-		m_geometries[id] = Feature(geo,style);
+		m_geometries[id] = new Feature(geo,style);
 		return id;
+	}
+
+	Feature * Qt_geometry_layer::get_feature(int id) const
+	{
+		auto iter = m_geometries.find(id);
+		if (iter == m_geometries.end())
+		{
+			return 0;
+		}
+		return iter.value();
+	}
+
+	int Qt_geometry_layer::get_feature_id(Feature * feature) const
+	{
+		if (feature == 0)
+		{
+			return 0;
+		}
+		auto iter = m_geometries.begin();
+		while (iter != m_geometries.end())
+		{
+			if (feature == iter.value())
+			{
+				return iter.key();
+			}
+			++iter;
+		}
+		return 0;
 	}
 
 	void Qt_geometry_layer::clear()
@@ -77,32 +104,32 @@ namespace layerwidget
 		auto iter = m_geometries.begin();
 		while (iter != m_geometries.end())
 		{
-			auto & geo = iter.value();
+			Feature * feature = iter.value();
 
-			drawer.setPen(QPen(geo.style.border_color,geo.style.border_width,
-				geo.style.border_type));
-			drawer.setBrush(geo.style.fill_color);
+			drawer.setPen(QPen(feature->style.border_color,feature->style.border_width,
+				feature->style.border_type));
+			drawer.setBrush(feature->style.fill_color);
 			
-			if (geo.geo.type == Geometry::Point)
+			if (feature->geo.type == Geometry::Point)
 			{
-				drawer.drawEllipse(convert(geo.geo.pt),geo.style.size,geo.style.size);
+				drawer.drawEllipse(convert(feature->geo.pt),feature->style.size,feature->style.size);
 			}
-			else if (geo.geo.type == Geometry::Polyline)
-			{
-
-			}
-			else if (geo.geo.type == Geometry::Ellipse)
+			else if (feature->geo.type == Geometry::Polyline)
 			{
 
-				drawer.drawEllipse(convert(geo.geo.pt),convert(geo.geo.width),convert(geo.geo.length));
 			}
-			else if (geo.geo.type == Geometry::Rect)
+			else if (feature->geo.type == Geometry::Ellipse)
+			{
+
+				drawer.drawEllipse(convert(feature->geo.pt),convert(feature->geo.width),convert(feature->geo.length));
+			}
+			else if (feature->geo.type == Geometry::Rect)
 			{
 				
 			}
-			else if (geo.geo.type == Geometry::Polygon)
+			else if (feature->geo.type == Geometry::Polygon)
 			{
-				drawer.drawPolygon(convert(geo.geo.pts));
+				drawer.drawPolygon(convert(feature->geo.pts));
 			}
 			else
 			{
@@ -132,6 +159,56 @@ namespace layerwidget
 			res << convert(pts[i]);
 		}
 		return res;
+	}
+
+	Qt_geometry_layer_manager * Qt_geometry_layer_manager::GetInstance()
+	{
+		static Qt_geometry_layer_manager manager;
+		return &manager;
+	}
+
+	Feature * Qt_geometry_layer_manager::get_feature(int id)
+	{
+		if (id <= 0)
+		{
+			return 0;
+		}
+		for (int i=0;i<size();++i)
+		{
+			Qt_geometry_layer * layer = get_entry(i);
+			if (layer == 0)
+			{
+				continue;
+			}
+			Feature * feature = layer->get_feature(id);
+			if (feature)
+			{
+				return feature;
+			}
+		}
+		return 0;
+	}
+
+	int Qt_geometry_layer_manager::get_feature_id(Feature * feature)
+	{
+		if (feature == 0)
+		{
+			return 0;
+		}
+		for (int i=0;i<size();++i)
+		{
+			Qt_geometry_layer * layer = get_entry(i);
+			if (layer == 0)
+			{
+				continue;
+			}
+			int id = layer->get_feature_id(feature);
+			if (id)
+			{
+				return id;
+			}
+		}
+		return 0;
 	}
 
 }

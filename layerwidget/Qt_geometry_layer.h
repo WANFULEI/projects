@@ -4,6 +4,7 @@
 #include "layerwidget_global.h"
 #include <QtGui/QColor>
 #include <QtGui/QPixmap>
+#include "../baseset2/baseset2.h"
 
 using namespace layerwidget;
 
@@ -29,7 +30,8 @@ namespace layerwidget
 		Qt::PenStyle border_type;
 		Style(){
 			size = 6;
-			border_color = fill_color = Qt::green;
+			border_color = Qt::green;
+			fill_color = Qt::transparent;
 			border_width = 1;
 			border_type = Qt::SolidLine;
 		}
@@ -60,7 +62,10 @@ namespace layerwidget
 		int add_polygon(const QList<QPointF> & pts,const Style & style = Style());
 
 		int add_geometry(Geometry geo, const Style & style);
-		QMap<int,Feature> & get_geometries() { return m_geometries; }
+		QMap<int,Feature *> & get_geometries() { return m_geometries; }
+
+		Feature * get_feature(int id) const;
+		int get_feature_id(Feature * feature) const;
 
 		void clear();
 
@@ -70,8 +75,18 @@ namespace layerwidget
 		QVector<QPointF> convert(const QList<QPointF> & pts);
 		double convert(double dis);
 
-		QMap<int,Feature> m_geometries;
-		int m_next_geometry_id;
+		QMap<int,Feature *> m_geometries;
+		static int m_next_geometry_id;
+	};
+
+	class LAYERWIDGET_EXPORT Qt_geometry_layer_manager :
+		public baseset::list_manager<Qt_geometry_layer>
+	{
+	public:
+
+		static Qt_geometry_layer_manager * GetInstance();
+		Feature * get_feature(int id);
+		int get_feature_id(Feature * feature);
 	};
 }
 

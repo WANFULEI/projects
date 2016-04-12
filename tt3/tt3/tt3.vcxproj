@@ -19,15 +19,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="G:\projects\algorithm\cgal\Partition_2\examples\Partition_2\greene_approx_convex_partition_2.cpp" />
-    <ClCompile Include="ShowPointWidget.cpp" />
+    <ClCompile Include="G:\projects\algorithm\cgal\Spatial_searching\examples\Spatial_searching\circular_query.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global.h" />
-    <ClInclude Include="ShowPointWidget.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -75,7 +73,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>F:\CGAL\lib;F:\boost_1_59_0\lib32-msvc-10.0;F:\3rd_party\x86\lib;$(QtDir)\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libgmp-10.lib;qt5cored.lib;qt5guid.lib;qt5widgetsd.lib</AdditionalDependencies>
+      <AdditionalDependencies>libgmp-10.lib;qt5cored.lib;qt5guid.lib;qt5widgetsd.lib;libmpfr-4.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

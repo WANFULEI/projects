@@ -22,10 +22,10 @@ public:
 	virtual void mouseReleaseEvent(QMouseEvent *);
 
 	void is_select(const QPoint & pt);
-	intersection2::Result is_select(const Feature & geo,const QPoint & pt);
+	intersection2::Result is_select(Feature * geo,const QPoint & pt);
 
 	QList<Qt_geometry_layer *> m_geometry_layers;
-	Geometry * m_geometry;
+	Feature * m_feature;
 	intersection2::Result m_res;
 	QPoint m_pt_down;
 };

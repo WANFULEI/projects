@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tt4", "..\tt4\tt4.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "layerwidget", "..\layerwidget\layerwidget.vcxproj", "{F0A79E1F-6A71-445B-8678-ABD1CF3D0A0C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "baseset2", "..\baseset2\baseset2.vcxproj", "{57A2FF4B-DF04-4E93-A528-65FD2CF3FAC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -37,6 +39,10 @@ Global
 		{F0A79E1F-6A71-445B-8678-ABD1CF3D0A0C}.Debug|Win32.Build.0 = Debug|Win32
 		{F0A79E1F-6A71-445B-8678-ABD1CF3D0A0C}.Release|Win32.ActiveCfg = Release|Win32
 		{F0A79E1F-6A71-445B-8678-ABD1CF3D0A0C}.Release|Win32.Build.0 = Release|Win32
+		{57A2FF4B-DF04-4E93-A528-65FD2CF3FAC6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{57A2FF4B-DF04-4E93-A528-65FD2CF3FAC6}.Debug|Win32.Build.0 = Debug|Win32
+		{57A2FF4B-DF04-4E93-A528-65FD2CF3FAC6}.Release|Win32.ActiveCfg = Release|Win32
+		{57A2FF4B-DF04-4E93-A528-65FD2CF3FAC6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

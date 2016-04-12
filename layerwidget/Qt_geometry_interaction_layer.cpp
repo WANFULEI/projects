@@ -6,7 +6,7 @@ namespace layerwidget
 
 Qt_geometry_interaction_layer::Qt_geometry_interaction_layer(void)
 {
-	m_geometry = 0;
+	m_feature = 0;
 }
 
 
@@ -40,32 +40,32 @@ void Qt_geometry_interaction_layer::mouseMoveEvent(QMouseEvent * event)
 	{
 		if (m_res.type != intersection2::None)
 		{
-			if (m_geometry == 0)
+			if (m_feature == 0)
 			{
 				return;
 			}
-			if (m_geometry->type == Geometry::Point)
+			if (m_feature->geo.type == Geometry::Point)
 			{
-				m_geometry->pt.rx() = widget->x_real(event->pos().x());
-				m_geometry->pt.ry() = widget->y_real(event->pos().y());
+				m_feature->geo.pt.rx() = widget->x_real(event->pos().x());
+				m_feature->geo.pt.ry() = widget->y_real(event->pos().y());
 			}
-			else if (m_geometry->type == Geometry::Picture)
-			{
-
-			}
-			else if (m_geometry->type == Geometry::Polyline)
+			else if (m_feature->geo.type == Geometry::Picture)
 			{
 
 			}
-			else if (m_geometry->type == Geometry::Ellipse)
+			else if (m_feature->geo.type == Geometry::Polyline)
 			{
 
 			}
-			else if (m_geometry->type == Geometry::Rect)
+			else if (m_feature->geo.type == Geometry::Ellipse)
 			{
 
 			}
-			else if (m_geometry->type == Geometry::Polygon)
+			else if (m_feature->geo.type == Geometry::Rect)
+			{
+
+			}
+			else if (m_feature->geo.type == Geometry::Polygon)
 			{
 
 			}
@@ -81,7 +81,7 @@ void Qt_geometry_interaction_layer::mouseMoveEvent(QMouseEvent * event)
 
 void Qt_geometry_interaction_layer::mouseReleaseEvent(QMouseEvent * event)
 {
-	if (m_geometry == 0)
+	if (m_feature == 0)
 	{
 		return;
 	}
@@ -89,28 +89,28 @@ void Qt_geometry_interaction_layer::mouseReleaseEvent(QMouseEvent * event)
 	{
 		if (m_res.type != intersection2::None)
 		{
-			if (m_geometry->type == Geometry::Point)
+			if (m_feature->geo.type == Geometry::Point)
 			{
-				m_geometry->pt.rx() = widget->x_real(event->pos().x());
-				m_geometry->pt.ry() = widget->y_real(event->pos().y());
+				m_feature->geo.pt.rx() = widget->x_real(event->pos().x());
+				m_feature->geo.pt.ry() = widget->y_real(event->pos().y());
 			}
-			else if (m_geometry->type == Geometry::Picture)
-			{
-
-			}
-			else if (m_geometry->type == Geometry::Polyline)
+			else if (m_feature->geo.type == Geometry::Picture)
 			{
 
 			}
-			else if (m_geometry->type == Geometry::Ellipse)
+			else if (m_feature->geo.type == Geometry::Polyline)
 			{
 
 			}
-			else if (m_geometry->type == Geometry::Rect)
+			else if (m_feature->geo.type == Geometry::Ellipse)
 			{
 
 			}
-			else if (m_geometry->type == Geometry::Polygon)
+			else if (m_feature->geo.type == Geometry::Rect)
+			{
+
+			}
+			else if (m_feature->geo.type == Geometry::Polygon)
 			{
 
 			}
@@ -123,36 +123,36 @@ void Qt_geometry_interaction_layer::mouseReleaseEvent(QMouseEvent * event)
 	}
 }
 
-intersection2::Result Qt_geometry_interaction_layer::is_select(const Feature & geo,const QPoint & pt)
+intersection2::Result Qt_geometry_interaction_layer::is_select(Feature * feature,const QPoint & pt)
 {
 	intersection2::Result res;
-	if (geo.geo.type == Geometry::Point)
+	if (feature->geo.type == Geometry::Point)
 	{
-		int x = widget->x_pixel(geo.geo.pt.x());
-		int y = widget->y_pixel(geo.geo.pt.y());
+		int x = widget->x_pixel(feature->geo.pt.x());
+		int y = widget->y_pixel(feature->geo.pt.y());
 		if(intersection2::intersection(QPoint(x,y),pt))
 		{
 			res.type = intersection2::Point;
 			res.index = 0;
 		}
 	}
-	else if (geo.geo.type == Geometry::Picture)
+	else if (feature->geo.type == Geometry::Picture)
 	{
 
 	}
-	else if (geo.geo.type == Geometry::Polyline)
+	else if (feature->geo.type == Geometry::Polyline)
 	{
 
 	}
-	else if (geo.geo.type == Geometry::Ellipse)
+	else if (feature->geo.type == Geometry::Ellipse)
 	{
 
 	}
-	else if (geo.geo.type == Geometry::Rect)
+	else if (feature->geo.type == Geometry::Rect)
 	{
 
 	}
-	else if (geo.geo.type == Geometry::Polygon)
+	else if (feature->geo.type == Geometry::Polygon)
 	{
 
 	}
@@ -174,13 +174,13 @@ void Qt_geometry_interaction_layer::is_select(const QPoint & pt)
 			m_res = is_select(iter.value(),pt);
 			if (m_res.type != intersection2::None)
 			{
-				m_geometry = &(iter.value().geo);
+				m_feature = iter.value();
 				return;
 			}
 			++iter;
 		}
 	}
-	m_geometry = 0;
+	m_feature = 0;
 	m_res = intersection2::Result();
 }
 
