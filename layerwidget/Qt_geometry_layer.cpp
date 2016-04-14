@@ -2,7 +2,7 @@
 #include "Qt_geometry_layer.h"
 #include "..\..\layerwidget\Qt_widget.h"
 
-int Qt_geometry_layer::m_next_geometry_id = 1;
+int Qt_geometry_layer::m_next_feature_id = 1;
 namespace layerwidget
 {
 	Qt_geometry_layer::Qt_geometry_layer(void)
@@ -12,12 +12,13 @@ namespace layerwidget
 
 	Qt_geometry_layer::~Qt_geometry_layer(void)
 	{
+
 	}
 
 
 	int Qt_geometry_layer::get_next_geometry_id()
 	{
-		return m_next_geometry_id++;
+		return m_next_feature_id++;
 	}
 
 	void Qt_geometry_layer::add_points(const QList<QPointF> & pts, const QColor & color,int size)
@@ -31,7 +32,7 @@ namespace layerwidget
 			geo.pt = pts[i];
 			style.size = size;
 			geo.type = Geometry::Point;
-			add_geometry(geo,style);
+			add_feature(geo,style);
 		}
 	}
 
@@ -43,7 +44,7 @@ namespace layerwidget
 		geo.width = width;
 		geo.length = length;
 		
-		return add_geometry(geo, style);
+		return add_feature(geo, style);
 	}
 
 	int Qt_geometry_layer::add_polygon(const QList<QPointF> & pts,const Style & style /*= Style()*/)
@@ -52,34 +53,34 @@ namespace layerwidget
 		geo.pts = pts;
 		geo.type = Geometry::Polygon;
 
-		return add_geometry(geo, style);
+		return add_feature(geo, style);
 	}
 
-	int Qt_geometry_layer::add_geometry(Geometry geo, const Style & style)
+	int Qt_geometry_layer::add_feature(Geometry geo, const Style & style)
 	{
 		int id = get_next_geometry_id();
-		m_geometries[id] = new Feature(geo,style);
+		m_features[id] = new Feature(geo,style);
 		return id;
 	}
 
-	Feature * Qt_geometry_layer::get_feature(int id) const
+	baseset::share_ptr<Feature> Qt_geometry_layer::get_feature(int id) const
 	{
-		auto iter = m_geometries.find(id);
-		if (iter == m_geometries.end())
+		auto iter = m_features.find(id);
+		if (iter == m_features.end())
 		{
-			return 0;
+			return baseset::share_ptr<Feature>();
 		}
 		return iter.value();
 	}
 
-	int Qt_geometry_layer::get_feature_id(Feature * feature) const
+	int Qt_geometry_layer::get_feature_id(const baseset::share_ptr<Feature> & feature) const
 	{
-		if (feature == 0)
+		if (feature.is_null())
 		{
 			return 0;
 		}
-		auto iter = m_geometries.begin();
-		while (iter != m_geometries.end())
+		auto iter = m_features.begin();
+		while (iter != m_features.end())
 		{
 			if (feature == iter.value())
 			{
@@ -92,7 +93,7 @@ namespace layerwidget
 
 	void Qt_geometry_layer::clear()
 	{
-		m_geometries.clear();
+		m_features.clear();
 	}
 
 	void Qt_geometry_layer::draw()
@@ -101,14 +102,15 @@ namespace layerwidget
 
 		drawer.save();
 
-		auto iter = m_geometries.begin();
-		while (iter != m_geometries.end())
+		auto iter = m_features.begin();
+		while (iter != m_features.end())
 		{
-			Feature * feature = iter.value();
+			baseset::share_ptr<Feature> feature = iter.value();
 
 			drawer.setPen(QPen(feature->style.border_color,feature->style.border_width,
 				feature->style.border_type));
 			drawer.setBrush(feature->style.fill_color);
+			drawer.setFont(feature->style.font);
 			
 			if (feature->geo.type == Geometry::Point)
 			{
@@ -162,7 +164,7 @@ namespace layerwidget
 	}
 
 
-	Feature * Qt_geometry_layer_manager::get_feature(int id)
+	baseset::share_ptr<Feature> Qt_geometry_layer_manager::get_feature(int id)
 	{
 		if (id <= 0)
 		{
@@ -170,21 +172,21 @@ namespace layerwidget
 		}
 		for (int i=0;i<size();++i)
 		{
-			Qt_geometry_layer * layer = get_entry(i);
-			if (layer == 0)
+			baseset::share_ptr<Qt_geometry_layer> layer = get_entry(i);
+			if (layer.is_null())
 			{
 				continue;
 			}
-			Feature * feature = layer->get_feature(id);
+			baseset::share_ptr<Feature> feature = layer->get_feature(id);
 			if (feature)
 			{
 				return feature;
 			}
 		}
-		return 0;
+		return baseset::share_ptr<Feature>();
 	}
 
-	int Qt_geometry_layer_manager::get_feature_id(Feature * feature)
+	int Qt_geometry_layer_manager::get_feature_id(const baseset::share_ptr<Feature> & feature)
 	{
 		if (feature == 0)
 		{
@@ -192,8 +194,8 @@ namespace layerwidget
 		}
 		for (int i=0;i<size();++i)
 		{
-			Qt_geometry_layer * layer = get_entry(i);
-			if (layer == 0)
+			baseset::share_ptr<Qt_geometry_layer> layer = get_entry(i);
+			if (layer.is_null())
 			{
 				continue;
 			}

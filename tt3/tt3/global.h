@@ -43,7 +43,7 @@ QList<QPointF> convert_list_vector(Iter begin,Iter end){
 }
 
 #define AW 	QApplication app(argc,argv);\
-			layerwidget::Qt_widget2 w;\
+			layerwidget::Qt_default_widget w;\
 			w.set_window(-5,5,-5,5);\
 			w.show();\
 			w.redraw();

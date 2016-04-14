@@ -47,9 +47,13 @@ void Qt_pan_layer::mouseMoveEvent(QMouseEvent * event)
 	}
 }
 
-void Qt_pan_layer::mouseReleaseEvent(QMouseEvent *)
+void Qt_pan_layer::mouseReleaseEvent(QMouseEvent *event)
 {
-
+	if(event->button() == Qt::LeftButton)
+	{
+		m_pt_down = event->pos();
+		widget->setCursor(Qt::OpenHandCursor);
+	}
 }
 
 void Qt_select_layer::mouseMoveEvent(QMouseEvent * event)

@@ -27,12 +27,13 @@
 #include <list>
 #include <QtGui/QMouseEvent>
 #include "layerwidget_global.h"
+#include "../baseset2/baseset2.h"
 
 
 namespace layerwidget {
 
 class Qt_widget;
-class LAYERWIDGET_EXPORT Qt_widget_layer : public QObject {
+class LAYERWIDGET_EXPORT Qt_widget_layer : public QObject , public baseset::share_obj{
   Q_OBJECT
 public:
   Qt_widget_layer(QObject* parent = 0, const char* name = 0) 

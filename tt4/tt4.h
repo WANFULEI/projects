@@ -3,8 +3,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_tt4.h"
-#include "mywidget.h"
-#include "../layerwidget/Qt_widget2.h"
+#include "../layerwidget/Qt_default_widget.h"
 
 class tt4 : public QMainWindow
 {
@@ -16,11 +15,11 @@ public:
 
 protected slots:
 	void on_actionPan_triggered();
-	void on_actionZoomIn_triggered();
+	void on_actionSelect_triggered();
 
 private:
 	Ui::tt4Class ui;
-	Qt_widget2 * m_pMyWidget;
+	Qt_default_widget * m_pMyWidget;
 };
 
 #endif // TT4_H

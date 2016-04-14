@@ -18,6 +18,99 @@ namespace baseset
 		}
 	};
 
+	class share_obj
+	{
+	private:
+		int _ref_count;
+	public:
+		share_obj(){
+			_ref_count = 0;
+		}
+		~share_obj(){
+		}
+		int ref(){
+			return ++_ref_count;
+		}
+		int unref(){
+			return --_ref_count;
+		}
+		int ref_count(){
+			return _ref_count;
+		}
+	};
+
+	template<typename T>
+	class share_ptr
+	{
+	private:
+		T * _ptr;
+	public:
+		share_ptr(){ _ptr = 0; }
+		share_ptr(T * ptr){
+			ref_new(ptr);
+		}
+		share_ptr(const share_ptr<T> & obj){
+			ref_new(obj._ptr);
+		}
+		~share_ptr(){
+			unref_this();
+		}
+		const share_ptr<T> & operator = (const share_ptr<T> & obj){
+			unref_this();
+			ref_new(obj._ptr);
+			return *this;
+		}
+		T * ptr() const{
+			return _ptr;
+		}
+		bool is_null() const{
+			return _ptr == 0;
+		}
+		T * operator -> () const{
+			return _ptr;
+		}
+		T & operator * () const{
+			return *_ptr;
+		}
+		operator T * () const{
+			return _ptr;
+		}
+
+	private:
+		void unref_this(){
+			if(_ptr)
+			{
+				if (_ptr->unref() == 0)
+				{
+					delete _ptr;
+				}
+			}
+		}
+		void ref_new(T * ptr){
+			_ptr = ptr;
+			if (ptr)
+			{
+				ptr->ref();
+			}
+		}
+	};
+
+	template<typename T>
+	bool operator == (const share_ptr<T> & ptr1,const share_ptr<T> & ptr2){
+		return ptr1.ptr() == ptr2.ptr();
+	}
+
+
+	template<typename T>
+	bool operator != (const share_ptr<T> & ptr1,const share_ptr<T> & ptr2){
+		return !(ptr1 == ptr2);
+	}
+
+	template<typename T>
+	uint qHash(const share_ptr<T> & obj,uint i) throw(){
+		return qHash(obj.ptr(),i);
+	}
+
 	template<typename node>
 	class node
 	{
@@ -70,8 +163,8 @@ namespace baseset
 		QVector<node *> m_nodes; 
 	};
 
-	template<typename T,typename M,typename C = QList<T *>>
-	class list_vector_manager : public C, public instance<M>
+	template<typename T,typename C = QList<T *> >
+	class list_vector_manager : public C
 	{
 	public:
 		virtual ~list_vector_manager(){
@@ -114,10 +207,74 @@ namespace baseset
 			}
 			return at(i);
 		}
+
+		template<typename N>
+		QList<N *> get_type_entrys(){
+			QList<N *> entries;
+			for (int i=0;i<size();++i)
+			{
+				if (dynamic_cast<N *>(get_entry(i)))
+				{
+					entries << dynamic_cast<N *>(get_entry(i));
+				}
+			}
+			return entries;
+		}
 	};
 
-	template<typename K,typename V,typename M>
-	class map_manager : public QMap<K,V *> , public instance<M>
+	template<typename T,typename C = QList<share_ptr<T> > >
+	class share_list_vector_manager : public C
+	{
+	public:
+		~share_list_vector_manager(){
+			clear();
+		}
+		share_ptr<T> create_entry(){
+			share_ptr<T> p = new T;
+			push_back(p);
+			return p;
+		}
+		bool delete_entry(const share_ptr<T> & p){
+			return removeOne(p);
+		}
+		share_ptr<T> attach_entry(const share_ptr<T> & p){
+			if (p == 0)
+			{
+				return share_ptr<T>();
+			}
+			push_back(p);
+			return p;
+		}
+		share_ptr<T> detach_entry(const share_ptr<T> & p){
+			share_ptr<T> res(p);
+			removeOne(p);
+			return res;
+		}
+
+		share_ptr<T> get_entry(int i){
+			if (i < 0 || i >= size())
+			{
+				return share_ptr<T>();
+			}
+			return at(i);
+		}
+
+		template<typename N>
+		QList<share_ptr<N> > get_type_entrys(){
+			QList<share_ptr<N> > entries;
+			for (int i=0;i<size();++i)
+			{
+				if (dynamic_cast<N *>(get_entry(i)))
+				{
+					entries << share_ptr<N>(dynamic_cast<N *>(get_entry(i)));
+				}
+			}
+			return entries;
+		}
+	};
+
+	template<typename K,typename V>
+	class map_manager : public QMap<K,V *>
 	{
 	public:
 		V * create_entry(const K & k){
@@ -173,6 +330,54 @@ namespace baseset
 		}
 
 	};
+
+	template<typename K,typename V>
+	class share_map_manager : public QMap<K,share_ptr<V> >
+	{
+	public:
+		share_ptr<V> create_entry(const K & k){
+			share_ptr<V> p = new V;
+			insert(k,p);
+			return p;
+		}
+		bool delete_entry(const K & k){
+			auto iter = find(k);
+			if (iter != end())
+			{
+				erase(iter);
+				return true;
+			}
+			return false;
+		}
+		share_ptr<V> attach_entry(const K & k,const share_ptr<V> & p){
+			if (p.is_null())
+			{
+				return share_ptr<V>();
+			}
+			insert(k,p);
+			return p;
+		}
+		share_ptr<V> detach_entry(const K & k){
+			auto iter = find(k);
+			if (iter != end())
+			{
+				share_ptr<V> p = iter.value();
+				erase(iter);
+				return p;
+			}
+			return share_ptr<V>();
+		}
+		share_ptr<V> get_entry(const K & k){
+			auto iter = find(k);
+			if (iter != end())
+			{
+				return iter.value();
+			}
+			return share_ptr<V>();
+		}
+
+	};
+
 
 	class BASESET2_EXPORT tmp : public node<tmp>
 	{

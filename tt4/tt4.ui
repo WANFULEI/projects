@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>tt4</string>
   </property>
-  <widget class="Qt_widget2" name="centralWidget"/>
+  <widget class="Qt_default_widget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
@@ -63,10 +63,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>Qt_widget2</class>
+   <class>Qt_default_widget</class>
    <extends>QWidget</extends>
-   <header>..\layerwidget\qt_widget2.h</header>
-   <container>1</container>
+   <header>..\layerwidget\qt_default_widget.h</header>
   </customwidget>
  </customwidgets>
  <resources>

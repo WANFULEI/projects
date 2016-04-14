@@ -5,6 +5,7 @@
 #include <QtGui/QColor>
 #include <QtGui/QPixmap>
 #include "../baseset2/baseset2.h"
+#include <QtGui/QFont>
 
 using namespace layerwidget;
 
@@ -28,16 +29,18 @@ namespace layerwidget
 		QColor border_color,fill_color;
 		int border_width;
 		Qt::PenStyle border_type;
+		QFont font;
 		Style(){
 			size = 6;
 			border_color = Qt::green;
 			fill_color = Qt::transparent;
 			border_width = 1;
 			border_type = Qt::SolidLine;
+			font = QFont("ËÎÌו",9);
 		}
 	};
 
-	struct Feature 
+	struct Feature : public baseset::share_obj
 	{
 		Feature(const Geometry & geometry = Geometry(),const Style & style = Style())
 			:style(style)
@@ -55,36 +58,35 @@ namespace layerwidget
 		Qt_geometry_layer(void);
 		~Qt_geometry_layer(void);
 
-		int get_next_geometry_id();
-
 		void add_points(const QList<QPointF> & pts, const QColor & color,int size = 3);
+
 		int add_ellipse(const QPointF & pt, double length, double width, const Style & style = Style());
 		int add_polygon(const QList<QPointF> & pts,const Style & style = Style());
-
-		int add_geometry(Geometry geo, const Style & style);
-		QMap<int,Feature *> & get_geometries() { return m_geometries; }
-
-		Feature * get_feature(int id) const;
-		int get_feature_id(Feature * feature) const;
-
+		int add_feature(Geometry geo, const Style & style);
 		void clear();
 
-		void draw();
+		baseset::share_map_manager<int,Feature> & get_geometries() { return m_features; }
+		baseset::share_ptr<Feature> get_feature(int id) const;
+		int get_feature_id(const baseset::share_ptr<Feature> & feature) const;
 
+	protected:
+		void draw();
+	protected:
+		int get_next_geometry_id();
 		QPointF convert(const QPointF & pt);
 		QVector<QPointF> convert(const QList<QPointF> & pts);
 		double convert(double dis);
-
-		QMap<int,Feature *> m_geometries;
-		static int m_next_geometry_id;
+	protected:
+		baseset::share_map_manager<int,Feature> m_features;
+		static int m_next_feature_id;
 	};
 
 	class LAYERWIDGET_EXPORT Qt_geometry_layer_manager :
-		public baseset::list_vector_manager<Qt_geometry_layer,Qt_geometry_layer_manager/*,QList<Qt_geometry_layer *>*/>
+		public baseset::share_list_vector_manager<Qt_geometry_layer> , public baseset::instance<Qt_geometry_layer_manager>
 	{
 	public:
-		Feature * get_feature(int id);
-		int get_feature_id(Feature * feature);
+		baseset::share_ptr<Feature> get_feature(int id);
+		int get_feature_id(const baseset::share_ptr<Feature> & feature);
 	};
 }
 
