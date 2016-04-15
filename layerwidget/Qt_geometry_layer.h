@@ -82,7 +82,7 @@ namespace layerwidget
 	};
 
 	class LAYERWIDGET_EXPORT Qt_geometry_layer_manager :
-		public baseset::share_list_vector_manager<Qt_geometry_layer> , public baseset::instance<Qt_geometry_layer_manager>
+		public baseset::share_list_vector_manager<Qt_geometry_layer> , public baseset::share_obj
 	{
 	public:
 		baseset::share_ptr<Feature> get_feature(int id);
