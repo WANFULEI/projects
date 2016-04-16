@@ -10,6 +10,7 @@ public:
 	test_demo_core2();
 	~test_demo_core2();
 
+	virtual void action_triggered(QAction * action);
 private:
 
 };
@@ -19,6 +20,8 @@ class TEST_DEMO_CORE2_EXPORT test_demo_core3 : public demo_core::component
 public:
 	test_demo_core3();
 	~test_demo_core3();
+
+	
 
 private:
 

@@ -23,6 +23,11 @@ bool demo_core::component::initialize()
 	return true;
 }
 
+void demo_core::component::action_triggered(QAction * action)
+{
+
+}
+
 bool demo_core::object::load_from_xml(TiXmlElement * pXmlNode)
 {
 	if (pXmlNode == 0)
@@ -96,4 +101,16 @@ bool demo_core::application::load_from_xml(TiXmlElement * pXmlNode)
 		components = components->NextSiblingElement("components");
 	}
 	return res;
+}
+
+baseset::share_ptr<demo_core::component> demo_core::application::get_component(const QString & class_name) const
+{
+	for (int i=0;i<m_components.size();++i)
+	{
+		if (m_components[i]->get_class_name() == class_name)
+		{
+			return m_components[i];
+		}
+	}
+	return 0;
 }
