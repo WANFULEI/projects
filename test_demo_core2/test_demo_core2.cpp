@@ -1,5 +1,5 @@
 #include "test_demo_core2.h"
-#include <QtWidgets/QMessageBox>
+#include <QtGui/QMessageBox>
 
 test_demo_core2::test_demo_core2()
 {

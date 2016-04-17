@@ -3,7 +3,7 @@
 #include <vector>
 using namespace std;
 
-#include <QtWidgets/QApplication>
+#include <QtGui/QApplication>
 
 #include "..\..\layerwidget\Qt_default_widget.h"
 using namespace layerwidget;

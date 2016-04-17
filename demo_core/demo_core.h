@@ -5,7 +5,7 @@
 #include <QtCore/QObject>
 #include "../baseset2/baseset2.h"
 #include "../tinyxml/tinyxml.h"
-#include <QtWidgets/QAction>
+#include <QtGui/QAction>
 
 namespace demo_core
 {

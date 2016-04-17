@@ -33,11 +33,11 @@
 #include <map>
 #include <cmath>
 
-#include <QtWidgets/qwidget.h>
+#include <QtGui/qwidget.h>
 #include <QtGui/qpainter.h>
 #include <QtGui/qcolor.h>
 #include <QtGui/qpixmap.h>
-#include <QtPrintSupport/qprinter.h>
+#include <QtGui/qprinter.h>
 #include "layerwidget_global.h"
 #include "../baseset2/baseset2.h"
 #include "Qt_widget_layer.h"

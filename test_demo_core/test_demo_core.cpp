@@ -1,5 +1,5 @@
 #include "test_demo_core.h"
-#include <QtWidgets/QComboBox>
+#include <QtGui/QComboBox>
 
 test_demo_core::test_demo_core(QWidget *parent)
 	: QMainWindow(parent)

@@ -73,7 +73,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>F:\CGAL\lib;F:\boost_1_59_0\lib32-msvc-10.0;F:\3rd_party\x86\lib;$(QtDir)\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libgmp-10.lib;qt5cored.lib;qt5guid.lib;qt5widgetsd.lib;libmpfr-4.lib</AdditionalDependencies>
+      <AdditionalDependencies>libgmp-10.lib;qtcored4.lib;qtguid4.lib;libmpfr-4.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

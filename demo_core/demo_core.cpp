@@ -1,6 +1,6 @@
 #include "demo_core.h"
 #include <QtCore/QLibrary>
-#include <QtWidgets/QApplication>
+#include <QtGui/QApplication>
 
 typedef demo_core::component * (*FunctionPointer)(const QString & class_name);
 

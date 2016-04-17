@@ -1,7 +1,7 @@
 #ifndef TT4_H
 #define TT4_H
 
-#include <QtWidgets/QMainWindow>
+#include <QtGui/QMainWindow>
 #include "ui_tt4.h"
 #include "../layerwidget/Qt_default_widget.h"
 

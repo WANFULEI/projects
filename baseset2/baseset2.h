@@ -107,8 +107,8 @@ namespace baseset
 	}
 
 	template<typename T>
-	uint qHash(const share_ptr<T> & obj,uint i) throw(){
-		return qHash(obj.ptr(),i);
+	uint qHash(const share_ptr<T> & obj) throw(){
+		return qHash(obj.ptr());
 	}
 
 	template<typename node>
@@ -160,7 +160,7 @@ namespace baseset
 		}
 
 	public:
-		QVector<node *> m_nodes; 
+		QList<node *> m_nodes; 
 	};
 
 	template<typename T,typename C = QList<T *> >

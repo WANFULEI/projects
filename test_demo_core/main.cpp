@@ -1,5 +1,5 @@
 #include "test_demo_core.h"
-#include <QtWidgets/QApplication>
+#include <QtGui/QApplication>
 
 int main(int argc, char *argv[])
 {

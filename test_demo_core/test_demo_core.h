@@ -1,7 +1,7 @@
 #ifndef TEST_DEMO_CORE_H
 #define TEST_DEMO_CORE_H
 
-#include <QtWidgets/QMainWindow>
+#include <QtGui/QMainWindow>
 #include "ui_test_demo_core.h"
 #include "../demo_core/demo_core.h"
 

@@ -55,7 +55,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libgmp-10.lib;qt5cored.lib</AdditionalDependencies>
+      <AdditionalDependencies>libgmp-10.lib;qtcored4.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>F:\CGAL\lib;F:\boost_1_59_0\lib32-msvc-10.0;F:\3rd_party\x86\lib;$(QTDIR)\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
