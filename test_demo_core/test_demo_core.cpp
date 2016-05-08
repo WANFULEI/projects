@@ -6,6 +6,17 @@ test_demo_core::test_demo_core(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	m_tab = new QTabWidget;
+	setCentralWidget(m_tab);
+	
+	
+	m_map2d = new map2d;
+	m_tab->addTab(m_map2d,QIcon(""),"二维地图");
+//	m_tab->addTab(new QWidget,QIcon(""),"二维地图");
+	
+	m_map3d = new map3d;
+	m_tab->addTab(m_map3d,QIcon(""),"三维地图");
+
 	initialize();
 }
 
@@ -120,12 +131,17 @@ void test_demo_core::action_triggered()
 	{
 		return;
 	}
-	baseset::share_ptr<demo_core::component> com = get_component(action->data().toHash()["handle_component_class_name"].toString());
-	if (com == 0)
+
+	QStringList handle_components = action->data().toHash()["handle_component_class_name"].toString().split('|');
+	for (int i=0;i<handle_components.size();++i)
 	{
-		return;
+		baseset::share_ptr<demo_core::component> com = get_component(handle_components[i]);
+		if (com == 0)
+		{
+			return;
+		}
+		com->action_triggered(action);
 	}
-	com->action_triggered(action);
 }
 
 void test_demo_core::load_tool_bar()

@@ -4,6 +4,8 @@
 #include <QtGui/QMainWindow>
 #include "ui_test_demo_core.h"
 #include "../demo_core/demo_core.h"
+#include "../map2d/map2d.h"
+#include "../map3d/map3d.h"
 
 class test_demo_core : public QMainWindow , public demo_core::application
 {
@@ -26,6 +28,9 @@ public:
 private:
 	Ui::test_demo_coreClass ui;
 	QList<QAction *> m_actions;
+	QTabWidget * m_tab;
+	map2d * m_map2d;
+	map3d * m_map3d;
 
 protected slots:
 	void action_triggered();
