@@ -1,6 +1,7 @@
 #include "demo_core.h"
 #include <QtCore/QLibrary>
 #include <QtGui/QApplication>
+#include <QFile>
 
 typedef demo_core::component * (*FunctionPointer)(const QString & class_name);
 
@@ -113,4 +114,20 @@ baseset::share_ptr<demo_core::component> demo_core::application::get_component(c
 		}
 	}
 	return 0;
+}
+
+DEMO_CORE_EXPORT QString demo_core::get_full_path(const QString & path)
+{
+	if (path.indexOf(":") != -1)
+	{
+		return path;
+	}
+	else if (QFile::exists(QApplication::applicationDirPath() + "/" + path))
+	{
+		return QApplication::applicationDirPath() + "/" + path;
+	}
+	else
+	{
+		return path;
+	}
 }

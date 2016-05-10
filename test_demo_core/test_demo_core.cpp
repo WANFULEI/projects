@@ -1,5 +1,6 @@
 #include "test_demo_core.h"
 #include <QtGui/QComboBox>
+#include <QToolButton>
 
 test_demo_core::test_demo_core(QWidget *parent)
 	: QMainWindow(parent)
@@ -37,9 +38,10 @@ bool test_demo_core::initialize()
 	{
 		return false;
 	}
+	bool res = load_from_xml(doc.RootElement());
 	load_menu_bar();
 	load_tool_bar();
-	return load_from_xml(doc.RootElement());
+	return res;
 }
 
 void test_demo_core::load_menu_bar()
@@ -105,13 +107,13 @@ QObject * test_demo_core::load_menu_or_action(TiXmlElement * xml_node)
 	}
 	else if (QString(xml_node->Value()).toLower() == "action")
 	{
-		QAction * action = get_action(xml_node->Attribute("action_id"));
+		QAction * action = get_action(xml_node->Attribute("id"));
 		if (action == 0)
 		{
 			action = new QAction(QIcon(xml_node->Attribute("icon")),xml_node->Attribute("text"),0);
 			QVariantHash data;
 			data["handle_component_class_name"] = xml_node->Attribute("handle_component_class_name");
-			data["action_id"] = xml_node->Attribute("action_id");
+			data["id"] = xml_node->Attribute("id");
 			action->setData(data);
 			connect(action,SIGNAL(triggered()),this,SLOT(action_triggered()));
 			m_actions << action;
@@ -161,6 +163,8 @@ void test_demo_core::load_tool_bar()
 	while (xml_node)
 	{
 		QToolBar * toolbar = new QToolBar;
+		QString toolbar_id = xml_node->Attribute("id");
+
 		QString allowed_areas = xml_node->Attribute("allowed_areas");
 		toolbar->setAllowedAreas((Qt::ToolBarAreas)allowed_areas.toInt());
 		int n;
@@ -183,20 +187,72 @@ void test_demo_core::load_tool_bar()
 			{
 				QComboBox * combo = new QComboBox;
 				TiXmlElement * info = unknown->FirstChildElement("item");
+				QString id = unknown->Attribute("id");
 				while (info)
 				{
 					combo->addItem(QIcon(info->Attribute("icon")),info->Attribute("text"));
 					info = info->NextSiblingElement("item");
 				}
 				toolbar->addWidget(combo);
+				QString handle_component_class_name = unknown->Attribute("handle_component_class_name");
+				QStringList handle_component_class_names = handle_component_class_name.split('|');
+				for (int i=0;i<handle_component_class_names.size();++i)
+				{
+					baseset::share_ptr<demo_core::component> com = get_component(handle_component_class_names[i]);
+					if (com)
+					{
+						com->on_create_control(toolbar_id,id,combo);
+					}
+				}
+			}
+			else if (QString(unknown->Value()).toLower() == "toolbutton")
+			{
+				
+				QString id = unknown->Attribute("id");
+				QString icon = unknown->Attribute("icon");
+				QString text = unknown->Attribute("text");
+				QString tip = unknown->Attribute("tip");
+				QToolButton * button = new QToolButton;
+				button->setIcon(QIcon(demo_core::get_full_path(icon)));
+				button->setText(text);
+				button->setToolTip(tip);
+				button->setObjectName(id);
+				toolbar->addWidget(button);
+
+				QString handle_component_class_name = unknown->Attribute("handle_component_class_name");
+				QStringList handle_component_class_names = handle_component_class_name.split('|');
+				for (int i=0;i<handle_component_class_names.size();++i)
+				{
+					baseset::share_ptr<demo_core::component> com = get_component(handle_component_class_names[i]);
+					if (com)
+					{
+						com->on_create_control(toolbar_id,id,button);
+					}
+				}
 			}
 			else if (QString(unknown->Value()).toLower() == "widget")
 			{
+				QString id = unknown->Attribute("id");
 				baseset::share_ptr<demo_core::component> com = get_component(unknown->Attribute("create_component_class_name"));
-// 				if (com)
-// 				{
-// 					com->
-// 				}
+				if (com)
+				{
+					QWidget * widget = com->create_control(toolbar_id,id);
+					if (widget)
+					{
+						widget->setObjectName(id);
+						toolbar->addWidget(widget);
+						QString handle_component_class_name = unknown->Attribute("handle_component_class_name");
+						QStringList handle_component_class_names = handle_component_class_name.split('|');
+						for (int i=0;i<handle_component_class_names.size();++i)
+						{
+							baseset::share_ptr<demo_core::component> com = get_component(handle_component_class_names[i]);
+							if (com)
+							{
+								com->on_create_control(toolbar_id,id,widget);
+							}
+						}
+					}
+				}
 			}
 			else
 			{
@@ -257,11 +313,11 @@ Qt::ToolButtonStyle test_demo_core::get_tool_button_style(const QString & s) con
 	return res;
 }
 
-QAction * test_demo_core::get_action(const QString & action_id) const
+QAction * test_demo_core::get_action(const QString & id) const
 {
 	for (int i=0;i<m_actions.size();++i)
 	{
-		if (m_actions[i]->data().toHash()["action_id"].toString() == action_id)
+		if (m_actions[i]->data().toHash()["id"].toString() == id)
 		{
 			return m_actions[i];
 		}

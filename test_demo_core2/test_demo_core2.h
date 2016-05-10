@@ -11,6 +11,9 @@ public:
 	~test_demo_core2();
 
 	virtual void action_triggered(QAction * action);
+
+	virtual QWidget * create_control(const QString & toolbar_id,const QString & control_id);
+
 private:
 
 };
@@ -20,6 +23,8 @@ class TEST_DEMO_CORE2_EXPORT test_demo_core3 : public demo_core::component
 public:
 	test_demo_core3();
 	~test_demo_core3();
+
+	virtual void action_triggered(QAction * action);
 
 	
 
