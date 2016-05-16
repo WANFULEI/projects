@@ -5,6 +5,14 @@
 #include <QDockWidget>
 #include "../framegui/framegui.h"
 #include "../../base/baseset2/baseset2.h"
+#include <QLabel>
+#include <QLineEdit>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QPushButton>
+#include <QToolButton>
+#include <QSpinBox>
+
 
 frameapp::frameapp(QWidget *parent)
 	: QMainWindow(parent)
@@ -47,6 +55,7 @@ bool frameapp::initialize()
 	load_menu_bar();
 	load_tool_bar();
 	load_window();
+	load_stautsbar();
 
 	baseset::share_list_vector_manager<framecore::component> coms = get_components();
 	for (int i=0;i<coms.size();++i)
@@ -202,80 +211,84 @@ void frameapp::load_tool_bar()
 			{
 				toolbar->addAction(dynamic_cast<QAction *>(load_menu_or_action(unknown)));
 			}
-			else if (QString(unknown->Value()).toLower() == "combobox")
-			{
-				QComboBox * combo = new QComboBox;
-				TiXmlElement * info = unknown->FirstChildElement("item");
-				QString id = unknown->Attribute("id");
-				while (info)
-				{
-					combo->addItem(QIcon(info->Attribute("icon")),info->Attribute("text"));
-					info = info->NextSiblingElement("item");
-				}
-				toolbar->addWidget(combo);
-				QString handle_component_class_name = unknown->Attribute("handle_component_class_name");
-				QStringList handle_component_class_names = handle_component_class_name.split('|');
-				for (int i=0;i<handle_component_class_names.size();++i)
-				{
-					baseset::share_ptr<framecore::component> com = get_component(handle_component_class_names[i]);
-					if (com)
-					{
-						com->on_create_control(toolbar_id,id,combo);
-					}
-				}
-			}
-			else if (QString(unknown->Value()).toLower() == "toolbutton")
-			{
-				
-				QString id = unknown->Attribute("id");
-				QString icon = unknown->Attribute("icon");
-				QString text = unknown->Attribute("text");
-				QString tip = unknown->Attribute("tip");
-				QToolButton * button = new QToolButton;
-				button->setIcon(QIcon(frameutil::get_full_path(icon)));
-				button->setText(text);
-				button->setToolTip(tip);
-				button->setObjectName(id);
-				toolbar->addWidget(button);
-
-				QString handle_component_class_name = unknown->Attribute("handle_component_class_name");
-				QStringList handle_component_class_names = handle_component_class_name.split('|');
-				for (int i=0;i<handle_component_class_names.size();++i)
-				{
-					baseset::share_ptr<framecore::component> com = get_component(handle_component_class_names[i]);
-					if (com)
-					{
-						com->on_create_control(toolbar_id,id,button);
-					}
-				}
-			}
-			else if (QString(unknown->Value()).toLower() == "widget")
-			{
-				QString id = unknown->Attribute("id");
-				baseset::share_ptr<framecore::component> com = get_component(unknown->Attribute("create_component_class_name"));
-				if (com)
-				{
-					QWidget * widget = com->create_control(toolbar_id,id);
-					if (widget)
-					{
-						widget->setObjectName(id);
-						toolbar->addWidget(widget);
-						QString handle_component_class_name = unknown->Attribute("handle_component_class_name");
-						QStringList handle_component_class_names = handle_component_class_name.split('|');
-						for (int i=0;i<handle_component_class_names.size();++i)
-						{
-							baseset::share_ptr<framecore::component> com = get_component(handle_component_class_names[i]);
-							if (com)
-							{
-								com->on_create_control(toolbar_id,id,widget);
-							}
-						}
-					}
-				}
-			}
+// 			else if (QString(unknown->Value()).toLower() == "combobox")
+// 			{
+// 				QComboBox * combo = new QComboBox;
+// 				TiXmlElement * info = unknown->FirstChildElement("item");
+// 				QString id = unknown->Attribute("id");
+// 				while (info)
+// 				{
+// 					combo->addItem(QIcon(info->Attribute("icon")),info->Attribute("text"));
+// 					info = info->NextSiblingElement("item");
+// 				}
+// 				toolbar->addWidget(combo);
+// 				QString handle_component_class_name = unknown->Attribute("handle_component_class_name");
+// 				QStringList handle_component_class_names = handle_component_class_name.split('|');
+// 				for (int i=0;i<handle_component_class_names.size();++i)
+// 				{
+// 					baseset::share_ptr<framecore::component> com = get_component(handle_component_class_names[i]);
+// 					if (com)
+// 					{
+// 						com->on_create_control(id,combo);
+// 					}
+// 				}
+// 			}
+// 			else if (QString(unknown->Value()).toLower() == "toolbutton")
+// 			{
+// 				
+// 				QString id = unknown->Attribute("id");
+// 				QString icon = unknown->Attribute("icon");
+// 				QString text = unknown->Attribute("text");
+// 				QString tip = unknown->Attribute("tip");
+// 				QToolButton * button = new QToolButton;
+// 				button->setIcon(QIcon(frameutil::get_full_path(icon)));
+// 				button->setText(text);
+// 				button->setToolTip(tip);
+// 				button->setObjectName(id);
+// 				toolbar->addWidget(button);
+// 
+// 				QString handle_component_class_name = unknown->Attribute("handle_component_class_name");
+// 				QStringList handle_component_class_names = handle_component_class_name.split('|');
+// 				for (int i=0;i<handle_component_class_names.size();++i)
+// 				{
+// 					baseset::share_ptr<framecore::component> com = get_component(handle_component_class_names[i]);
+// 					if (com)
+// 					{
+// 						com->on_create_control(id,button);
+// 					}
+// 				}
+// 			}
+// 			else if (QString(unknown->Value()).toLower() == "widget")
+// 			{
+// 				QString id = unknown->Attribute("id");
+// 				baseset::share_ptr<framecore::component> com = get_component(unknown->Attribute("create_component_class_name"));
+// 				if (com)
+// 				{
+// 					QWidget * widget = com->create_control(id);
+// 					if (widget)
+// 					{
+// 						widget->setObjectName(id);
+// 						toolbar->addWidget(widget);
+// 						QString handle_component_class_name = unknown->Attribute("handle_component_class_name");
+// 						QStringList handle_component_class_names = handle_component_class_name.split('|');
+// 						for (int i=0;i<handle_component_class_names.size();++i)
+// 						{
+// 							baseset::share_ptr<framecore::component> com = get_component(handle_component_class_names[i]);
+// 							if (com)
+// 							{
+// 								com->on_create_control(id,widget);
+// 							}
+// 						}
+// 					}
+// 				}
+// 			}
 			else
 			{
-
+				QWidget * widget = load_widget(unknown);
+				if (widget)
+				{
+					toolbar->addWidget(widget);
+				}
 			}
 			unknown = unknown->NextSiblingElement();
 		}
@@ -390,5 +403,119 @@ void frameapp::load_window()
 
 		ele = ele->NextSiblingElement("window");
 	}
+}
+
+void frameapp::load_stautsbar()
+{
+	TiXmlDocument doc;
+	if (!doc.LoadFile((qApp->applicationDirPath() + "/config/statusbar.cfg").toStdString().c_str()))
+	{
+		return;
+	}
+	TiXmlElement * root = doc.RootElement();
+	if (root == 0)
+	{
+		return;
+	}
+	TiXmlElement * item = root->FirstChildElement();
+	while (item)
+	{
+		QWidget * widget = load_widget(item);
+		if (widget)
+		{
+			statusBar()->addPermanentWidget(widget);
+		}
+		item = item->NextSiblingElement();
+	}
+}
+
+QWidget * frameapp::load_widget(TiXmlElement * xml_node)
+{
+	QWidget * res = 0;
+	if (xml_node == 0)
+	{
+		return res;
+	}
+	QString tag = xml_node->Value();
+	QString id = xml_node->Attribute("id");
+	QString text = xml_node->Attribute("text");
+	QString icon = xml_node->Attribute("icon");
+	QString handle_component_class_name = xml_node->Attribute("handle_component_class_name");
+	QStringList handle_component_class_names = handle_component_class_name.split('|',QString::SkipEmptyParts);
+	if (tag == "label")
+	{
+		res = new QLabel(text,0);
+	}
+	else if (tag == "lineedit")
+	{
+		QLineEdit * edt = new QLineEdit(text,0);
+		QString width = xml_node->Attribute("width");
+		int w = width.toInt();
+		//edt->resize(w > 0 ? w : 120 , edt->height() );
+		edt->setFixedWidth(w > 0 ? w : 120);
+		res = edt;
+	}
+	else if (tag == "combobox")
+	{
+		QComboBox * cmb = new QComboBox(0);
+		TiXmlElement * item = xml_node->FirstChildElement("item");
+		while (item)
+		{
+			QString text,icon;
+			text = item->Attribute("text");
+			icon = item->Attribute("icon");
+			cmb->addItem(QIcon(frameutil::get_full_path(icon)),text);
+			item = item->NextSiblingElement("item");
+		}
+		res = cmb;
+	}
+	else if (tag == "spinbox")
+	{
+		QSpinBox * spn = new QSpinBox(0);
+		res = spn;
+	}
+	else if (tag == "checkbox")
+	{
+		QCheckBox * chk = new QCheckBox(text,0);
+		res = chk;
+	}
+	else if (tag == "pushbutton")
+	{
+		QPushButton * btn = new QPushButton(QIcon(frameutil::get_full_path(icon)),text,0);
+		res = btn;
+	}
+	else if (tag == "toolbutton")
+	{
+		QToolButton * btn = new QToolButton(0);
+		btn->setIcon(QIcon(frameutil::get_full_path(icon)));
+		btn->setText(text);
+		res = btn;
+	}
+	else if (tag == "widget")
+	{
+		QString create_component_class_name = xml_node->Attribute("create_component_class_name");
+		auto com = get_component(create_component_class_name);
+		if (com)
+		{
+			res = com->create_control(id);
+		}
+	}
+	else
+	{
+
+	}
+	if (res)
+	{
+		res->setObjectName(id);
+		for (int i=0;i<handle_component_class_names.size();++i)
+		{
+			auto com = get_component(handle_component_class_names[i]);
+			if (com)
+			{
+				com->on_create_control(id,res);
+			}
+		}
+	}
+	return res;
 }
 

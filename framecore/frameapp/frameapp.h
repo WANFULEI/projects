@@ -18,8 +18,10 @@ public:
 	void load_menu_bar();
 	void load_tool_bar();
 	void load_window();
+	void load_stautsbar();
 
 	QObject * load_menu_or_action(TiXmlElement * xml_node);
+	QWidget * load_widget(TiXmlElement * xml_node);
 	Qt::Orientation get_orientation(const QString & s) const;
 	Qt::ToolButtonStyle get_tool_button_style(const QString & s) const;
 	QAction * get_action(const QString & action_id) const;

@@ -64,8 +64,8 @@ namespace framecore
 		// Parameter: const QString & id
 		// Parameter: QWidget * widget
 		//************************************
-		virtual void on_create_control(const QString & toolbar_id,const QString & id,QWidget * widget){}
-		virtual QWidget * create_control(const QString & toolbar_id,const QString & control_id){ return 0; }
+		virtual void on_create_control(const QString & id,QWidget * widget){}
+		virtual QWidget * create_control(const QString & control_id){ return 0; }
 
 	protected:
 		QString m_sClassName;

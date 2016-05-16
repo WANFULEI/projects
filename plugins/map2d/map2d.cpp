@@ -32,6 +32,9 @@
 #include <QgsLegendFilterButton.h>
 #include <QgsAnnotationItem.h>
 #include <QMessageBox>
+#include <QgsVectorDataProvider.h>
+#include <QgsTransactionGroup.h>
+#include <qgsstatusbarcoordinateswidget.h>
 
 extern "C"
 {
@@ -129,6 +132,7 @@ bool map2dcom::initialize()
 	{
 		addProject("C:/Users/wq/Desktop/tt2.qgs");
 		createCanvasTools();
+		mCoordsEdit->setMapCanvas(mMapCanvas);
 	}
 	
 
@@ -335,7 +339,11 @@ void map2dcom::initLayerTreeView()
 	toolbar->addWidget( mLegendExpressionFilterButton );
 	toolbar->addAction( actionExpandAll );
 	toolbar->addAction( actionCollapseAll );
-//	toolbar->addAction( mActionRemoveLayer );
+
+	mActionRemoveLayer = new QAction(QIcon(""),"remove",0);
+
+	connect( mActionRemoveLayer, SIGNAL( triggered() ), this, SLOT( removeLayer() ) );
+	toolbar->addAction( mActionRemoveLayer );
 
 	QVBoxLayout* vboxLayout = new QVBoxLayout;
 	vboxLayout->setMargin( 0 );
@@ -589,4 +597,198 @@ QStatusBar * map2dcom::statusBar() const
 	return framegui::framegui::get_instance()->status_bar();
 }
 
+void map2dcom::removeLayer()
+{
+	if ( !mLayerTreeView )
+	{
+		return;
+	}
 
+	Q_FOREACH ( QgsMapLayer * layer, mLayerTreeView->selectedLayers() )
+	{
+		QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer*>( layer );
+		if ( vlayer && vlayer->isEditable() && !toggleEditing( vlayer, true ) )
+			return;
+	}
+
+	QList<QgsLayerTreeNode*> selectedNodes = mLayerTreeView->selectedNodes( true );
+
+// 	//validate selection
+// 	if ( selectedNodes.isEmpty() )
+// 	{
+// 		messageBar()->pushMessage( tr( "No legend entries selected" ),
+// 			tr( "Select the layers and groups you want to remove in the legend." ),
+// 			QgsMessageBar::INFO, messageTimeout() );
+// 		return;
+// 	}
+
+	bool promptConfirmation = QSettings().value( "qgis/askToDeleteLayers", true ).toBool();
+	bool shiftHeld = QApplication::queryKeyboardModifiers().testFlag( Qt::ShiftModifier );
+	//display a warning
+	if ( !shiftHeld && promptConfirmation && QMessageBox::warning( framegui::framegui::get_instance()->get_main_window(), tr( "Remove layers and groups" ), tr( "Remove %n legend entries?", "number of legend items to remove", selectedNodes.count() ), QMessageBox::Ok | QMessageBox::Cancel ) == QMessageBox::Cancel )
+	{
+		return;
+	}
+
+	Q_FOREACH ( QgsLayerTreeNode* node, selectedNodes )
+	{
+		QgsLayerTreeGroup* parentGroup = qobject_cast<QgsLayerTreeGroup*>( node->parent() );
+		if ( parentGroup )
+			parentGroup->removeChildNode( node );
+	}
+
+	showStatusMessage( tr( "%n legend entries removed.", "number of removed legend entries", selectedNodes.count() ) );
+
+	mMapCanvas->refresh();
+}
+
+bool map2dcom::toggleEditing( QgsMapLayer *layer, bool allowCancel )
+{
+	QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( layer );
+	if ( !vlayer )
+	{
+		return false;
+	}
+
+	bool res = true;
+
+	QString connString = QgsDataSourceURI( vlayer->source() ).connectionInfo();
+	QString key = vlayer->providerType();
+
+	QMap< QPair< QString, QString>, QgsTransactionGroup*> transactionGroups = QgsProject::instance()->transactionGroups();
+	QMap< QPair< QString, QString>, QgsTransactionGroup*>::iterator tIt = transactionGroups .find( qMakePair( key, connString ) );
+	QgsTransactionGroup* tg = ( tIt != transactionGroups.end() ? tIt.value() : nullptr );
+
+	bool isModified = false;
+
+	// Assume changes if: a) the layer reports modifications or b) its transaction group was modified
+	if ( vlayer->isModified() || ( tg && tg->layers().contains( vlayer ) && tg->modified() ) )
+		isModified  = true;
+
+	if ( !vlayer->isEditable() && !vlayer->readOnly() )
+	{
+		if ( !( vlayer->dataProvider()->capabilities() & QgsVectorDataProvider::EditingCapabilities ) )
+		{
+// 			mActionToggleEditing->setChecked( false );
+// 			mActionToggleEditing->setEnabled( false );
+// 			messageBar()->pushMessage( tr( "Start editing failed" ),
+// 				tr( "Provider cannot be opened for editing" ),
+// 				QgsMessageBar::INFO, messageTimeout() );
+			return false;
+		}
+
+		vlayer->startEditing();
+
+		QSettings settings;
+		QString markerType = settings.value( "/qgis/digitizing/marker_style", "Cross" ).toString();
+		bool markSelectedOnly = settings.value( "/qgis/digitizing/marker_only_for_selected", false ).toBool();
+
+		// redraw only if markers will be drawn
+		if (( !markSelectedOnly || vlayer->selectedFeatureCount() > 0 ) &&
+			( markerType == "Cross" || markerType == "SemiTransparentCircle" ) )
+		{
+			vlayer->triggerRepaint();
+		}
+	}
+	else if ( isModified )
+	{
+		QMessageBox::StandardButtons buttons = QMessageBox::Save | QMessageBox::Discard;
+		if ( allowCancel )
+			buttons |= QMessageBox::Cancel;
+
+		switch ( QMessageBox::information( nullptr,
+			tr( "Stop editing" ),
+			tr( "Do you want to save the changes to layer %1?" ).arg( vlayer->name() ),
+			buttons ) )
+		{
+		case QMessageBox::Cancel:
+			res = false;
+			break;
+
+		case QMessageBox::Save:
+			QApplication::setOverrideCursor( Qt::WaitCursor );
+
+			if ( !vlayer->commitChanges() )
+			{
+//				commitError( vlayer );
+				// Leave the in-memory editing state alone,
+				// to give the user a chance to enter different values
+				// and try the commit again later
+				res = false;
+			}
+
+			vlayer->triggerRepaint();
+
+			QApplication::restoreOverrideCursor();
+			break;
+
+		case QMessageBox::Discard:
+			QApplication::setOverrideCursor( Qt::WaitCursor );
+
+			mMapCanvas->freeze( true );
+			if ( !vlayer->rollBack() )
+			{
+// 				messageBar()->pushMessage( tr( "Error" ),
+// 					tr( "Problems during roll back" ),
+// 					QgsMessageBar::CRITICAL );
+				res = false;
+			}
+			mMapCanvas->freeze( false );
+
+			vlayer->triggerRepaint();
+
+			QApplication::restoreOverrideCursor();
+			break;
+
+		default:
+			break;
+		}
+	}
+	else //layer not modified
+	{
+		mMapCanvas->freeze( true );
+		vlayer->rollBack();
+		mMapCanvas->freeze( false );
+		res = true;
+		vlayer->triggerRepaint();
+	}
+
+	if ( !res && layer == activeLayer() )
+	{
+		// while also called when layer sends editingStarted/editingStopped signals,
+		// this ensures correct restoring of gui state if toggling was canceled
+		// or layer commit/rollback functions failed
+//		activateDeactivateLayerRelatedActions( layer );
+	}
+
+	return res;
+}
+
+/** Get a pointer to the currently selected map layer */
+QgsMapLayer *map2dcom::activeLayer()
+{
+	return mLayerTreeView ? mLayerTreeView->currentLayer() : nullptr;
+}
+
+void map2dcom::showStatusMessage( const QString& theMessage )
+{
+	statusBar()->showMessage( theMessage );
+}
+
+void map2dcom::on_create_control(const QString & id,QWidget * widget)
+{
+
+}
+
+QWidget * map2dcom::create_control(const QString & control_id)
+{
+	if (control_id == "coordinate")
+	{
+		mCoordsEdit = new QgsStatusBarCoordinatesWidget(0);
+		
+		mCoordsEdit->setMouseCoordinatesPrecision(6);
+		
+		return mCoordsEdit;
+	}
+	return 0;
+}

@@ -134,6 +134,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\rcc.exe" -name "%(Filename)" -no-compress "%(FullPath)" -o .\GeneratedFiles\qrc_%(Filename).cpp</Command>
     </CustomBuild>
     <None Include="menu.cfg" />
+    <None Include="statusbar.cfg" />
     <None Include="toolbar.cfg" />
     <None Include="window.cfg" />
   </ItemGroup>

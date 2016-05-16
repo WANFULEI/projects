@@ -72,5 +72,6 @@
     <None Include="toolbar.cfg" />
     <None Include="application.cfg" />
     <None Include="window.cfg" />
+    <None Include="statusbar.cfg" />
   </ItemGroup>
 </Project>

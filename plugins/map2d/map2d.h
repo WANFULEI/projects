@@ -50,9 +50,11 @@ class QDockWidget;
 class QAction;
 class QgsAnnotationItem;
 class QStatusBar;
+class QgsStatusBarCoordinatesWidget;
 
 class map2dcom : public QObject , public framecore::component , public baseset::instance2<map2dcom>
 {
+	Q_OBJECT
 public:
 	map2dcom();
 	~map2dcom();
@@ -96,6 +98,23 @@ private:
 
 	void createCanvasTools();
 
+	virtual void on_create_control(const QString & id,QWidget * widget);
+
+private slots:
+	//! Remove a layer from the map and legend
+	void removeLayer();
+	//! starts/stops editing mode of a layer
+	bool toggleEditing( QgsMapLayer *layer, bool allowCancel = true );
+	//! Return pointer to the active layer
+	QgsMapLayer *activeLayer();
+	void showStatusMessage( const QString& theMessage );
+
+
+private:
+	virtual QWidget * create_control(const QString & control_id);
+
+	
+
 private:
 	QgsMapCanvas * mMapCanvas;
 
@@ -114,6 +133,8 @@ private:
 
 	QgsLegendFilterButton* mLegendExpressionFilterButton;
 	QDateTime mProjectLastModified;
+
+	QgsStatusBarCoordinatesWidget * mCoordsEdit;
 
 // 	//! Overview map canvas
 // 	QgsMapOverviewCanvas *mOverviewCanvas;
