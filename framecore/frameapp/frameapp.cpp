@@ -13,7 +13,8 @@ frameapp::frameapp(QWidget *parent)
 
 	m_tab = new QTabWidget;
 	setCentralWidget(m_tab);
-	
+
+	framegui::framegui::get_instance()->set_main_window(this);
 	
 // 	m_map2d = new map2d;
 // 	m_tab->addTab(m_map2d,QIcon(""),"¶þÎ¬µØÍ¼");
@@ -123,14 +124,16 @@ QObject * frameapp::load_menu_or_action(TiXmlElement * xml_node)
 	}
 	else if (QString(xml_node->Value()).toLower() == "action")
 	{
-		QAction * action = get_action(xml_node->Attribute("id"));
+		QString id = xml_node->Attribute("id");
+		QAction * action = get_action(id);
 		if (action == 0)
 		{
 			action = new QAction(QIcon(xml_node->Attribute("icon")),xml_node->Attribute("text"),0);
 			QVariantHash data;
 			data["handle_component_class_name"] = xml_node->Attribute("handle_component_class_name");
-			data["id"] = xml_node->Attribute("id");
+			data["id"] = id;
 			action->setData(data);
+			action->setObjectName(id);
 			connect(action,SIGNAL(triggered()),this,SLOT(action_triggered()));
 			m_actions << action;
 		}

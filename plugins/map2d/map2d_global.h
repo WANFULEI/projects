@@ -9,4 +9,10 @@
 # define MAP2D_EXPORT Q_DECL_IMPORT
 #endif
 
+#define CORE_EXPORT Q_DECL_IMPORT
+#define GUI_EXPORT Q_DECL_IMPORT
+#define APP_EXPORT Q_DECL_IMPORT
+#define PYTHON_EXPORT Q_DECL_IMPORT
+#define noexcept
+
 #endif // MAP2D_GLOBAL_H

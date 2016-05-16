@@ -5,12 +5,18 @@
 #include <QWidget>
 #include <QResizeEvent>
 #include "../../base/baseset2/baseset2.h"
+#include <QMainWindow>
+#include <QStatusBar>
 
 namespace framegui
 {
 	class FRAMEGUI_EXPORT framegui : public baseset::instance<framegui>
 	{
 	public:
+		framegui(){
+			m_main_window = 0;
+		}
+
 		template<typename T>
 		T * get_type_object(const QString & id)
 		{
@@ -41,8 +47,17 @@ namespace framegui
 			m_objects.removeOne(object);
 		}
 
+		QMainWindow * get_main_window() const { return m_main_window; }
+		void set_main_window(QMainWindow * wgt) { m_main_window = wgt; }
+		QStatusBar * status_bar() const {
+			if(m_main_window)
+				return m_main_window->statusBar();
+			return 0;
+		}
+
 	private:
 		QObjectList m_objects;
+		QMainWindow * m_main_window;
 	};
 
 	class FRAMEGUI_EXPORT center_widget : public QWidget

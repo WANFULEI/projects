@@ -1,5 +1,8 @@
 ﻿#include "qgis2.h"
 #include "QMessageBox"
+#include <QgsPluginLayer.h>
+#include <QgsMapLayerLegend.h>
+#include <qgspainteffect.h>
 
 qgis2::qgis2(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
@@ -99,36 +102,39 @@ void qgis2::addLayer()
 	}
 
 	//读取矢量数据
-//  	QgsVectorLayer * file_vector_layer = new QgsVectorLayer("F:/earth-map/CHN_adm/CHN_adm1.shp","","ogr");
-//  	if (file_vector_layer->isValid())
-//  	{
-// 		QGis::GeometryType geometry_type = file_vector_layer->geometryType();
-// 		QgsSimpleFillSymbolLayerV2 * fill_layer1 = new QgsSimpleFillSymbolLayerV2;
-// 		fill_layer1->setBorderColor(Qt::gray);
-// 		//fill_layer1->setFillColor(QColor(0,255,0,60));
-// 		fill_layer1->setFillColor(Qt::transparent);
-// 		QgsSymbolLayerV2List layer_list;
-// 		layer_list << fill_layer1;
-// 		QgsFillSymbolV2 * symbol = new QgsFillSymbolV2(layer_list);
-// 
-// 		QgsVectorSimplifyMethod simplier;
-// 		simplier.setForceLocalOptimization(0);
-// 		simplier.setSimplifyHints(QgsVectorSimplifyMethod::FullSimplification);
-// 		simplier.setThreshold(2);
-// 		simplier.setMaximumScale(10 * 10000);
-// 		file_vector_layer->setSimplifyMethod(simplier);
-// 
-//  		QgsSingleSymbolRendererV2 *myRenderer = new QgsSingleSymbolRendererV2(symbol);
-//  		//myLayer->setRenderer(myRenderer);
-//  		file_vector_layer->setRendererV2(myRenderer);
-//  		//设置画布的extent
-//  		//mpMapCanvas->setExtent(file_vector_layer->extent());
-// 
-//  		//layer_set.insert(0,file_vector_layer);
-//  		//mpMapCanvas->setLayerSet(layer_set);
-// 
-//  		QgsMapLayerRegistry::instance()->addMapLayer(file_vector_layer);
-//  	}
+ 	QgsVectorLayer * file_vector_layer = new QgsVectorLayer("F:/earth-map/CHN_adm/CHN_adm1.shp","","ogr");
+ 	if (file_vector_layer->isValid())
+ 	{
+		QGis::GeometryType geometry_type = file_vector_layer->geometryType();
+		QgsSimpleFillSymbolLayerV2 * fill_layer1 = new QgsSimpleFillSymbolLayerV2;
+		fill_layer1->setBorderColor(Qt::yellow);
+		fill_layer1->setFillColor(QColor(0,255,0,60));
+		//fill_layer1->setFillColor(Qt::transparent);
+		QgsSymbolLayerV2List layer_list;
+		layer_list << fill_layer1;
+		QgsFillSymbolV2 * symbol = new QgsFillSymbolV2(layer_list);
+
+		QgsVectorSimplifyMethod simplier;
+		simplier.setForceLocalOptimization(0);
+		simplier.setSimplifyHints(QgsVectorSimplifyMethod::FullSimplification);
+		simplier.setThreshold(2);
+		simplier.setMaximumScale(10 * 10000);
+		file_vector_layer->setSimplifyMethod(simplier);
+
+ 		QgsSingleSymbolRendererV2 *myRenderer = new QgsSingleSymbolRendererV2(symbol);
+ 		//myLayer->setRenderer(myRenderer);
+
+		myRenderer->paintEffect()->setEnabled(true);
+
+ 		file_vector_layer->setRendererV2(myRenderer);
+ 		//设置画布的extent
+ 		//mpMapCanvas->setExtent(file_vector_layer->extent());
+
+ 		layer_set.insert(0,file_vector_layer);
+ 		mpMapCanvas->setLayerSet(layer_set);
+
+ 		QgsMapLayerRegistry::instance()->addMapLayer(file_vector_layer);
+ 	}
 
 	QgsVectorLayer * vector_layer = new QgsVectorLayer("point?crs=EPSG:4326&memoryid={e38fe2de-bcae-4ce8-91eb-8d8aa09b2a87}","test","memory"); //初始化矢量图层;
 	if (vector_layer->isValid())
@@ -189,9 +195,12 @@ void qgis2::addLayer()
 		QgsSingleSymbolRendererV2 *render = new QgsSingleSymbolRendererV2(symbol);
 		//应用于图层 
 
+		render->paintEffect()->setEnabled(true);
+		
+
 		vector_layer->setRendererV2(render);
 
-		for(int index = 0; index < 1 * 10000; index ++){
+		for(int index = 0; index < 1 * 100; index ++){
 			QgsPoint point;
 
 			double xmin = -180;

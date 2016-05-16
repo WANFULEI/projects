@@ -12,6 +12,7 @@ namespace framecore
 	class FRAMECORE_EXPORT object : public baseset::share_obj
 	{
 	public:
+		virtual ~object(){}
 		QString get_name() const { return m_sName; }
 		void set_name(const QString & val) { m_sName = val; }
 		virtual bool load_from_xml(TiXmlElement * pXmlNode);
@@ -23,6 +24,7 @@ namespace framecore
 	class FRAMECORE_EXPORT component : public object
 	{
 	public:
+		virtual ~component(){}
 		QString get_class_name() const { return m_sClassName; }
 		void set_class_name(const QString & val) { m_sClassName = val; }
 		//************************************
@@ -72,6 +74,7 @@ namespace framecore
 	class FRAMECORE_EXPORT application : public object
 	{
 	public:
+		virtual ~application(){}
 		const baseset::share_list_vector_manager<component> & get_components() const { return m_components; }
 		virtual bool load_from_xml(TiXmlElement * pXmlNode);
 		baseset::share_ptr<framecore::component> get_component(const QString & class_name) const;
