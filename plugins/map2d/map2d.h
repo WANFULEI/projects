@@ -51,6 +51,10 @@ class QAction;
 class QgsAnnotationItem;
 class QStatusBar;
 class QgsStatusBarCoordinatesWidget;
+class QgsScaleComboBox;
+class QgsDoubleSpinBox;
+class QCheckBox;
+class QToolButton;
 
 class map2dcom : public QObject , public framecore::component , public baseset::instance2<map2dcom>
 {
@@ -108,12 +112,26 @@ private slots:
 	//! Return pointer to the active layer
 	QgsMapLayer *activeLayer();
 	void showStatusMessage( const QString& theMessage );
-
+	//! Slot to handle user scale input;
+	void userScale();
+	//! Slot to show current map scale;
+	void showScale( double theScale );
+	//! Slot to handle user rotation input;
+	//! @note added in 2.8
+	void userRotation();
+	void showRotation();
+	void updateMouseCoordinatePrecision();
+	/** Get the mapcanvas object from the app */
+	QgsMapCanvas *mapCanvas();
+	//! Set project properties, including map untis
+	void projectProperties();
+	//! Open project properties dialog and show the projections tab
+	void projectPropertiesProjections();
 
 private:
 	virtual QWidget * create_control(const QString & control_id);
 
-	
+
 
 private:
 	QgsMapCanvas * mMapCanvas;
@@ -135,6 +153,18 @@ private:
 	QDateTime mProjectLastModified;
 
 	QgsStatusBarCoordinatesWidget * mCoordsEdit;
+
+	//! Widget that will live on the statusbar to display scale value
+	QgsScaleComboBox *mScaleEdit;
+	//! Widget that will live in the statusbar to display and edit rotation
+	QgsDoubleSpinBox *mRotationEdit;
+	//! Widget used to suppress rendering
+	QCheckBox *mRenderSuppressionCBox;
+	//! Widget in status bar used to show status of on the fly projection
+	QToolButton *mOnTheFlyProjectionStatusButton;
+
+	//! Flag to indicate how the project properties dialog was summoned
+	bool mShowProjectionTab;
 
 // 	//! Overview map canvas
 // 	QgsMapOverviewCanvas *mOverviewCanvas;

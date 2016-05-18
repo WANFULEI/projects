@@ -195,12 +195,12 @@ void qgis2::addLayer()
 		QgsSingleSymbolRendererV2 *render = new QgsSingleSymbolRendererV2(symbol);
 		//应用于图层 
 
-		render->paintEffect()->setEnabled(true);
+		//render->paintEffect()->setEnabled(true);
 		
 
 		vector_layer->setRendererV2(render);
 
-		for(int index = 0; index < 1 * 100; index ++){
+		for(int index = 0; index < 1 * 10000; index ++){
 			QgsPoint point;
 
 			double xmin = -180;

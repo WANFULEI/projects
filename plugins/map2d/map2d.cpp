@@ -35,6 +35,11 @@
 #include <QgsVectorDataProvider.h>
 #include <QgsTransactionGroup.h>
 #include <qgsstatusbarcoordinateswidget.h>
+#include <QgsScaleComboBox.h>
+#include <QgsDoubleSpinBox.h>
+#include <QgsCoordinateUtils.h>
+#include <QCheckBox>
+#include <qgsprojectproperties.h>
 
 extern "C"
 {
@@ -132,7 +137,20 @@ bool map2dcom::initialize()
 	{
 		addProject("C:/Users/wq/Desktop/tt2.qgs");
 		createCanvasTools();
+
 		mCoordsEdit->setMapCanvas(mMapCanvas);
+
+		connect( mMapCanvas, SIGNAL( scaleChanged( double ) ),
+			this, SLOT( showScale( double ) ) );
+
+		connect( mMapCanvas, SIGNAL( rotationChanged( double ) ),
+			this, SLOT( showRotation() ) );
+
+		connect( mMapCanvas, SIGNAL( scaleChanged( double ) ),
+			this, SLOT( updateMouseCoordinatePrecision() ) );
+
+		connect( mRenderSuppressionCBox, SIGNAL( toggled( bool ) ),
+			mMapCanvas, SLOT( setRenderFlag( bool ) ) );
 	}
 	
 
@@ -777,12 +795,46 @@ void map2dcom::showStatusMessage( const QString& theMessage )
 
 void map2dcom::on_create_control(const QString & id,QWidget * widget)
 {
-
+	if (id == "map_render")
+	{
+		// render suppression status bar widget
+		mRenderSuppressionCBox = dynamic_cast<QCheckBox *>(widget);
+		mRenderSuppressionCBox->setObjectName( "mRenderSuppressionCBox" );
+		mRenderSuppressionCBox->setChecked( true );
+		//mRenderSuppressionCBox->setFont( myFont );
+		mRenderSuppressionCBox->setWhatsThis( tr( "When checked, the map layers "
+			"are rendered in response to map navigation commands and other "
+			"events. When not checked, no rendering is done. This allows you "
+			"to add a large number of layers and symbolize them before rendering." ) );
+		mRenderSuppressionCBox->setToolTip( tr( "Toggle map rendering" ) );
+	}
+	else if (id == "map_properties")
+	{
+		// On the fly projection status bar icon
+		// Changed this to a tool button since a QPushButton is
+		// sculpted on OS X and the icon is never displayed [gsherman]
+		mOnTheFlyProjectionStatusButton = dynamic_cast<QToolButton *>(widget);
+		mOnTheFlyProjectionStatusButton->setAutoRaise( true );
+		mOnTheFlyProjectionStatusButton->setToolButtonStyle( Qt::ToolButtonTextBesideIcon );
+		mOnTheFlyProjectionStatusButton->setObjectName( "mOntheFlyProjectionStatusButton" );
+		// Maintain uniform widget height in status bar by setting button height same as labels
+		// For Qt/Mac 3.3, the default toolbutton height is 30 and labels were expanding to match
+		//mOnTheFlyProjectionStatusButton->setMaximumHeight( mScaleLabel->height() );
+		mOnTheFlyProjectionStatusButton->setIcon( QgsApplication::getThemeIcon( "mIconProjectionEnabled.png" ) );
+		mOnTheFlyProjectionStatusButton->setWhatsThis( tr( "This icon shows whether "
+			"on the fly coordinate reference system transformation is enabled or not. "
+			"Click the icon to bring up "
+			"the project properties dialog to alter this behaviour." ) );
+		mOnTheFlyProjectionStatusButton->setToolTip( tr( "CRS status - Click "
+			"to open coordinate reference system dialog" ) );
+		connect( mOnTheFlyProjectionStatusButton, SIGNAL( clicked() ),
+			this, SLOT( projectPropertiesProjections() ) );//bring up the project props dialog when clicked
+	}
 }
 
 QWidget * map2dcom::create_control(const QString & control_id)
 {
-	if (control_id == "coordinate")
+	if (control_id == "map_coordinate")
 	{
 		mCoordsEdit = new QgsStatusBarCoordinatesWidget(0);
 		
@@ -790,5 +842,145 @@ QWidget * map2dcom::create_control(const QString & control_id)
 		
 		return mCoordsEdit;
 	}
+	else if (control_id == "map_scale")
+	{
+		mScaleEdit = new QgsScaleComboBox( statusBar() );
+		mScaleEdit->setObjectName( "mScaleEdit" );
+		//mScaleEdit->setFont( myFont );
+		// seems setFont() change font only for popup not for line edit,
+		// so we need to set font for it separately
+		//mScaleEdit->lineEdit()->setFont( myFont );
+		mScaleEdit->setMinimumWidth( 120 );
+		mScaleEdit->setContentsMargins( 0, 0, 0, 0 );
+		mScaleEdit->setWhatsThis( tr( "Displays the current map scale" ) );
+		mScaleEdit->setToolTip( tr( "Current map scale (formatted as x:y)" ) );
+
+		connect( mScaleEdit, SIGNAL( scaleChanged( double ) ), this, SLOT( userScale() ) );
+
+		return mScaleEdit;
+	}
+	else if (control_id == "map_rotation")
+	{
+		mRotationEdit = new QgsDoubleSpinBox(0);
+		mRotationEdit->setObjectName( "mRotationEdit" );
+		mRotationEdit->setClearValue( 0.0 );
+		mRotationEdit->setKeyboardTracking( false );
+		mRotationEdit->setMaximumWidth( 120 );
+		mRotationEdit->setDecimals( 1 );
+		mRotationEdit->setRange( -180.0, 180.0 );
+		mRotationEdit->setWrapping( true );
+		mRotationEdit->setSingleStep( 5.0 );
+		//mRotationEdit->setFont( myFont );
+		mRotationEdit->setWhatsThis( tr( "Shows the current map clockwise rotation "
+			"in degrees. It also allows editing to set "
+			"the rotation" ) );
+		mRotationEdit->setToolTip( tr( "Current clockwise map rotation in degrees" ) );
+		connect( mRotationEdit, SIGNAL( valueChanged( double ) ), this, SLOT( userRotation() ) );
+
+		showRotation();
+		return mRotationEdit;
+	}
 	return 0;
 }
+
+void map2dcom::userScale()
+{
+	// Why has MapCanvas the scale inverted?
+	mMapCanvas->zoomScale( 1.0 / mScaleEdit->scale() );
+}
+
+void map2dcom::showScale( double theScale )
+{
+	// Why has MapCanvas the scale inverted?
+	mScaleEdit->setScale( 1.0 / theScale );
+
+	// Not sure if the lines below do anything meaningful /Homann
+	if ( mScaleEdit->width() > mScaleEdit->minimumWidth() )
+	{
+		mScaleEdit->setMinimumWidth( mScaleEdit->width() );
+	}
+}
+
+void map2dcom::userRotation()
+{
+	if (mMapCanvas == 0)
+	{
+		return;
+	}
+	double degrees = mRotationEdit->value();
+	mMapCanvas->setRotation( degrees );
+	mMapCanvas->refresh();
+}
+
+void map2dcom::showRotation()
+{
+	if (mMapCanvas == 0)
+	{
+		return;
+	}
+	// update the statusbar with the current rotation.
+	double myrotation = mMapCanvas->rotation();
+	mRotationEdit->setValue( myrotation );
+} // QgisApp::showRotation
+
+void map2dcom::updateMouseCoordinatePrecision()
+{
+	mCoordsEdit->setMouseCoordinatesPrecision( QgsCoordinateUtils::calculateCoordinatePrecision( mapCanvas()->mapUnitsPerPixel(), mapCanvas()->mapSettings().destinationCrs() ) );
+}
+
+QgsMapCanvas *map2dcom::mapCanvas()
+{
+	Q_ASSERT( mMapCanvas );
+	return mMapCanvas;
+}
+
+void map2dcom::projectPropertiesProjections()
+{
+	// Driver to display the project props dialog and switch to the
+	// projections tab
+	mShowProjectionTab = true;
+	projectProperties();
+}
+
+void map2dcom::projectProperties()
+{
+	/* Display the property sheet for the Project */
+	// set wait cursor since construction of the project properties
+	// dialog results in the construction of the spatial reference
+	// system QMap
+	QApplication::setOverrideCursor( Qt::WaitCursor );
+	QgsProjectProperties *pp = new QgsProjectProperties( mMapCanvas , framegui::framegui::get_instance()->get_main_window() );
+	// if called from the status bar, show the projection tab
+	if ( mShowProjectionTab )
+	{
+		pp->showProjectionsTab();
+		mShowProjectionTab = false;
+	}
+	qApp->processEvents();
+	// Be told if the mouse display precision may have changed by the user
+	// changing things in the project properties dialog box
+	connect( pp, SIGNAL( displayPrecisionChanged() ), this,
+		SLOT( updateMouseCoordinatePrecision() ) );
+
+	connect( pp, SIGNAL( scalesChanged( const QStringList & ) ), mScaleEdit,
+		SLOT( updateScales( const QStringList & ) ) );
+	QApplication::restoreOverrideCursor();
+
+	//pass any refresh signals off to canvases
+	// Line below was commented out by wonder three years ago (r4949).
+	// It is needed to refresh scale bar after changing display units.
+	connect( pp, SIGNAL( refresh() ), mMapCanvas, SLOT( refresh() ) );
+
+	// Display the modal dialog box.
+	pp->exec();
+
+//	qobject_cast<QgsMeasureTool*>( mMapTools.mMeasureDist )->updateSettings();
+//	qobject_cast<QgsMeasureTool*>( mMapTools.mMeasureArea )->updateSettings();
+//	qobject_cast<QgsMapToolMeasureAngle*>( mMapTools.mMeasureAngle )->updateSettings();
+
+	// Set the window title.
+//	setTitleBarText_( *this );
+
+	// delete the property sheet object
+	delete pp;
+} // QgisApp::projectProperties
