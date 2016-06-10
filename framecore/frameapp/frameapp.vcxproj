@@ -138,7 +138,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="toolbar.cfg" />
-    <None Include="window.cfg" />
+    <None Include="window.cfg">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\base\baseset2\baseset2.vcxproj">

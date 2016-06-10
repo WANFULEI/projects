@@ -8,7 +8,7 @@
 #include "../../framecore/framecore/framecore.h"
 #include <QDomElement>
 #include "../../base/baseset2/baseset2.h"
-
+#include <QgsMapTool.h>
 
 // class map2d : public QgsMapCanvas
 // {
@@ -55,6 +55,19 @@ class QgsScaleComboBox;
 class QgsDoubleSpinBox;
 class QCheckBox;
 class QToolButton;
+
+class MyMapTool : public QgsMapTool
+{
+public:
+	MyMapTool(QgsMapCanvas * map);
+
+	virtual void canvasMoveEvent(QgsMapMouseEvent* e);
+
+	virtual void canvasPressEvent(QgsMapMouseEvent* e);
+
+	virtual void canvasReleaseEvent(QgsMapMouseEvent* e);
+
+};
 
 class map2dcom : public QObject , public framecore::component , public baseset::instance2<map2dcom>
 {

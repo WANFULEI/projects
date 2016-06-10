@@ -3,6 +3,8 @@
 #include <QgsPluginLayer.h>
 #include <QgsMapLayerLegend.h>
 #include <qgspainteffect.h>
+#include <QgsMarkerSymbolLayerV2.h>
+//#include <QgsMarkerSymbolLayerV2.h>
 
 qgis2::qgis2(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
@@ -154,21 +156,28 @@ void qgis2::addLayer()
 		QgsSimpleLineSymbolLayerV2 * layer1 = new QgsSimpleLineSymbolLayerV2;
 		layer1->setColor(Qt::black);
 		layer1->setWidth(4);
+		//layer1->setFillColor(QColor(0,255,0,127));
 		layer1->setOutputUnit(QgsSymbolV2::Pixel);
 		layer1->setPenJoinStyle(Qt::RoundJoin);
 		layer1->setPenCapStyle(Qt::RoundCap);
 
-		QgsSimpleLineSymbolLayerV2 * layer2 = new QgsSimpleLineSymbolLayerV2;
+		QgsSimpleFillSymbolLayerV2 * layer2 = new QgsSimpleFillSymbolLayerV2;
 		layer2->setColor(Qt::red);
-		layer2->setWidth(2);
+		//layer2->setWidth(2);
+		layer2->setFillColor(QColor(0,255,0,127));
 		layer2->setOutputUnit(QgsSymbolV2::Pixel);
 		layer2->setPenJoinStyle(Qt::RoundJoin);
-		layer2->setPenCapStyle(Qt::RoundCap);
+		//layer2->setPenCapStyle(Qt::RoundCap);
+
+		QgsSvgMarkerSymbolLayerV2 * layer3 = new QgsSvgMarkerSymbolLayerV2("c:/Users/wq/Documents/Visual Studio 2010/Projects/Win32/svg/gpsicons/plane.svg");
+		//layer3->setPath();
+		layer3->setFillColor(Qt::red);
 
 		QgsSymbolLayerV2List layer_list;
-		layer_list << layer1 << layer2;
+		//layer_list << layer1 << layer2;
+		layer_list << layer3;
 
-		QgsLineSymbolV2 * symbol = new QgsLineSymbolV2(layer_list);
+		QgsMarkerSymbolV2 * symbol = new QgsMarkerSymbolV2(layer_list);
 
 		//QgsLineSymbolV2 *pSym1 = QgsLineSymbolV2::createSimple(fields);
 		//设置点的外轮廓线的颜色和线宽
@@ -221,10 +230,16 @@ void qgis2::addLayer()
 			polyline << point;
 
 			QgsFeature feature;
-			QgsGeometry *geo = QgsGeometry::fromPolyline(polyline);
+			
+			//QgsGeometry *geo = QgsGeometry::fromPolygon(QgsPolygon() << polyline);
+			QgsGeometry * geo = QgsGeometry::fromPoint(point);
 			feature.setGeometry(geo);
 			feature.setFeatureId(QgsFeatureId(index));
 			vector_layer->addFeature(feature);
+
+// 			QgsPointV2 * pt = dynamic_cast<QgsPointV2 *>(geo->geometry());
+// 			pt->setX(10);
+// 			pt->setY(10);
 		}
 
 		//设置图层LOD

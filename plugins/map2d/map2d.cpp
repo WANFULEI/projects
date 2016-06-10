@@ -282,6 +282,10 @@ void map2dcom::action_triggered(QAction * action)
 	{
 		mMapCanvas->zoomToFullExtent();
 	}
+	else if (action->objectName() == "test")
+	{
+		mMapCanvas->setMapTool(new MyMapTool(mMapCanvas));
+	}
 }
 
 void map2dcom::initLayerTreeView()
@@ -839,6 +843,8 @@ QWidget * map2dcom::create_control(const QString & control_id)
 		mCoordsEdit = new QgsStatusBarCoordinatesWidget(0);
 		
 		mCoordsEdit->setMouseCoordinatesPrecision(6);
+
+		mCoordsEdit->getLable()->setText(tr("×ø±ê£º"));
 		
 		return mCoordsEdit;
 	}
@@ -984,3 +990,22 @@ void map2dcom::projectProperties()
 	// delete the property sheet object
 	delete pp;
 } // QgisApp::projectProperties
+
+MyMapTool::MyMapTool(QgsMapCanvas * map)
+	:QgsMapTool(map)
+{
+
+}
+
+void MyMapTool::canvasMoveEvent(QgsMapMouseEvent* e)
+{
+
+}
+
+void MyMapTool::canvasPressEvent(QgsMapMouseEvent* e)
+{
+}
+
+void MyMapTool::canvasReleaseEvent(QgsMapMouseEvent* e)
+{
+}

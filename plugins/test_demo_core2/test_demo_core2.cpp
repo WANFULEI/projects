@@ -1,6 +1,10 @@
 #include "test_demo_core2.h"
 #include <QtGui/QMessageBox>
 #include <QCheckBox>
+#include "../../framecore/framecore/file.h"
+#include "../../framecore/framecore/file_type.h"
+#include "../../framecore/framecore/file_manager.h"
+using namespace framecore;
 
 test_demo_core2::test_demo_core2()
 {
@@ -34,12 +38,31 @@ void test_demo_core3::action_triggered(QAction * action)
 	QMessageBox::warning(0,"in test_demo_core3",action->data().toHash()["action_id"].toString());
 }
 
+class test_file : public file
+{
+public:
+
+
+private:
+	int m_data;
+};
+
 void test_demo_core2::action_triggered(QAction * action)
 {
 	if (action == 0)
 	{
 		return;
 	}
+
+	file_type file_type;
+	file_type.set_ext(".test_file");
+	file_manager::get_instance()->register_file_type(file_type);
+	test_file * file = new test_file;
+	file->set_file_type(file_type);
+	file_manager::get_instance()->attach_file(file);
+
+	auto file2 = file_manager::get_instance()->create_file<test_file>(file_type);
+	file2->set_path("");
 
 	QMessageBox::warning(0,"in test_demo_core2",action->data().toHash()["action_id"].toString());
 }
