@@ -176,6 +176,9 @@ void vector_layer::update_envelope()
 
 void vector_layer::draw_polygon(OGRGeometry * geometry, QPainter &pa)
 {
+	baseset::time_elapsed timer;
+// 	geometry = geometry->Simplify(0.5);
+// 	qDebug() << "Simplify:" << timer.stop();
 	if (geometry == 0)
 	{
 		return;
@@ -184,12 +187,14 @@ void vector_layer::draw_polygon(OGRGeometry * geometry, QPainter &pa)
 	{
 		return;
 	}
+	
+
 	OGRPolygon * polygon = (OGRPolygon *)geometry;
 	OGRLinearRing * ring = polygon->getExteriorRing();
 	OGRRawPoint * buffer = new OGRRawPoint[ring->getNumPoints()];
 
 	ring->getPoints(buffer);
-	baseset::time_elapsed timer;
+	timer.start();
 	for (int j=0;j<ring->getNumPoints();++j)
 	{
 		buffer[j].x = widget->x_pixel(buffer[j].x);
