@@ -1,4 +1,6 @@
 #include "map2d.h"
+#undef max
+#undef min
 #include <qgsapplication.h>
 #include <qgsproviderregistry.h>
 #include <qgssinglesymbolrendererv2.h>
