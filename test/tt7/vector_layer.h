@@ -5,6 +5,7 @@
 #include <QBrush>
 
 class OGRFeature;
+class OGRGeometry;
 class vector_layer : public layerwidget::Qt_widget_layer
 {
 public:
@@ -20,6 +21,8 @@ public:
 
 protected:
 	void draw();
+
+	void draw_polygon(OGRGeometry * geometry, QPainter &pa);
 
 private:
 	QString m_url;

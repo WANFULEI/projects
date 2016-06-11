@@ -117,34 +117,29 @@ void vector_layer::draw()
 		}
 		else if ( geometry->getGeometryType() == wkbPolygon )
 		{
-			OGRPolygon * polygon = (OGRPolygon *)geometry;
-			OGRLinearRing * ring = polygon->getExteriorRing();
-			OGRRawPoint * buffer = new OGRRawPoint[ring->getNumPoints()];
-			
-			ring->getPoints(buffer);
-			baseset::time_elapsed timer;
-			for (int j=0;j<ring->getNumPoints();++j)
-			{
-				buffer[j].x = widget->x_pixel(buffer[j].x);
-				buffer[j].y = widget->y_pixel(buffer[j].y);
-			}
-//			qDebug() << "getPoints:" << timer.stop();
+			draw_polygon(geometry, pa);
 
-			
-// 			auto tmp = pts.toList();
-// 			timer.start();
-// 			math::simplier_polyline(tmp,1);
-// 			qDebug() << "simplier_polyline:" << timer.stop();
-// 			pts = tmp.toVector();
-			
-			timer.start();
-			pa.drawPolygon((QPointF *)buffer,ring->getNumPoints());
-			delete [] buffer;
-//			qDebug() << "drawPolygon:" << timer.stop();
+		}
+		else if (geometry->getGeometryType() == wkbMultiPolygon)
+		{
+			OGRMultiPolygon * polygon = (OGRMultiPolygon *)geometry;
+			for (int j=0;j<polygon->getNumGeometries();++j)
+			{
+				auto geometry = polygon->getGeometryRef(j);
+				if (geometry == 0)
+				{
+					continue;
+				}
+				if (geometry->getGeometryType() == wkbPolygon)
+				{
+					draw_polygon((OGRPolygon *)geometry,pa);
+				}
+			}
 		}
 		else
 		{
-
+			auto type = geometry->getGeometryType();
+			int n = 0;
 		}
 	}
 	
@@ -177,4 +172,40 @@ void vector_layer::update_envelope()
 			}
 		}
 	}
+}
+
+void vector_layer::draw_polygon(OGRGeometry * geometry, QPainter &pa)
+{
+	if (geometry == 0)
+	{
+		return;
+	}
+	if (geometry->getGeometryType() != wkbPolygon)
+	{
+		return;
+	}
+	OGRPolygon * polygon = (OGRPolygon *)geometry;
+	OGRLinearRing * ring = polygon->getExteriorRing();
+	OGRRawPoint * buffer = new OGRRawPoint[ring->getNumPoints()];
+
+	ring->getPoints(buffer);
+	baseset::time_elapsed timer;
+	for (int j=0;j<ring->getNumPoints();++j)
+	{
+		buffer[j].x = widget->x_pixel(buffer[j].x);
+		buffer[j].y = widget->y_pixel(buffer[j].y);
+	}
+	//			qDebug() << "getPoints:" << timer.stop();
+
+
+	// 			auto tmp = pts.toList();
+	// 			timer.start();
+	// 			math::simplier_polyline(tmp,1);
+	// 			qDebug() << "simplier_polyline:" << timer.stop();
+	// 			pts = tmp.toVector();
+
+	timer.start();
+	pa.drawPolygon((QPointF *)buffer,ring->getNumPoints());
+	delete [] buffer;
+	//			qDebug() << "drawPolygon:" << timer.stop();
 }

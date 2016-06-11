@@ -1,5 +1,5 @@
 @echo Off
-del /s /a *.exe *.ncb *.sdf *.ipch *.dll *.pdb *.netmodule *.aps *.ilk *.log 2>nul
+del /s /a *.ncb *.sdf *.ipch *.netmodule *.aps *.ilk *.log *.obj 2>nul
 FOR /R . %%d IN (.) DO rd /s /q "%%d\x64" 2>nul
 FOR /R . %%d IN (.) DO rd /s /q "%%d\Debug" 2>nul
 FOR /R . %%d IN (.) DO rd /s /q "%%d\Release" 2>nul
