@@ -5,6 +5,9 @@
 #include <QtCore/QMap>
 #include <QtCore/QList>
 #include <QtCore/QVector>
+#ifdef _WIN32
+#include "windows.h"
+#endif
 
 namespace baseset
 {
@@ -403,6 +406,28 @@ namespace baseset
 		tmp tp;
 		tp.m_nodes[0]->m_nodes[0]->m_nodes;
 	}
+
+#ifdef _WIN32
+	class time_elapsed
+	{
+	public:
+		time_elapsed(){ QueryPerformanceFrequency(&m_start_freq); start(); }
+		void start(){ QueryPerformanceCounter(&m_start_time); }
+		int stop(){
+			LARGE_INTEGER end_time;
+			QueryPerformanceCounter(&end_time);
+			return(((end_time.QuadPart - m_start_time.QuadPart) * 1e6) 
+				/ m_start_freq.QuadPart);
+		}
+
+	private:
+		LARGE_INTEGER m_start_freq;
+		LARGE_INTEGER m_start_time;
+	};
+#else
+#endif
+
+
 }
 
 #endif // BASESET2_H

@@ -441,15 +441,7 @@ double Qt_widget::y_real_dist(double d) const
   return(d/yscal);
 }
 
-int Qt_widget::x_pixel(double x) const
-{
-  return( static_cast<int>((x-xmin)*xscal) );
-}
 
-int Qt_widget::y_pixel(double y) const
-{
-  return( - static_cast<int>((y-ymax)*yscal) );
-}
 
 int Qt_widget::x_pixel_dist(double d) const
 {

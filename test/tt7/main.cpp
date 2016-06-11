@@ -1,21 +1,29 @@
 
 #include <QtCore/QCoreApplication>
 #include "gdal_priv.h"
+#include "ogrsf_frmts.h"
 #include "cpl_conv.h" // for CPLMalloc()
 #include <QtGui/QtGui>
 #include <windows.h>
 #include "simple_map.h"
 #include "raster_layer.h"
+#include "vector_layer.h"
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
+	QTextCodec *codec = QTextCodec::codecForName("System");  
+	QTextCodec::setCodecForCStrings(codec);  
+	QTextCodec::setCodecForLocale(codec);  
+	QTextCodec::setCodecForTr(codec);  
+
 //	GDALDataset  *poDataset;
 
 // 	GDALAllRegister();
 // 
- 	char * pszFilename = "F:\\earth-map\\NE2_HR_LC_SR_W_DR (2)\\NE2_HR_LC_SR_W_DR\\NE2_HR_LC_SR_W_DR.tif";
+ 	char * pszFilename = "NE2_HR_LC_SR_W_DR.tif";
+	QDir::setCurrent(a.applicationDirPath());
 // 
 // 	poDataset = (GDALDataset *) GDALOpen( pszFilename, GA_ReadOnly );
 // 	if( poDataset == NULL )
@@ -108,13 +116,109 @@ int main(int argc, char *argv[])
 // 
 // 	image.save("f:\\1.png");
 
+	GDALAllRegister();
+
+// 	GDALDataset       *poDS;
+// 
+// 	poDS = (GDALDataset*) GDALOpenEx( "CHN_adm1.shp", GDAL_OF_VECTOR, NULL, NULL, NULL );
+// 	if( poDS == NULL )
+// 	{
+// 		printf( "Open failed.\n" );
+// 		exit( 1 );
+// 	}
+// 
+// 	OGRLayer  *poLayer;
+// 
+// 	for(int i=0;i<poDS->GetLayerCount();++i)
+// 	{
+// 		poLayer = poDS->GetLayer(i);
+// 		if (poLayer == 0)
+// 		{
+// 			continue;
+// 		}
+// 
+// 
+// 		OGRFeature *poFeature;
+// 
+// 		poLayer->ResetReading();
+// 		while( (poFeature = poLayer->GetNextFeature()) != NULL )
+// 		{
+// 			OGRFeatureDefn *poFDefn = poLayer->GetLayerDefn();
+// 			int iField;
+// 
+// 			for( iField = 0; iField < poFDefn->GetFieldCount(); iField++ )
+// 			{
+// 				OGRFieldDefn *poFieldDefn = poFDefn->GetFieldDefn( iField );
+// 
+// 				if( poFieldDefn->GetType() == OFTInteger )
+// 					printf( "%d,", poFeature->GetFieldAsInteger( iField ) );
+// 				else if( poFieldDefn->GetType() == OFTInteger64 )
+// 					printf( CPL_FRMT_GIB ",", poFeature->GetFieldAsInteger64( iField ) );
+// 				else if( poFieldDefn->GetType() == OFTReal )
+// 					printf( "%.3f,", poFeature->GetFieldAsDouble(iField) );
+// 				else if( poFieldDefn->GetType() == OFTString )
+// 					printf( "%s,", poFeature->GetFieldAsString(iField) );
+// 				else
+// 					printf( "%s,", poFeature->GetFieldAsString(iField) );
+// 			}
+// 			printf("\n\n\n");
+// 
+// 			OGRGeometry *poGeometry;
+// 
+// 			poGeometry = poFeature->GetGeometryRef();
+// 			if( poGeometry != NULL 
+// 				&& wkbFlatten(poGeometry->getGeometryType()) == wkbPoint )
+// 			{
+// 				OGRPoint *poPoint = (OGRPoint *) poGeometry;
+// 
+// 				printf( "%.3f,%3.f\n", poPoint->getX(), poPoint->getY() );
+// 			}
+// 			else if( poGeometry != NULL 
+// 				&& wkbFlatten(poGeometry->getGeometryType()) == wkbPolygon )
+// 			{
+// 				OGRPolygon *poPolygon = (OGRPolygon *) poGeometry;
+// 
+// 				//printf( "%.3f,%3.f\n", poPoint->getX(), poPoint->getY() );
+// 
+// 				OGRCurve * curve = poPolygon->getExteriorRingCurve();
+// 				OGRPointIterator * iter = curve->getPointIterator();
+// 				OGRPoint pt;
+// // 				while (iter->getNextPoint(&pt))
+// // 				{
+// // 					printf( "%.3f,%3.f\n", pt.getX(), pt.getY() );
+// // 				}
+// 			}
+// 			else if( poGeometry != NULL 
+// 				&& wkbFlatten(poGeometry->getGeometryType()) == wkbLineString )
+// 			{
+// 				OGRPoint *poPoint = (OGRPoint *) poGeometry;
+// 
+// 				printf( "%.3f,%3.f\n", poPoint->getX(), poPoint->getY() );
+// 			}
+// 			else
+// 			{
+// 				printf( "no point geometry\n" );
+// 			}
+// 			OGRFeature::DestroyFeature( poFeature );
+// 		}
+// 
+// 	}
+// 	GDALClose( poDS );
+
+
+
 	simple_map map;
 	map.set_window(-18,18,-9,9);
 	raster_layer * layer = new raster_layer;
 	layer->load(pszFilename);
 	map.attach(layer);
+	vector_layer * vlayer = new vector_layer;
+	vlayer->load("CHN_adm1.shp");
+	map.attach(vlayer);
+
 	map.select_tool(layerwidget::Pan);
 	map.show();
+	map.redraw();
 
 	return a.exec();
 }

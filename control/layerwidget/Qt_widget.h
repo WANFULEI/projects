@@ -144,8 +144,15 @@ public:
 
 
   // pixel coordinates
-  int x_pixel(double x) const;
-  int y_pixel(double y) const;
+  int x_pixel(double x) const
+  {
+	  return( static_cast<int>((x-xmin)*xscal) );
+  }
+
+  int y_pixel(double y) const
+  {
+	  return( - static_cast<int>((y-ymax)*yscal) );
+  }
   int x_pixel_dist(double d) const;
   int y_pixel_dist(double d) const;
 

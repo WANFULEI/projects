@@ -30,12 +30,18 @@
     <ClCompile Include="raster_layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vector_layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="simple_map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="raster_layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vector_layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

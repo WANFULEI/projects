@@ -64,7 +64,7 @@
       <PreprocessorDefinitions>UNICODE;WIN32;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;F:\OSGeo4W\include;$(QTDIR)\include\QtGui;C:\gdal_2.1.0_dev\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;C:\gdal_2.1.0_dev\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <Optimization>Disabled</Optimization>
     </ClCompile>
@@ -80,12 +80,17 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="raster_layer.cpp" />
     <ClCompile Include="simple_map.cpp" />
+    <ClCompile Include="vector_layer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="raster_layer.h" />
     <ClInclude Include="simple_map.h" />
+    <ClInclude Include="vector_layer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\base\math\math.vcxproj">
+      <Project>{93b25bad-fa2f-476f-a9ec-e658d5948ca0}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\control\layerwidget\layerwidget.vcxproj">
       <Project>{f0a79e1f-6a71-445b-8678-abd1cf3d0a0c}</Project>
     </ProjectReference>
