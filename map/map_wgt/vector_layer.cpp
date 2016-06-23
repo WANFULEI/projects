@@ -1,10 +1,15 @@
+#include "gl/glew.h"
 #include "vector_layer.h"
 #include "ogrsf_frmts.h"
-#include "..\..\control\layerwidget\Qt_widget.h"
 #include <QTime>
 #include <QDebug>
 #include "..\..\base\baseset2\baseset2.h"
 #include "..\..\base\math\math2.h"
+#include "..\..\control\layer_widget\layer_widget.h"
+
+
+
+namespace map_wgt{
 
 vector_layer::vector_layer(void)
 {
@@ -45,9 +50,15 @@ bool vector_layer::load(const QString & url)
 
 		OGRFeature * poFeature = 0;
 		poLayer->ResetReading();
+		OGRFieldDefn def("buffer_id", OGRFieldType::OFTInteger);
+		poLayer->GetLayerDefn()->AddFieldDefn(&def);
+		OGRFieldDefn def1("vertex_count", OGRFieldType::OFTInteger);
+		poLayer->GetLayerDefn()->AddFieldDefn(&def1);
 		while( (poFeature = poLayer->GetNextFeature()) != 0 )
 		{
 			m_features << poFeature;
+			
+
 		}
 
 	}
@@ -68,7 +79,7 @@ void vector_layer::free_features()
 	}
 }
 
-void vector_layer::draw()
+void vector_layer::gl_draw()
 {
 	baseset::time_elapsed timer;
 
@@ -83,10 +94,10 @@ void vector_layer::draw()
 		return;
 	}
 	
-	QPainter & pa = widget->get_painter();
-	pa.save();
-	pa.setPen(QPen(m_border_color,m_border_width,m_border_style,m_border_cap,m_border_join));
-	pa.setBrush(m_fill_brush);
+// 	QPainter & pa = widget->get_painter();
+// 	pa.save();
+// 	pa.setPen(QPen(m_border_color,m_border_width,m_border_style,m_border_cap,m_border_join));
+// 	pa.setBrush(m_fill_brush);
 
 	int num = 0;
 	for (int i=0;i<m_features.size();++i)
@@ -111,7 +122,12 @@ void vector_layer::draw()
 			{
 				continue;
 			}
-			draw_polygon(geometry, pa);
+			//draw_polygon(geometry);
+
+			OGRGeometry *geometry = m_features[i]->GetGeometryRef();
+			draw_polygon2(geometry);
+
+
 			++num;
 		}
 		else if (geometry->getGeometryType() == wkbMultiPolygon)
@@ -130,7 +146,7 @@ void vector_layer::draw()
 					{
 						continue;
 					}
-					draw_polygon((OGRPolygon *)geometry,pa);
+					draw_polygon2((OGRPolygon *)geometry);
 					++num;
 				}
 			}
@@ -142,7 +158,7 @@ void vector_layer::draw()
 		}
 	}
 	
-	pa.restore();
+	//pa.restore();
 	qDebug() << "vector draw:" << timer.stop() / 1000 << "num:" << num;
 }
 
@@ -173,7 +189,7 @@ void vector_layer::update_envelope()
 	}
 }
 
-void vector_layer::draw_polygon(OGRGeometry * geometry, QPainter &pa)
+void vector_layer::draw_polygon(OGRGeometry * geometry)
 {
 	baseset::time_elapsed timer;
 // 	geometry = geometry->Simplify(0.5);
@@ -194,11 +210,11 @@ void vector_layer::draw_polygon(OGRGeometry * geometry, QPainter &pa)
 
 	ring->getPoints(buffer);
 	timer.start();
-	for (int j=0;j<ring->getNumPoints();++j)
-	{
-		buffer[j].x = widget->x_pixel(buffer[j].x);
-		buffer[j].y = widget->y_pixel(buffer[j].y);
-	}
+// 	for (int j=0;j<ring->getNumPoints();++j)
+// 	{
+// 		buffer[j].x = widget->x_pixel(buffer[j].x);
+// 		buffer[j].y = widget->y_pixel(buffer[j].y);
+// 	}
 	//			qDebug() << "getPoints:" << timer.stop();
 
 
@@ -209,7 +225,38 @@ void vector_layer::draw_polygon(OGRGeometry * geometry, QPainter &pa)
 	// 			pts = tmp.toVector();
 
 	timer.start();
-	pa.drawPolygon((QPointF *)buffer,ring->getNumPoints());
+	//pa.drawPolygon((QPointF *)buffer,ring->getNumPoints());
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+// 	glEnable(GL_CULL_FACE);
+// 	glCullFace(GL_BACK);
+// 	glBegin(GL_POLYGON);
+// 		for (int i=0; i<ring->getNumPoints(); ++i)
+// 		{
+// 			glVertex2f(buffer[i].x, buffer[i].y);
+// 		}
+// 	glEnd();
+
+//	glEnableClientState(GL_VERTEX_ARRAY);
+//	glVertexPointer(2, GL_DOUBLE, 0, buffer);
+// 	glBegin(GL_POLYGON);
+// 	 	for (int i=0; i<ring->getNumPoints(); ++i)
+// 	 	{
+// 	 		glArrayElement(i);
+// 	 	}
+// 	glEnd();
+// 	int n = ring->getNumPoints();
+// 	int *p = new int[n];
+// 	for (int i=0; i<n; ++i)
+// 	{
+// 		p[i] = i;
+// 	}
+// 	glDrawElements(GL_POLYGON, n, GL_UNSIGNED_INT, p);
+// 	delete [] p;
+
+//	glDrawArrays(GL_POLYGON, 0, ring->getNumPoints());
+
+
 	delete [] buffer;
 	//qDebug() << "drawPolygon:" << timer.stop();
 }
@@ -223,4 +270,37 @@ bool vector_layer::is_in_viewport(OGRGeometry * geometry, QRectF &viewport)
 
 	QRectF rc(envelope.MinX,envelope.MinY,envelope.MaxX-envelope.MinX,envelope.MaxY-envelope.MinY);
 	return viewport.intersects(rc);
+}
+
+void vector_layer::draw_polygon2(OGRGeometry * geometry)
+{
+	if (geometry == 0)
+	{
+		return;
+	}
+	auto iter = m_tmp.find(geometry);
+	if (iter == m_tmp.end())
+	{
+		if(geometry->getGeometryType() == wkbPolygon){
+			OGRPolygon *polygon = (OGRPolygon *)geometry;
+			OGRLinearRing *ring = polygon->getExteriorRing();
+			OGRRawPoint *buffer = new OGRRawPoint[ring->getNumPoints()];
+			ring->getPoints(buffer);
+			GLuint id;
+			glGenBuffers(1, &id);
+
+			glBindBuffer(GL_ARRAY_BUFFER, id);
+			glBufferData(GL_ARRAY_BUFFER, ring->getNumPoints()*sizeof(OGRRawPoint), buffer, GL_STATIC_DRAW);
+			delete [] buffer;
+			m_tmp[geometry] = QPair<int, int>(id, ring->getNumPoints());
+		}
+	}
+
+	iter = m_tmp.find(geometry);
+
+	glBindBuffer(GL_ARRAY_BUFFER, iter.value().first);
+	glVertexPointer(2, GL_DOUBLE, 0, 0);
+	glDrawArrays(GL_POLYGON, 0, iter.value().second);
+}
+
 }

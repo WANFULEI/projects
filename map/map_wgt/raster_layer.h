@@ -1,12 +1,16 @@
 #pragma once
 
-#include "../../control/layerwidget/Qt_widget_layer.h"
 #include <QRect>
 #include <QRectF>
 #include <QImage>
+#include "../../control/layer_widget/layer.h"
+#include "map_wgt_global.h"
 
 class GDALDataset;
-class raster_layer : public layerwidget::Qt_widget_layer
+
+namespace map_wgt{
+
+class MAP_WGT_EXPORT raster_layer : public layer_wgt::layer
 {
 public:
 	raster_layer(void);
@@ -15,7 +19,7 @@ public:
 	bool load(const QString & url);
 
 protected:
-	virtual void draw();
+	virtual void gl_draw();
 	QRect calc_tif_rect(const QRectF & geo_rect);
 	QImage get_image(const QRect & rect, int width, int height);
 
@@ -24,3 +28,4 @@ private:
 	GDALDataset * m_data;
 };
 
+}

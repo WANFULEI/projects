@@ -124,7 +124,7 @@ namespace baseset
 	}
 
 	template<typename T>
-	uint qHash(const share_ptr<T> & obj) throw(){
+	inline uint qHash(const share_ptr<T> & obj) throw(){
 		return qHash(obj.ptr());
 	}
 
@@ -248,6 +248,12 @@ namespace baseset
 		}
 		share_ptr<T> create_entry(){
 			share_ptr<T> p = new T;
+			push_back(p);
+			return p;
+		}
+		template<typename M>
+		share_ptr<T> create_entry(){
+			share_ptr<T> p = new M;
 			push_back(p);
 			return p;
 		}

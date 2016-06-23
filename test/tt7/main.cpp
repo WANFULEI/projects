@@ -208,17 +208,16 @@ int main(int argc, char *argv[])
 
 
 	simple_map map;
-	map.set_window(-18,18,-9,9);
+	map.set_window(-18,18,-1,1);
 	raster_layer * layer = new raster_layer;
 	layer->load("data\\NE2_HR_LC_SR_W_DR.tif");
 	map.attach(layer);
-	vector_layer * vlayer = new vector_layer;
-	vlayer->load("data\\ne_10m_admin_0_countries.shp");
-	map.attach(vlayer);
+ 	vector_layer * vlayer = new vector_layer;
+ 	vlayer->load("data\\ne_10m_admin_0_countries.shp");
+ 	map.attach(vlayer);
 
 	map.select_tool(layerwidget::Pan);
 	map.show();
 	map.redraw();
-
 	return a.exec();
 }

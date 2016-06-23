@@ -1,12 +1,16 @@
+#include <gl\glew.h>
 #include "raster_layer.h"
 #include "gdal_priv.h"
 #include "cpl_conv.h" // for CPLMalloc()
 
 #include <QColor>
-#include "..\..\control\layerwidget\Qt_widget.h"
+#include "..\..\control\layer_widget\layer_widget.h"
 #include <windows.h>
 #include <QTime>
 #include <QDebug>
+#include "QLibrary"
+
+namespace map_wgt{
 
 raster_layer::raster_layer(void)
 {
@@ -22,7 +26,7 @@ raster_layer::~raster_layer(void)
 	}
 }
 
-void raster_layer::draw()
+void raster_layer::gl_draw()
 {
 	if (widget == 0)
 	{
@@ -57,6 +61,7 @@ void raster_layer::draw()
 	int y1 = widget->y_pixel(y_max);
 	int y2 = widget->y_pixel(y_min);
 
+
 	// makesure layer in screen, if not, return
 	QRect rc = widget->rect();
 	if (!rc.contains(QPoint(x1,y1)) && !rc.contains(x2,y2))
@@ -76,9 +81,13 @@ void raster_layer::draw()
 		return;
 	}
 
+	glPixelStorei(GL_UNPACK_ALIGNMENT,4);
+	//glRasterPos2d(x_min, y_max);
+	glWindowPos3i(x1, widget->height()-y1, 0);
+	glPixelZoom(1.0,-1.0);  //从上到下绘制
 	baseset::time_elapsed timer;
-	widget->get_painter().drawImage(x1, y1, image);
-	qDebug() << "drawImage:" << timer.stop()/1000;
+	glDrawPixels(image.width(), image.height(), GL_RGBA, GL_UNSIGNED_BYTE,image.bits());
+	qDebug() << "glDrawPixels:" << timer.stop() / 1000;
 
 	delete [] (char *)image.bits();
 }
@@ -199,7 +208,7 @@ QImage raster_layer::get_image(const QRect & rect, int width, int height)
 			return res;
 		}
 		band->RasterIO( GF_Read, image_x, image_y, image_width, image_height, 
-			datas+2-i, scr_width, scr_height, GDT_Byte, 
+			datas+i, scr_width, scr_height, GDT_Byte, 
 			4, 4*scr_width );
 	}
 
@@ -210,4 +219,6 @@ QImage raster_layer::get_image(const QRect & rect, int width, int height)
 
 	res = QImage( (uchar *)datas, scr_width, scr_height,scr_width*4, QImage::Format_ARGB32 );
 	return res;
+}
+
 }

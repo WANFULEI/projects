@@ -1,0 +1,12 @@
+#ifndef LAYER_WIDGET_GLOBAL_H
+#define LAYER_WIDGET_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#ifdef LAYER_WIDGET_LIB
+# define LAYER_WIDGET_EXPORT Q_DECL_EXPORT
+#else
+# define LAYER_WIDGET_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // LAYER_WIDGET_GLOBAL_H
