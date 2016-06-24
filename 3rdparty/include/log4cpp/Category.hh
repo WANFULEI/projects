@@ -672,6 +672,8 @@ namespace log4cpp {
         volatile bool _isAdditive;
 
     };
-
+	LOG4CPP_EXPORT bool initialize_logger(const char *file, const char *name);
+	LOG4CPP_EXPORT log4cpp::Category &logger();
 }
+
 #endif // _LOG4CPP_CATEGORY_HH
