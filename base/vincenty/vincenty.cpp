@@ -117,5 +117,14 @@ void vincenty::calc_coor(double λ1, double φ1, double s, double angle, double 
 	 
 	 φ2 = φ2 / M_PI * 180;
 	 λ2 = λ2 / M_PI * 180;
+	 while (λ2 > 180)
+	 {
+		 λ2 -= 360;
+	 }
+	 while (λ2 < -180)
+	 {
+		 λ2 += 360;
+	 }
+
 	 revAz = revAz / M_PI * 180;
 }
