@@ -37,7 +37,7 @@ namespace math
 
 	MATH_EXPORT double qt_angle2north_angle(double angle);
 	MATH_EXPORT double normalize_north_angle(double angle);
-//	MATH_EXPORT Orientation is_turn_right(const QPointF & p1,const QPointF & p2,const QPointF & p3);
+	MATH_EXPORT Orientation is_clock_wise(const QPointF & p1,const QPointF & p2,const QPointF & p3);
 
 	MATH_EXPORT bool is_3point_same_dir(const QPointF & p1,const QPointF & p2,const QPointF & p3,double mis);
 	MATH_EXPORT void simplier_polyline(QList<QPointF> & pts,double mis);

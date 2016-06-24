@@ -1,3 +1,16 @@
+/*!
+ * \file baseset2.h
+ * \date 2016/06/24 19:40
+ *
+ * \author ÎºÇå
+ * Contact: 897810981@qq.com
+ *
+ * \brief 
+ *
+ * TODO: long description
+ *
+ * \note
+*/
 #ifndef BASESET2_H
 #define BASESET2_H
 

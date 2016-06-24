@@ -55,21 +55,8 @@ MATH_EXPORT void math::simplier_polyline(QList<QPoint> & pts,int mis)
 	}
 }
 
-// MATH_EXPORT math::Orientation math::is_turn_right(const QPointF & p1,const QPointF & p2,const QPointF & p3)
-// {
-// 	double a1 = normalize_north_angle(QLineF(p1,p2).angle());
-// 	double a2 = normalize_north_angle(QLineF(p2,p3).angle());
-// 	if (IS_DOUBLE_EQUAL(a1,a2))
-// 	{
-// 		return EQUAL;
-// 	}
-// 	else if (a2 > a1)
-// 	{
-// 		return RIGHT_TURN;
-// 	}
-// 	else
-// 	{
-// 		return LEFT_TURN;
-// 	}
-// }
+MATH_EXPORT math::Orientation math::is_clock_wise(const QPointF & p1,const QPointF & p2,const QPointF & p3)
+{
+	return CLOCKWISE;
+}
 
