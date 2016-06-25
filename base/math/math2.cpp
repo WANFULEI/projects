@@ -40,6 +40,12 @@ MATH_EXPORT void math::simplier_polyline(QList<QPointF> & pts,double mis)
 	}
 }
 
+bool math::is_clock_wise(const vector2d &p1, const vector2d &p2, const vector2d &p3)
+{
+	//向量AC叉乘一下向量AB,结果大于0为逆时针,小于0为顺时针 
+	return (p2 - p1) * (p3 - p1) < 0;
+}
+
 MATH_EXPORT void math::simplier_polyline(QList<QPoint> & pts,int mis)
 {
 	for (int i=0;i<pts.size()-1;)

@@ -31,6 +31,12 @@
     <ClInclude Include="math2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="vector2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vector3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math2.cpp">

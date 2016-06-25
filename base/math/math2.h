@@ -5,7 +5,7 @@
 #include <QPointF>
 #include <qlist.h>
 #include <math.h>
-
+#include "vector2d.h"
 
 
 namespace math
@@ -42,6 +42,8 @@ namespace math
 	MATH_EXPORT bool is_3point_same_dir(const QPointF & p1,const QPointF & p2,const QPointF & p3,double mis);
 	MATH_EXPORT void simplier_polyline(QList<QPointF> & pts,double mis);
 	MATH_EXPORT void simplier_polyline(QList<QPoint> & pts,int mis);
+
+	MATH_EXPORT bool is_clock_wise(const vector2d &p1, const vector2d &p2, const vector2d &p3);
 };
 
 #endif // MATH_H
