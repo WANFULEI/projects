@@ -2,6 +2,8 @@
 #include "layer_widget.h"
 #include <qdebug>
 #include <assert.h>
+#include "swapbuffer_worker.h"
+#include <QThreadPool>
 
 namespace layer_wgt{
 
@@ -51,6 +53,7 @@ void layer_widget::initializeGL()
 // 	setFormat(ft);
 	bool res = format().doubleBuffer();
 	assert(res);
+//	setAutoBufferSwap(false);
 
 	glewInit();
 
@@ -113,6 +116,11 @@ void layer_widget::initializeGL()
 
 void layer_widget::paintGL()
 {
+	if (!swapbuffer_down)
+	{
+		return;
+	}
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //	glClearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -126,6 +134,10 @@ void layer_widget::paintGL()
 	{
 		layers[i]->gl_draw();
 	}
+
+// 	doneCurrent();
+// 	swapbuffer_down = false;
+// 	QThreadPool::globalInstance()->start( new swapbuffer_worker( this ), QThread::HighestPriority );
 
 //	swapBuffers();
 }

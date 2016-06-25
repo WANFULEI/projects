@@ -9,6 +9,11 @@
 #include "../../map/map_wgt/raster_layer.h"
 #include "../../control/layer_widget/tools_layer.h"
 #include "../../map/map_wgt/vector_layer.h"
+#include "qdebug"
+
+#include <log4cpp/Category.hh>
+#include <exception>
+#include "../../base/vincenty/vincenty.h"
 
 using namespace map_wgt;
 
@@ -17,7 +22,9 @@ int main(int argc, char *argv[])
 	QTextCodec *codec = QTextCodec::codecForName("System");  
 	QTextCodec::setCodecForCStrings(codec);  
 	QTextCodec::setCodecForLocale(codec);  
-	QTextCodec::setCodecForTr(codec);  
+	QTextCodec::setCodecForTr(codec); 
+
+	log4cpp::initialize_logger("test.log","test");
 	
 	GDALAllRegister();
 
@@ -41,6 +48,12 @@ int main(int argc, char *argv[])
 	map.show();
 	map.set_window(-18,18,-9,9);
 //	map.redraw();
+
+	
+	double length = 0, angle1 = 0;
+	vincenty::calc_dist(0, 0, 10, 10, length, angle1);
+	double x, y;
+	vincenty::calc_coor(0, 0, length, angle1, x, y);
 
 	return a.exec();
 }

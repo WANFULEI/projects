@@ -37,9 +37,6 @@
     <ClInclude Include="vector_layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="swapbuffer_thread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="map_widget.cpp">
@@ -49,9 +46,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vector_layer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="swapbuffer_thread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

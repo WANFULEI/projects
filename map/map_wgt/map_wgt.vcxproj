@@ -73,20 +73,18 @@
       <OutputFile>$(OutDir)\$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;..\..\3rdparty\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;QtOpenGL4.lib;opengl32.lib;glu32.lib;QtSvg4.lib;glew32.lib;gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;QtOpenGL4.lib;opengl32.lib;glu32.lib;QtSvg4.lib;glew32.lib;gdal_i.lib;log4cpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="map_widget.cpp" />
     <ClCompile Include="raster_layer.cpp" />
-    <ClCompile Include="swapbuffer_thread.cpp" />
     <ClCompile Include="vector_layer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="map_widget.h" />
     <ClInclude Include="map_wgt_global.h" />
     <ClInclude Include="raster_layer.h" />
-    <ClInclude Include="swapbuffer_thread.h" />
     <ClInclude Include="vector_layer.h" />
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,7 @@ namespace layer_wgt{
 
 class LAYER_WIDGET_EXPORT layer_widget : public coordinate_wgt::coordinate_widget
 {
+	friend class swapbuffer_worker;
 	Q_OBJECT
 public:
 	layer_widget();
@@ -40,6 +41,7 @@ private:
 private:
 	int active_layer;
 	baseset::share_list_vector_manager<layer> layers;
+	volatile bool swapbuffer_down;
 };
 
 }

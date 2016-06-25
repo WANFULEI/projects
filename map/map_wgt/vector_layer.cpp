@@ -6,6 +6,7 @@
 #include "..\..\base\baseset2\baseset2.h"
 #include "..\..\base\math\math2.h"
 #include "..\..\control\layer_widget\layer_widget.h"
+#include "log4cpp/Category.hh"
 
 
 
@@ -160,6 +161,7 @@ void vector_layer::gl_draw()
 	
 	//pa.restore();
 	qDebug() << "vector draw:" << timer.stop() / 1000 << "num:" << num;
+	log4cpp::logger().info("vector draw:");
 }
 
 void vector_layer::update_envelope()

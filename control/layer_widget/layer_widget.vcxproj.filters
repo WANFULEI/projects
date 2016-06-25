@@ -50,12 +50,18 @@
     <ClCompile Include="GeneratedFiles\Release\moc_layer_widget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="swapbuffer_worker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="layer_widget_global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="swapbuffer_worker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

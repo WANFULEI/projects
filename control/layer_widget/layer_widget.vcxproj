@@ -86,10 +86,12 @@
     </ClCompile>
     <ClCompile Include="layer.cpp" />
     <ClCompile Include="layer_widget.cpp" />
+    <ClCompile Include="swapbuffer_worker.cpp" />
     <ClCompile Include="tools_layer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="layer.h" />
+    <ClInclude Include="swapbuffer_worker.h" />
     <CustomBuild Include="layer_widget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing layer_widget.h...</Message>
