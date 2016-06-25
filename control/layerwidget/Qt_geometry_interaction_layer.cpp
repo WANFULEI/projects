@@ -14,7 +14,7 @@ Qt_geometry_interaction_layer::~Qt_geometry_interaction_layer(void)
 {
 }
 
-void Qt_geometry_interaction_layer::add_geometry_layer(const baseset::share_ptr<Qt_geometry_layer> & layer)
+void Qt_geometry_interaction_layer::add_geometry_layer(const share_ptr<Qt_geometry_layer> & layer)
 {
 	if (layer.is_null())
 	{
@@ -123,7 +123,7 @@ void Qt_geometry_interaction_layer::mouseReleaseEvent(QMouseEvent * event)
 	}
 }
 
-intersection2::Result Qt_geometry_interaction_layer::is_select(const baseset::share_ptr<Feature> & feature,const QPoint & pt)
+intersection2::Result Qt_geometry_interaction_layer::is_select(const share_ptr<Feature> & feature,const QPoint & pt)
 {
 	if (feature.is_null())
 	{
@@ -184,7 +184,7 @@ void Qt_geometry_interaction_layer::is_select(const QPoint & pt)
 			++iter;
 		}
 	}
-	m_feature = baseset::share_ptr<Feature>();
+	m_feature = share_ptr<Feature>();
 	m_res = intersection2::Result();
 }
 

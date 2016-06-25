@@ -77,7 +77,7 @@ bool framecore::application::load_from_xml(TiXmlElement * pXmlNode)
 				cmp = cmp->NextSiblingElement("component");
 				continue;
 			}
-			baseset::share_ptr<component> com = create_component(sClassName);
+			share_ptr<component> com = create_component(sClassName);
 			if (com == 0)
 			{
 				res = false;
@@ -104,7 +104,7 @@ bool framecore::application::load_from_xml(TiXmlElement * pXmlNode)
 	return res;
 }
 
-baseset::share_ptr<framecore::component> framecore::application::get_component(const QString & class_name) const
+share_ptr<framecore::component> framecore::application::get_component(const QString & class_name) const
 {
 	for (int i=0;i<m_components.size();++i)
 	{

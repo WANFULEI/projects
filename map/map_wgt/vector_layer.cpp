@@ -3,7 +3,7 @@
 #include "ogrsf_frmts.h"
 #include <QTime>
 #include <QDebug>
-#include "..\..\base\baseset2\baseset2.h"
+#include "..\..\template\time_elapsed.h"
 #include "..\..\base\math\math2.h"
 #include "..\..\control\layer_widget\layer_widget.h"
 #include "log4cpp/Category.hh"
@@ -82,7 +82,7 @@ void vector_layer::free_features()
 
 void vector_layer::gl_draw()
 {
-	baseset::time_elapsed timer;
+	time_elapsed timer;
 
 	QRectF viewport;
 	viewport.setLeft(widget->x_min());
@@ -193,7 +193,7 @@ void vector_layer::update_envelope()
 
 void vector_layer::draw_polygon(OGRGeometry * geometry)
 {
-	baseset::time_elapsed timer;
+	time_elapsed timer;
 // 	geometry = geometry->Simplify(0.5);
 // 	qDebug() << "Simplify:" << timer.stop();
 	if (geometry == 0)

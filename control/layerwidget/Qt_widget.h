@@ -39,7 +39,7 @@
 #include <QtGui/qpixmap.h>
 #include <QtGui/qprinter.h>
 #include "layerwidget_global.h"
-#include "../../base/baseset2/baseset2.h"
+#include "../../template\manager.h"
 #include "Qt_widget_layer.h"
 
 /*#include <CGAL/auto_link/CGALQt3.h>*/
@@ -174,7 +174,7 @@ public:
   // remove a layer from the list of displayable scenes
   void detach(Qt_widget_layer* s);
 
-  baseset::share_list_vector_manager<Qt_widget_layer> get_layers() const { return qt_layers; }
+  share_list_vector_manager<Qt_widget_layer> get_layers() const { return qt_layers; }
 
 signals:
   void s_mousePressEvent(QMouseEvent *e);
@@ -283,8 +283,8 @@ private:
   bool      constranges; // tell if the ranges should be const
 
   //for layers
-  baseset::share_list_vector_manager<Qt_widget_layer> qt_layers;
-  baseset::share_list_vector_manager<Qt_widget_layer> qt_standard_layers;
+  share_list_vector_manager<Qt_widget_layer> qt_layers;
+  share_list_vector_manager<Qt_widget_layer> qt_standard_layers;
 };//end Qt_widget class
 
 // manipulators

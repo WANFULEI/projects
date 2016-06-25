@@ -3,13 +3,14 @@
 
 #include "framecore_global.h"
 #include <QtCore/QObject>
-#include "../../base/baseset2/baseset2.h"
+#include "../../template/share_obj.h"
+#include "../../template/manager.h"
 #include "../../base/tinyxml/tinyxml.h"
 #include <QtGui/QAction>
 
 namespace framecore
 {
-	class FRAMECORE_EXPORT object : public baseset::share_obj
+	class FRAMECORE_EXPORT object : public share_obj
 	{
 	public:
 		virtual ~object(){}
@@ -75,11 +76,11 @@ namespace framecore
 	{
 	public:
 		virtual ~application(){}
-		const baseset::share_list_vector_manager<component> & get_components() const { return m_components; }
+		const share_list_vector_manager<component> & get_components() const { return m_components; }
 		virtual bool load_from_xml(TiXmlElement * pXmlNode);
-		baseset::share_ptr<framecore::component> get_component(const QString & class_name) const;
+		share_ptr<framecore::component> get_component(const QString & class_name) const;
 	protected:
-		baseset::share_list_vector_manager<component> m_components;
+		share_list_vector_manager<component> m_components;
 	};
 
 

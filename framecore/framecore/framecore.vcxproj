@@ -90,9 +90,6 @@
     <ClInclude Include="framecore_global.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\base\baseset2\baseset2.vcxproj">
-      <Project>{57a2ff4b-df04-4e93-a528-65fd2cf3fac6}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\base\tinyxml\tinyxml_lib.vcxproj">
       <Project>{c406daec-0886-4771-8dea-9d7329b46cc1}</Project>
     </ProjectReference>

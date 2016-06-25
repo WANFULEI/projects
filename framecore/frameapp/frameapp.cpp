@@ -4,7 +4,7 @@
 #include "../frameutil/frameutil.h"
 #include <QDockWidget>
 #include "../framegui/framegui.h"
-#include "../../base/baseset2/baseset2.h"
+#include "../../template/share_obj.h"
 #include <QLabel>
 #include <QLineEdit>
 #include <QCheckBox>
@@ -57,7 +57,7 @@ bool frameapp::initialize()
 	load_window();
 	load_stautsbar();
 
-	baseset::share_list_vector_manager<framecore::component> coms = get_components();
+	share_list_vector_manager<framecore::component> coms = get_components();
 	for (int i=0;i<coms.size();++i)
 	{
 		if (coms[i] == 0)
@@ -165,7 +165,7 @@ void frameapp::action_triggered()
 	QStringList handle_components = action->data().toHash()["handle_component_class_name"].toString().split('|');
 	for (int i=0;i<handle_components.size();++i)
 	{
-		baseset::share_ptr<framecore::component> com = get_component(handle_components[i]);
+		share_ptr<framecore::component> com = get_component(handle_components[i]);
 		if (com == 0)
 		{
 			return;

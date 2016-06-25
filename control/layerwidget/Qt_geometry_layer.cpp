@@ -63,17 +63,17 @@ namespace layerwidget
 		return id;
 	}
 
-	baseset::share_ptr<Feature> Qt_geometry_layer::get_feature(int id) const
+	share_ptr<Feature> Qt_geometry_layer::get_feature(int id) const
 	{
 		auto iter = m_features.find(id);
 		if (iter == m_features.end())
 		{
-			return baseset::share_ptr<Feature>();
+			return share_ptr<Feature>();
 		}
 		return iter.value();
 	}
 
-	int Qt_geometry_layer::get_feature_id(const baseset::share_ptr<Feature> & feature) const
+	int Qt_geometry_layer::get_feature_id(const share_ptr<Feature> & feature) const
 	{
 		if (feature.is_null())
 		{
@@ -105,7 +105,7 @@ namespace layerwidget
 		auto iter = m_features.begin();
 		while (iter != m_features.end())
 		{
-			baseset::share_ptr<Feature> feature = iter.value();
+			share_ptr<Feature> feature = iter.value();
 
 			drawer.setPen(QPen(feature->style.border_color,feature->style.border_width,
 				feature->style.border_type));
@@ -164,7 +164,7 @@ namespace layerwidget
 	}
 
 
-	baseset::share_ptr<Feature> Qt_geometry_layer_manager::get_feature(int id)
+	share_ptr<Feature> Qt_geometry_layer_manager::get_feature(int id)
 	{
 		if (id <= 0)
 		{
@@ -172,21 +172,21 @@ namespace layerwidget
 		}
 		for (int i=0;i<size();++i)
 		{
-			baseset::share_ptr<Qt_geometry_layer> layer = get_entry(i);
+			share_ptr<Qt_geometry_layer> layer = get_entry(i);
 			if (layer.is_null())
 			{
 				continue;
 			}
-			baseset::share_ptr<Feature> feature = layer->get_feature(id);
+			share_ptr<Feature> feature = layer->get_feature(id);
 			if (feature)
 			{
 				return feature;
 			}
 		}
-		return baseset::share_ptr<Feature>();
+		return share_ptr<Feature>();
 	}
 
-	int Qt_geometry_layer_manager::get_feature_id(const baseset::share_ptr<Feature> & feature)
+	int Qt_geometry_layer_manager::get_feature_id(const share_ptr<Feature> & feature)
 	{
 		if (feature == 0)
 		{
@@ -194,7 +194,7 @@ namespace layerwidget
 		}
 		for (int i=0;i<size();++i)
 		{
-			baseset::share_ptr<Qt_geometry_layer> layer = get_entry(i);
+			share_ptr<Qt_geometry_layer> layer = get_entry(i);
 			if (layer.is_null())
 			{
 				continue;

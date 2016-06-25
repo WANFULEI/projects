@@ -9,14 +9,15 @@
 #define EA_F0FD6FA5_B2DA_4d6a_9A28_D099E53B93DB__INCLUDED_
 
 #include <QList>
-#include "../../base/baseset2/baseset2.h"
+#include "../../template/manager.h"
+#include "../../template/singleton.h"
 #include "file_type.h"
 #include "File.h"
 #include "framecore_global.h"
 
 namespace framecore{
 
-class FRAMECORE_EXPORT file_manager : public baseset::instance<file_manager>
+class FRAMECORE_EXPORT file_manager : public instance<file_manager>
 {
 
 public:
@@ -55,8 +56,8 @@ public:
 	share_file_type get_file_type(const file_type & type);
 	
 private:
-	baseset::share_list_vector_manager<file> m_files;
-	baseset::share_list_vector_manager<file_type> m_register_file_types;
+	share_list_vector_manager<file> m_files;
+	share_list_vector_manager<file_type> m_register_file_types;
 
 };
 

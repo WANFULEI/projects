@@ -9,6 +9,7 @@
 #include <QTime>
 #include <QDebug>
 #include "QLibrary"
+#include "..\..\template\time_elapsed.h"
 
 namespace map_wgt{
 
@@ -85,7 +86,7 @@ void raster_layer::gl_draw()
 	//glRasterPos2d(x_min, y_max);
 	glWindowPos3i(x1, widget->height()-y1, 0);
 	glPixelZoom(1.0,-1.0);  //从上到下绘制
-	baseset::time_elapsed timer;
+	time_elapsed timer;
 	glDrawPixels(image.width(), image.height(), GL_RGBA, GL_UNSIGNED_BYTE,image.bits());
 	qDebug() << "glDrawPixels:" << timer.stop() / 1000;
 

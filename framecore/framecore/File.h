@@ -9,14 +9,14 @@
 #define EA_57CEB381_7E7F_4407_9BF0_88A003D7AF89__INCLUDED_
 
 #include <QString>
-#include "../../base/baseset2/baseset2.h"
+#include "../../template/share_obj.h"
 #include "file_type.h"
 #include "framecore_global.h"
 
 namespace framecore
 {
 class file_type;
-class FRAMECORE_EXPORT file : public baseset::share_obj
+class FRAMECORE_EXPORT file : public share_obj
 {
 
 public:
@@ -43,7 +43,7 @@ private:
 
 };
 
-typedef baseset::share_ptr<file> share_file;
+typedef share_ptr<file> share_file;
 typedef const share_file & const_share_file_ref;
 
 }

@@ -10,12 +10,12 @@
 
 #include <QString>
 #include <QIcon>
-#include "../../base/baseset2/baseset2.h"
+#include "../../template/share_obj.h"
 #include "framecore_global.h"
 
 namespace framecore{
 
-class FRAMECORE_EXPORT file_type : public baseset::share_obj
+class FRAMECORE_EXPORT file_type : public share_obj
 {
 
 public:
@@ -34,7 +34,7 @@ private:
 
 };
 
-typedef baseset::share_ptr<file_type> share_file_type;
+typedef share_ptr<file_type> share_file_type;
 typedef const share_file_type & const_share_file_type_ref;
 
 inline bool operator == (const file_type & f1,const file_type & f2){

@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <QTime>
 #include <QDebug>
+#include "..\..\template\time_elapsed.h"
 
 raster_layer::raster_layer(void)
 {
@@ -76,7 +77,7 @@ void raster_layer::draw()
 		return;
 	}
 
-	baseset::time_elapsed timer;
+	time_elapsed timer;
 	widget->get_painter().drawImage(x1, y1, image);
 	qDebug() << "drawImage:" << timer.stop()/1000;
 

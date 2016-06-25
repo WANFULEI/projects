@@ -1,6 +1,7 @@
 #pragma once
 #include "layer.h"
 #include "layer_widget_global.h"
+#include <QPoint>
 
 class QWheelEvent;
 class QMouseEvent;

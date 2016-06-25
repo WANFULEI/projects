@@ -4,7 +4,8 @@
 #include "layerwidget_global.h"
 #include <QtGui/QColor>
 #include <QtGui/QPixmap>
-#include "../../base/baseset2/baseset2.h"
+#include "../../template/share_obj.h"
+#include "../../template/manager.h"
 #include <QtGui/QFont>
 
 using namespace layerwidget;
@@ -40,7 +41,7 @@ namespace layerwidget
 		}
 	};
 
-	struct Feature : public baseset::share_obj
+	struct Feature : public share_obj
 	{
 		Feature(const Geometry & geometry = Geometry(),const Style & style = Style())
 			:style(style)
@@ -65,9 +66,9 @@ namespace layerwidget
 		int add_feature(Geometry geo, const Style & style);
 		void clear();
 
-		baseset::share_map_manager<int,Feature> & get_geometries() { return m_features; }
-		baseset::share_ptr<Feature> get_feature(int id) const;
-		int get_feature_id(const baseset::share_ptr<Feature> & feature) const;
+		share_map_manager<int,Feature> & get_geometries() { return m_features; }
+		share_ptr<Feature> get_feature(int id) const;
+		int get_feature_id(const share_ptr<Feature> & feature) const;
 
 	protected:
 		void draw();
@@ -77,16 +78,16 @@ namespace layerwidget
 		QVector<QPointF> convert(const QList<QPointF> & pts);
 		double convert(double dis);
 	protected:
-		baseset::share_map_manager<int,Feature> m_features;
+		share_map_manager<int,Feature> m_features;
 		static int m_next_feature_id;
 	};
 
 	class LAYERWIDGET_EXPORT Qt_geometry_layer_manager :
-		public baseset::share_list_vector_manager<Qt_geometry_layer> , public baseset::share_obj
+		public share_list_vector_manager<Qt_geometry_layer> , public share_obj
 	{
 	public:
-		baseset::share_ptr<Feature> get_feature(int id);
-		int get_feature_id(const baseset::share_ptr<Feature> & feature);
+		share_ptr<Feature> get_feature(int id);
+		int get_feature_id(const share_ptr<Feature> & feature);
 	};
 }
 

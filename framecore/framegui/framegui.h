@@ -4,13 +4,13 @@
 #include "framegui_global.h"
 #include <QWidget>
 #include <QResizeEvent>
-#include "../../base/baseset2/baseset2.h"
+#include "../../template/singleton.h"
 #include <QMainWindow>
 #include <QStatusBar>
 
 namespace framegui
 {
-	class FRAMEGUI_EXPORT framegui : public baseset::instance<framegui>
+	class FRAMEGUI_EXPORT framegui : public instance<framegui>
 	{
 	public:
 		framegui(){

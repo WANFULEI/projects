@@ -4,7 +4,7 @@
 #include "layer_widget_global.h"
 #include "..\coordinate_widget\coordinate_widget.h"
 #include "layer.h"
-#include "..\..\base\baseset2\baseset2.h"
+#include "..\..\template\manager.h"
 
 namespace layer_wgt{
 
@@ -40,7 +40,7 @@ private:
 
 private:
 	int active_layer;
-	baseset::share_list_vector_manager<layer> layers;
+	share_list_vector_manager<layer> layers;
 	volatile bool swapbuffer_down;
 };
 

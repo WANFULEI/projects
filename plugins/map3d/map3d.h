@@ -4,7 +4,7 @@
 #include "map3d_global.h"
 #include <osgEarthQt/ViewerWidget>
 #include "../../framecore/framecore/framecore.h"
-#include "../../base/baseset2/baseset2.h"
+#include "../../template/singleton.h"
 
 class MAP3D_EXPORT map3d : public osgEarth::QtGui::ViewerWidget
 {
@@ -16,7 +16,7 @@ private:
 
 };
 
-class map3dcom : public framecore::component , public baseset::instance2<map3dcom>
+class map3dcom : public framecore::component , public instance2<map3dcom>
 {
 public:
 	map3dcom();

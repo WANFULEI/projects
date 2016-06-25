@@ -1,5 +1,5 @@
 #pragma once
-#include "..\..\base\baseset2\baseset2.h"
+#include "..\..\template\share_obj.h"
 #include "layer_widget_global.h"
 
 class QMouseEvent;
@@ -8,7 +8,7 @@ class QKeyEvent;
 class QEvent;
 namespace layer_wgt{
 
-class LAYER_WIDGET_EXPORT layer : public baseset::share_obj
+class LAYER_WIDGET_EXPORT layer : public share_obj
 {
 	friend class layer_widget;
 public:

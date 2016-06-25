@@ -25,16 +25,16 @@ public:
 
 	void select_tool(ToolType type);
 	ToolType get_tool();
-	baseset::share_ptr<Qt_geometry_layer> get_geometry_layer() const { return m_geometry_layer; }
-	baseset::share_ptr<Qt_image_layer> get_image_layer() const { return m_image_layer; }
-	baseset::share_ptr<Qt_geometry_layer_manager> get_geometry_layer_manager() const { return m_geometry_layer_manager; }
+	share_ptr<Qt_geometry_layer> get_geometry_layer() const { return m_geometry_layer; }
+	share_ptr<Qt_image_layer> get_image_layer() const { return m_image_layer; }
+	share_ptr<Qt_geometry_layer_manager> get_geometry_layer_manager() const { return m_geometry_layer_manager; }
 	
 protected:
-	baseset::share_ptr<Qt_geometry_layer> m_geometry_layer;
-	baseset::share_ptr<Qt_pan_layer> m_pan_tool;
-	baseset::share_ptr<Qt_geometry_interaction_layer> m_select_tool;
-	baseset::share_ptr<Qt_image_layer> m_image_layer;
-	baseset::share_ptr<Qt_geometry_layer_manager> m_geometry_layer_manager;
+	share_ptr<Qt_geometry_layer> m_geometry_layer;
+	share_ptr<Qt_pan_layer> m_pan_tool;
+	share_ptr<Qt_geometry_interaction_layer> m_select_tool;
+	share_ptr<Qt_image_layer> m_image_layer;
+	share_ptr<Qt_geometry_layer_manager> m_geometry_layer_manager;
 	bool m_is_select;
 };
 

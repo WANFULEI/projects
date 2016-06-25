@@ -7,7 +7,7 @@
 #include <qgsmaplayer.h>
 #include "../../framecore/framecore/framecore.h"
 #include <QDomElement>
-#include "../../base/baseset2/baseset2.h"
+#include "../../template/singleton.h"
 #include <QgsMapTool.h>
 
 // class map2d : public QgsMapCanvas
@@ -69,7 +69,7 @@ public:
 
 };
 
-class map2dcom : public QObject , public framecore::component , public baseset::instance2<map2dcom>
+class map2dcom : public QObject , public framecore::component , public instance2<map2dcom>
 {
 	Q_OBJECT
 public:
