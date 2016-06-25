@@ -11,14 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\control\layerwidget\layerwidget.vcxproj">
-      <Project>{f0a79e1f-6a71-445b-8678-abd1cf3d0a0c}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\cgal_warpper\cgal_warpper.vcxproj">
-      <Project>{255966c0-ea76-48ef-b05c-2caa4332bd84}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="G:\projects\algorithm\cgal\Spatial_searching\examples\Spatial_searching\circular_query.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -28,6 +20,14 @@
   <ItemGroup>
     <ClInclude Include="global.h" />
     <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\base\cgal_warpper\cgal_warpper.vcxproj">
+      <Project>{255966c0-ea76-48ef-b05c-2caa4332bd84}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\control\layerwidget\layerwidget.vcxproj">
+      <Project>{f0a79e1f-6a71-445b-8678-abd1cf3d0a0c}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9701773F-E4A6-4145-B64D-7742F4291F37}</ProjectGuid>
