@@ -1,5 +1,5 @@
 @echo Off
-del /s /a *.lastbuildstate *.log *.exe.intermediate.manifest *.obj vc100.pdb *.tlog *.vcxprojResolveAssemblyReference.cache 2>nul
+del /s /a *.lastbuildstate *.log *.exe.intermediate.manifest *.dll.intermediate.manifest *.obj vc100.pdb *.tlog *.vcxprojResolveAssemblyReference.cache 2>nul
 FOR /R . %%d IN (.) DO rd /s /q "%%d\GeneratedFiles" 2>nul
 
 rem del /s /a *.ncb *.sdf *.ipch *.netmodule *.aps *.ilk *.log *.obj *.tlog *.manifest *.lastbuildstate vc100.pdb 2>nul
