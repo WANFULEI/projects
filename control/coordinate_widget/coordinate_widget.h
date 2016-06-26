@@ -90,7 +90,7 @@ protected:
 
 private:
 	void	 set_scales();
-	void redraw() { glDraw(); }
+	void redraw();
 
 signals:
 	void rangesChanged();

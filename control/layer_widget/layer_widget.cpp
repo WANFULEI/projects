@@ -9,6 +9,7 @@ namespace layer_wgt{
 
 
 layer_widget::layer_widget()
+
 {
 	active_layer = -1;
 }
@@ -56,6 +57,8 @@ void layer_widget::initializeGL()
 //	setAutoBufferSwap(false);
 
 	glewInit();
+
+	glEnable(GL_MULTISAMPLE);
 
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 
@@ -114,33 +117,32 @@ void layer_widget::initializeGL()
 	printf("GL_NUM_EXTENSIONS:%d\n", nExtensions);
 }
 
-void layer_widget::paintGL()
-{
-	if (!swapbuffer_down)
-	{
-		return;
-	}
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//	glClearColor(0.0, 0.0, 0.0, 1.0);
-
-// 	glMatrixMode(GL_PROJECTION);
-// 	glLoadIdentity();
+// void layer_widget::paintGL()
+// {
+// 	glViewport( 0, 0, width(), height() );
+// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+// //	glClearColor(0.0, 0.0, 0.0, 1.0);
 // 
-// 	glMatrixMode(GL_MODELVIEW);
-// 	glLoadIdentity();
-
-	for (int i=0;i<layers.size();++i)
-	{
-		layers[i]->gl_draw();
-	}
-
-// 	doneCurrent();
-// 	swapbuffer_down = false;
-// 	QThreadPool::globalInstance()->start( new swapbuffer_worker( this ), QThread::HighestPriority );
-
-//	swapBuffers();
-}
+// // 	glMatrixMode(GL_PROJECTION);
+// // 	glLoadIdentity();
+// // 
+// // 	glMatrixMode(GL_MODELVIEW);
+// // 	glLoadIdentity();
+// 
+// 	for (int i=0;i<layers.size();++i)
+// 	{
+// 		layers[i]->gl_draw();
+// 	}
+// 
+// // 	QPainter p(this);
+// // 	p.drawRect(50, 50, 50, 50);
+// 
+// // 	doneCurrent();
+// // 	swapbuffer_down = false;
+// // 	QThreadPool::globalInstance()->start( new swapbuffer_worker( this ), QThread::HighestPriority );
+// 
+// //	swapBuffers();
+// }
 
 void layer_widget::resizeGL( int width, int height )
 {
@@ -172,6 +174,32 @@ void layer_widget::set_active_layer(layer *l)
 int layer_widget::get_layer_index(layer *l)
 {
 	return layers.indexOf(l,0);
+}
+
+void layer_widget::paintEvent(QPaintEvent *event)
+{
+	
+	//p.setRenderHint(QPainter::Antialiasing);
+
+	makeCurrent();
+
+	glViewport( 0, 0, width(), height() );
+	glClearColor(0, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	for (int i=0;i<layers.size();++i)
+	{
+		layers[i]->gl_draw();
+	}
+
+	
+
+// 	QPainter p(this);
+// 	p.setPen(QPen(Qt::red, 2));
+// 	p.drawRect(50, 50, 100, 100);
+// 	p.end();
+
+	swapBuffers();
 }
 
 }

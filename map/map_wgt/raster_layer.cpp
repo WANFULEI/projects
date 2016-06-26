@@ -76,15 +76,21 @@ void raster_layer::gl_draw()
 	rect.setTop(y_max);
 	rect.setBottom(y_min);
 
-	QImage image = get_image(calc_tif_rect(rect), x2-x1, y2-y1);
+	//qDebug() << QObject::tr("x1:%1, x2:%2").arg(x1).arg(x2);
+	if (x2-x1-1 < 0 || y2-y1-1 < 0)
+	{
+		return;
+	}
+	QImage image = get_image(calc_tif_rect(rect), x2-x1-1, y2-y1-1);
 	if (image.isNull())
 	{
 		return;
 	}
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT,4);
-	//glRasterPos2d(x_min, y_max);
-	glWindowPos3i(x1, widget->height()-y1, 0);
+	glRasterPos2d(widget->x_real(x1+1), widget->y_real(y1+1));
+	
+	//glWindowPos3i(x1, widget->height()-y1, 0);
 	glPixelZoom(1.0,-1.0);  //从上到下绘制
 	time_elapsed timer;
 	glDrawPixels(image.width(), image.height(), GL_RGBA, GL_UNSIGNED_BYTE,image.bits());

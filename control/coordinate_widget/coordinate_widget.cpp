@@ -3,6 +3,7 @@
 namespace coordinate_wgt{
 
 coordinate_widget::coordinate_widget(void)
+	:QGLWidget(QGLFormat(QGL::SampleBuffers))
 {
 	xmin_old = xmin = -1;
 	xmax_old = xmax = 1;
@@ -117,6 +118,12 @@ void coordinate_widget::set_scales()
 		xscal=width()/(xmax-xmin);
 		yscal=height()/(ymax-ymin);
 	}
+}
+
+void coordinate_widget::redraw()
+{
+	///glDraw();
+	update();
 }
 
 }

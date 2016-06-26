@@ -33,9 +33,9 @@ int main(int argc, char *argv[])
 
 	map_widget map;
 	
-// 	raster_layer *layer = new raster_layer;
-// 	layer->load("data\\NE2_HR_LC_SR_W_DR.tif");
-// 	map.attach(layer);
+ 	raster_layer *layer = new raster_layer;
+ 	layer->load("data\\NE2_HR_LC_SR_W_DR.tif");
+ 	map.attach(layer);
  	vector_layer * vlayer = new vector_layer;
  	vlayer->load("data\\ne_10m_admin_0_countries.shp");
  	map.attach(vlayer);
@@ -49,11 +49,7 @@ int main(int argc, char *argv[])
 	map.set_window(-18,18,-9,9);
 //	map.redraw();
 
-	
-	double length = 0, angle1 = 0;
-	vincenty::calc_dist(0, 0, 10, 10, length, angle1);
-	double x, y;
-	vincenty::calc_coor(0, 0, length, angle1, x, y);
+	QImage *p = new QImage(-1, -1, QImage::Format_ARGB32);
 
 	return a.exec();
 }

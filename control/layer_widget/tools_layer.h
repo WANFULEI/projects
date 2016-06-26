@@ -2,6 +2,7 @@
 #include "layer.h"
 #include "layer_widget_global.h"
 #include <QPoint>
+#include <QImage>
 
 class QWheelEvent;
 class QMouseEvent;
@@ -27,6 +28,7 @@ public:
 	virtual void mouseReleaseEvent(QMouseEvent *);
 
 	QPoint m_pt_down;
+	QImage m_image; // 鼠标左键点下时图片
 };
 
 // class LAYER_WIDGET_EXPORT select_layer :

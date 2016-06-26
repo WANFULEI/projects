@@ -32,8 +32,9 @@ protected:
 	void leaveEvent(QEvent *e);
 	//bool event(QEvent *e);
 	void initializeGL(); 
-	void paintGL();      
+	//void paintGL();      
 	void resizeGL( int width, int height ); 
+	void paintEvent(QPaintEvent *event);
 
 private:
 	int get_layer_index(layer *l);

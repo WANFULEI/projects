@@ -212,9 +212,9 @@ int main(int argc, char *argv[])
 	raster_layer * layer = new raster_layer;
 	layer->load("data\\NE2_HR_LC_SR_W_DR.tif");
 	map.attach(layer);
- 	vector_layer * vlayer = new vector_layer;
- 	vlayer->load("data\\ne_10m_admin_0_countries.shp");
- 	map.attach(vlayer);
+//  	vector_layer * vlayer = new vector_layer;
+//  	vlayer->load("data\\ne_10m_admin_0_countries.shp");
+//  	map.attach(vlayer);
 
 	map.select_tool(layerwidget::Pan);
 	map.show();
