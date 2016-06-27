@@ -38,7 +38,17 @@ protected:
 
 private:
 	int get_layer_index(layer *l);
-
+	struct render_layer_data 
+	{
+		layer *layer;
+		int width, height;
+		int framebuffer;
+		render_layer_data(){
+			layer = 0;
+			width = height = framebuffer = 0;
+		}
+	};
+	static void render_layer(render_layer_data &layer);
 private:
 	int active_layer;
 	share_list_vector_manager<layer> layers;

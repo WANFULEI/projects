@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "swapbuffer_worker.h"
 #include <QThreadPool>
+#include "QtConcurrentMap"
 
 namespace layer_wgt{
 
@@ -182,9 +183,12 @@ void layer_widget::paintEvent(QPaintEvent *event)
 	//p.setRenderHint(QPainter::Antialiasing);
 
 	makeCurrent();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	//glRotatef(-45, 0, 0, 1);
 
 	glViewport( 0, 0, width(), height() );
-	glClearColor(0, 0, 0, 1);
+	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	for (int i=0;i<layers.size();++i)
@@ -192,14 +196,73 @@ void layer_widget::paintEvent(QPaintEvent *event)
 		layers[i]->gl_draw();
 	}
 
-	
 
-// 	QPainter p(this);
+// 	QList<render_layer_data> layers;
+// 	for (int i=0; i<2; ++i)
+// 	{
+// 		render_layer_data layer;
+// 		layer.layer = this->layers[i];
+// 		layer.width = width();
+// 		layer.height = height();
+// 		layers << layer;
+// 	}
+// 
+// 	doneCurrent();
+// 	QThreadPool::globalInstance()->setMaxThreadCount(1);
+// 	QFuture<void> res = QtConcurrent::map(layers, render_layer);
+// 	res.waitForFinished();
+// 
+// 	makeCurrent();
+// 
+// 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+// 	for (int i=0; i<layers.size(); ++i)
+// 	{
+// 		if (layers[i].framebuffer == 0)
+// 		{
+// 			continue;
+// 		}
+// 		glBindFramebuffer(GL_READ_FRAMEBUFFER, layers[i].framebuffer);
+// 		glBlitFramebuffer(0, 0, width(), height(), 0, 0, width(), height(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+// 		glDeleteFramebuffers(1, (GLuint *)&layers[i].framebuffer);
+// 	}
+	
+// 	QPainter p;
+// 	p.begin(this);
 // 	p.setPen(QPen(Qt::red, 2));
 // 	p.drawRect(50, 50, 100, 100);
 // 	p.end();
 
 	swapBuffers();
+}
+
+void layer_widget::render_layer(render_layer_data &layer)
+{
+	if (layer.layer == 0)
+	{
+		return;
+	}
+
+	layer.layer->widget->makeCurrent();
+	GLuint renderbuffer = 0;
+	glGenRenderbuffers(1, &renderbuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, layer.width, layer.height);
+
+	GLuint framebuffer = 0;
+	glGenFramebuffers(1, &framebuffer); 
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer);
+	glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer);
+
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer);
+	glViewport(0, 0, layer.width, layer.height);
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	layer.layer->gl_draw();
+
+	layer.framebuffer = framebuffer;
+
+	layer.layer->widget->doneCurrent();
 }
 
 }
