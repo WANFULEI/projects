@@ -76,7 +76,9 @@
       <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;QtOpenGL4.lib;tinyxml.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy *.cfg "$(OutDir)config\" /s /y</Command>
+      <Command>xcopy *.cfg %QGIS_RUN_HOME%\bin\config\ /s /y
+xcopy $(OutDir)$(TargetName).pdb %QGIS_RUN_HOME%\bin\ /s /y
+xcopy $(OutDir)$(TargetName)$(TargetExt) %QGIS_RUN_HOME%\bin\ /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

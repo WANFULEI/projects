@@ -3,8 +3,11 @@
 
 1.安装VS2010
 2.安装Qt4.8.5VS2010
-1.解压public.7z
-2.运行*\public\bin\qgis.exe，可以运行说明一切正常
-2.设置环境变量QGIS_RUN_HOME=*\public
-3.注销或重启
-5.打开src\projects.sln，编译
+3.解压public.7z
+4.运行*\public\bin\qgis.exe，可以运行说明一切正常
+5.设置环境变量QGIS_RUN_HOME=*\public
+6.注销或重启
+7.打开src\projects.sln
+8.在属性管理器窗口中随便选一个项目，双击Release|Win32下Microsoft.Cpp.Win32.user，
+C++包含目录添加$(QGIS_RUN_HOME)\include，Linker包含目录添加$(QGIS_RUN_HOME)\lib
+9.编译
