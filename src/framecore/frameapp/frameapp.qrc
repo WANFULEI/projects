@@ -1,0 +1,4 @@
+<RCC>
+    <qresource prefix="test_demo_core">
+    </qresource>
+</RCC>
