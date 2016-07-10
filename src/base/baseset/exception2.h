@@ -1,16 +1,4 @@
-/*!
- * \file exception2.h
- * \date 2016/06/24 19:39
- *
- * \author ÎºÇå
- * Contact: 897810981@qq.com
- *
- * \brief 
- *
- * TODO: long description
- *
- * \note
-*/
+
 #ifndef EXCEPTION_H
 #define EXCEPTION_H
 

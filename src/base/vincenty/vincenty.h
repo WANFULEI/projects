@@ -1,16 +1,4 @@
-/*!
- * \file vincenty.h
- * \date 2016/06/24 22:19
- *
- * \author ÎºÇå
- * Contact: 897810981@qq.com
- *
- * \brief 
- *
- * TODO: long description
- *
- * \note
-*/
+
 #ifndef VINCENTY_H
 #define VINCENTY_H
 

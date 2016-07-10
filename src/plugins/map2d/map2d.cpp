@@ -103,12 +103,12 @@ map2dcom::map2dcom()
 
 map2dcom::~map2dcom()
 {
-
+	QgsMapLayerRegistry::instance()->removeAllMapLayers();
 }
 
 bool map2dcom::initialize()
 {
-	QgsProviderRegistry::instance("G:/projects/gis/QGIS/build/output/plugins/RelWithDebInfo");
+	QgsProviderRegistry::instance(qApp->applicationDirPath() + "/../plugins");
 
 	framegui::center_widget * widget = framegui::framegui::get_instance()->get_type_object<framegui::center_widget>("map2d");
 	if (widget)

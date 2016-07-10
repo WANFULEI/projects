@@ -1,16 +1,3 @@
-/*!
- * \file compose_node.h
- * \date 2016/06/25 13:05
- *
- * \author ÎºÇå
- * Contact: 897810981@qq.com
- *
- * \brief 
- *
- * TODO: long description
- *
- * \note
-*/
 
 #ifndef compose_node_h__
 #define compose_node_h__
