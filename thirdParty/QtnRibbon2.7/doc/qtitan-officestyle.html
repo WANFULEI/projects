@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- QtnCommonStyle.qdoc -->
+  <title>Qt QtitanRibbon 2.7: OfficeStyle Class Reference</title>
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+  <script src="scripts/jquery.js" type="text/javascript"></script>
+  <script src="scripts/functions.js" type="text/javascript"></script>
+  <script src="./scripts/superfish.js" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="style/superfish.css" />  <script src="./scripts/narrow.js" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="style/narrow.css" />
+  <!--[if IE]>
+<meta name="MSSmartTagsPreventParsing" content="true">
+<meta http-equiv="imagetoolbar" content="no">
+<![endif]-->
+<!--[if lt IE 7]>
+<link rel="stylesheet" type="text/css" href="style/style_ie6.css">
+<![endif]-->
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="style/style_ie7.css">
+<![endif]-->
+<!--[if IE 8]>
+<link rel="stylesheet" type="text/css" href="style/style_ie8.css">
+<![endif]-->
+</head>
+<body class="" onload="CheckEmptyAndLoadList();">
+ <div class="header" id="qtdocheader">
+    <div class="content"> 
+    <div id="nav-logo">
+      <a href="index.html">Home</a></div>
+		<div id="narrowsearch"><form onsubmit="return false;" action="" id="qtdocsearch">
+		<fieldset>
+		<input type="text" value="" id="pageType2" name="searchstring"/>
+		 </fieldset>
+		</form></div>
+    <div id="nav-topright">
+      <ul>
+      </ul>
+    </div>
+    <div id="shortCut">
+      <ul>
+        <li class="shortCut-topleft-inactive"><span><a href="index.html">Home</a></span></li>
+        <li class="shortCut-topleft-inactive"><span><a href="classes.html">All&nbsp;Classes</a></span></li>
+        <li class="shortCut-topleft-inactive"><span><a href="overviews.html">Overviews</a></span></li>
+      </ul>
+</div> <ul class="sf-menu sf-js-enabled sf-shadow" id="narrowmenu"> 
+		 <li><a href="#">API Lookup</a> 
+			 <ul id="topmenuLook"> 
+			   <li><a href="qtitan.html">Qtitan Namespace</a></li> 
+			   <li><a href="classes.html">Class index</a></li> 
+ 			  <li><a href="qtitan.html#functions">Function index</a></li> 
+			   </ul> 
+		 </li> 
+ </ul> 
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="hd">
+      <span></span>
+    </div>
+    <div class="bd group">
+      <div class="sidebar">
+        <div class="searchlabel">
+          Search index:</div>
+        <div class="search">
+          <form id="qtdocsearch" action="" onsubmit="return false;">
+            <fieldset>
+              <input type="text" name="searchstring" id="pageType" value="" />
+            </fieldset>
+          </form>
+        </div>
+        <div class="box first bottombar" id="lookup">
+          <h2 title="API Lookup"><span></span>
+            API Lookup</h2>
+          <div  id="list001" class="list">
+          <ul id="ul001" >
+              <li class="defaultLink"><a href="qtitan.html">Qtitan Namespace</a></li>
+              <li class="defaultLink"><a href="classes.html">Class index</a></li>
+              <li class="defaultLink"><a href="qtitan.html#functions">Function index</a></li>
+            </ul> 
+          </div>
+        </div>
+      </div>
+      <div class="wrap">
+        <div class="toolbar">
+          <div class="breadcrumb toolblock">
+            <ul>
+              <li class="first"><a href="index.html">Home</a></li>
+              <!--  Bread crumbs goes here -->
+              <li><a href="modules.html">Modules</a></li>              <li>OfficeStyle</li>
+              <li>OfficeStyle</li>
+            </ul>
+          </div>
+          <div class="toolbuttons toolblock">
+            <ul>
+              <li id="smallA" class="t_button">A</li>
+              <li id="medA" class="t_button active">A</li>
+              <li id="bigA" class="t_button">A</li>
+              <li id="print" class="t_button"><a href="javascript:this.print();">
+                <span>Print</span></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="content">
+<div class="toc">
+<h3><a name="toc">Contents</a></h3>
+<ul>
+<li class="level1"><a href="#public-types">Public Types</a></li>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#protected-functions">Protected Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<h1 class="title">OfficeStyle Class Reference</h1>
+<span class="small-subtitle">(Qtitan::OfficeStyle)<br/></span>
+<!-- $$$OfficeStyle-brief -->
+<p>OfficeStyle class implements the style of Microsoft Office 2007 and Microsoft Office 2010 for Qt. The styles are available for Windows, Linux and <a href="http://qt.nokia.com/doc/4.7/winsystem.html">MacOSX</a> without restrictions. To change the appearance of your application to the Microsoft Office 2007 style, you must initialize it using this line of code: QApplication::setStyle(new Qtitan::OfficeStyle()); Style OfficeStyle supports 8 themes - Office2007Blue, Office2007Black, Office2007Silver, Office2007Aqua, Windows7Scenic, Office2010Blue, Office2010Black, Office2010Silver. <a href="#details">More...</a></p>
+<!-- @@@OfficeStyle -->
+<pre class="highlightedCode brush: cpp">    #include &lt;<a href="qtitan.html">Qtitan</a>&gt;</pre><p>Inherits <a href="qtitan-commonstyle.html">CommonStyle</a>.</p>
+<p>Inherited by <a href="qtitan-ribbonstyle.html">Qtitan::RibbonStyle</a>.</p>
+<ul>
+<li><a href="qtitan-officestyle-members.html">List of all members, including inherited members</a></li>
+</ul>
+<a name="public-types"></a>
+<h2>Public Types</h2>
+<table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> enum </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#OptionsStyle-enum">OptionsStyle</a></b> { OS_OFFICE2007BLUE, OS_OFFICE2007BLACK, OS_OFFICE2007SILVER, OS_OFFICE2007AQUA, ..., OS_STYLEWHITE }</td></tr>
+</table>
+<a name="public-functions"></a>
+<h2>Public Functions</h2>
+<table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#OfficeStyle">OfficeStyle</a></b> ()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#dtor.OfficeStyle">~OfficeStyle</a></b> ()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> OptionsStyle </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#getOptionStyle">getOptionStyle</a></b> () const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#setOptionStyle">setOptionStyle</a></b> ( OptionsStyle <i>style</i> )</td></tr>
+</table>
+<a name="reimplemented-public-functions"></a>
+<h2>Reimplemented Public Functions</h2>
+<table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> virtual int </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#pixelMetric">pixelMetric</a></b> ( PixelMetric <i>pm</i>, const QStyleOption * <i>option</i> = Q_NULL, const QWidget * <i>widget</i> = Q_NULL ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#polish">polish</a></b> ( QApplication * )</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#polish-2">polish</a></b> ( QWidget * <i>widget</i> )</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#polish-3">polish</a></b> ( QPalette &amp; <i>palette</i> )</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual QSize </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#sizeFromContents">sizeFromContents</a></b> ( ContentsType <i>ct</i>, const QStyleOption * <i>opt</i>, const QSize &amp; <i>contentsSize</i>, const QWidget * <i>widget</i> = Q_NULL ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual int </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#styleHint">styleHint</a></b> ( StyleHint <i>hint</i>, const QStyleOption * <i>opt</i> = Q_NULL, const QWidget * <i>widget</i> = Q_NULL, QStyleHintReturn * <i>returnData</i> = Q_NULL ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual QRect </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#subControlRect">subControlRect</a></b> ( ComplexControl <i>cc</i>, const QStyleOptionComplex * <i>opt</i>, SubControl <i>sc</i>, const QWidget * <i>widget</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#unpolish">unpolish</a></b> ( QApplication * )</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#unpolish-2">unpolish</a></b> ( QWidget * <i>widget</i> )</td></tr>
+</table>
+<ul>
+<li class="fn">17 public functions inherited from <a href="qtitan-commonstyle.html#public-functions">Qtitan::CommonStyle</a></li>
+<li class="fn">13 public functions inherited from <a href="http://qt.nokia.com/doc/4.7/qwindowsstyle.html#public-functions">QWindowsStyle</a></li>
+<li class="fn">16 public functions inherited from <a href="http://qt.nokia.com/doc/4.7/qcommonstyle.html#public-functions">QCommonStyle</a></li>
+<li class="fn">24 public functions inherited from <a href="http://qt.nokia.com/doc/4.7/qstyle.html#public-functions">QStyle</a></li>
+<li class="fn">29 public functions inherited from <a href="http://qt.nokia.com/doc/4.7/qobject.html#public-functions">QObject</a></li>
+</ul>
+<a name="protected-functions"></a>
+<h2>Protected Functions</h2>
+<table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawLabelGallery">drawLabelGallery</a></b> ( QPainter * <i>p</i>, RibbonGalleryItem * <i>item</i>, const QRect &amp; <i>rect</i> )</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual QWidgetList </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#getAllWidgets">getAllWidgets</a></b> () const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> QString </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#getStyle">getStyle</a></b> ( const QString &amp; <i>str</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual QColor </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#getTextColor">getTextColor</a></b> ( bool <i>selected</i>, bool <i>pressed</i>, bool <i>enabled</i>, bool <i>checked</i>, bool <i>popuped</i>, BarType <i>barType</i>, BarPosition <i>barPosition</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#isStyle2010">isStyle2010</a></b> () const</td></tr>
+</table>
+<a name="reimplemented-protected-functions"></a>
+<h2>Reimplemented Protected Functions</h2>
+<table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> virtual QPixmap </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#cached">cached</a></b> ( const QString &amp; <i>img</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawComboBox">drawComboBox</a></b> ( const QStyleOptionComplex * <i>opt</i>, QPainter * <i>p</i>, const QWidget * <i>w</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawControlEdit">drawControlEdit</a></b> ( const QStyleOption * <i>opt</i>, QPainter * <i>p</i>, const QWidget * <i>w</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawDockWidgetTitle">drawDockWidgetTitle</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawDropDownGlyph">drawDropDownGlyph</a></b> ( QPainter *, QPoint <i>pt</i>, bool <i>selected</i>, bool <i>popuped</i>, bool <i>enabled</i>, bool <i>vert</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawFrameDefaultButton">drawFrameDefaultButton</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawFrameLineEdit">drawFrameLineEdit</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawFrameMenu">drawFrameMenu</a></b> ( const QStyleOption * <i>opt</i>, QPainter * <i>p</i>, const QWidget * <i>w</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawFrameTabWidget">drawFrameTabWidget</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawGroupControlEntry">drawGroupControlEntry</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawHeader">drawHeader</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawHeaderEmptyArea">drawHeaderEmptyArea</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawHeaderSection">drawHeaderSection</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawIndicatorArrow">drawIndicatorArrow</a></b> ( PrimitiveElement, const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawIndicatorCheckRadioButton">drawIndicatorCheckRadioButton</a></b> ( PrimitiveElement <i>element</i>, const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawIndicatorDockWidgetResizeHandle">drawIndicatorDockWidgetResizeHandle</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawIndicatorHeaderArrow">drawIndicatorHeaderArrow</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawIndicatorMenuCheckMark">drawIndicatorMenuCheckMark</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawIndicatorToolBarHandle">drawIndicatorToolBarHandle</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawIndicatorToolBarSeparator">drawIndicatorToolBarSeparator</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawItemViewItem">drawItemViewItem</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawMdiControls">drawMdiControls</a></b> ( const QStyleOptionComplex *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawMenuBarEmptyArea">drawMenuBarEmptyArea</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawMenuBarItem">drawMenuBarItem</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawMenuItem">drawMenuItem</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawPanelButtonCommand">drawPanelButtonCommand</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawPanelButtonTool">drawPanelButtonTool</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawPanelItemViewItem">drawPanelItemViewItem</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawPanelMenu">drawPanelMenu</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawPanelStatusBar">drawPanelStatusBar</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawPanelTipLabel">drawPanelTipLabel</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawProgressBarGroove">drawProgressBarGroove</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawRectangle">drawRectangle</a></b> ( QPainter * <i>p</i>, const QRect &amp; <i>rect</i>, bool <i>selected</i>, bool <i>pressed</i>, bool <i>enabled</i>, bool <i>checked</i>, bool <i>popuped</i>, BarType <i>barType</i>, BarPosition <i>barPos</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawScrollBar">drawScrollBar</a></b> ( const QStyleOptionComplex * <i>opt</i>, QPainter * <i>p</i>, const QWidget * <i>w</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawScrollBarLine">drawScrollBarLine</a></b> ( ControlElement <i>element</i>, const QStyleOption * <i>opt</i>, QPainter * <i>p</i>, const QWidget * <i>w</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawScrollBarPage">drawScrollBarPage</a></b> ( ControlElement <i>element</i>, const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawScrollBarSlider">drawScrollBarSlider</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawShapedFrame">drawShapedFrame</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawSizeGrip">drawSizeGrip</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawSlider">drawSlider</a></b> ( const QStyleOptionComplex * <i>opt</i>, QPainter * <i>p</i>, const QWidget * <i>w</i> ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawSpinBox">drawSpinBox</a></b> ( const QStyleOptionComplex *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawTabBarTab">drawTabBarTab</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawTabBarTabLabel">drawTabBarTabLabel</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawTabBarTabShape">drawTabBarTabShape</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawToolBar">drawToolBar</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawToolBoxTab">drawToolBoxTab</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawToolBoxTabLabel">drawToolBoxTabLabel</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawToolBoxTabShape">drawToolBoxTabShape</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawToolButton">drawToolButton</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawToolButtonLabel">drawToolButtonLabel</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawWidget">drawWidget</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#drawWorkspace">drawWorkspace</a></b> ( const QStyleOption *, QPainter *, const QWidget * ) const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="qtitan-officestyle.html#eventFilter">eventFilter</a></b> ( QObject * <i>watched</i>, QEvent * <i>event</i> )</td></tr>
+</table>
+<ul>
+<li class="fn">68 protected functions inherited from <a href="qtitan-commonstyle.html#protected-functions">Qtitan::CommonStyle</a></li>
+<li class="fn">2 protected functions inherited from <a href="http://qt.nokia.com/doc/4.7/qwindowsstyle.html#protected-functions">QWindowsStyle</a></li>
+<li class="fn">7 protected functions inherited from <a href="http://qt.nokia.com/doc/4.7/qobject.html#protected-functions">QObject</a></li>
+</ul>
+<h3>Additional Inherited Members</h3>
+<ul>
+<li class="fn">1 property inherited from <a href="http://qt.nokia.com/doc/4.7/qobject.html#properties">QObject</a></li>
+<li class="fn">1 public slot inherited from <a href="http://qt.nokia.com/doc/4.7/qobject.html#public-slots">QObject</a></li>
+<li class="fn">1 signal inherited from <a href="http://qt.nokia.com/doc/4.7/qobject.html#signals">QObject</a></li>
+<li class="fn">1 public variable inherited from <a href="http://qt.nokia.com/doc/4.7/qobject.html#public-variables">QObject</a></li>
+<li class="fn">1 static public member inherited from <a href="qtitan-commonstyle.html#static-public-members">Qtitan::CommonStyle</a></li>
+<li class="fn">6 static public members inherited from <a href="http://qt.nokia.com/doc/4.7/qstyle.html#static-public-members">QStyle</a></li>
+<li class="fn">4 static public members inherited from <a href="http://qt.nokia.com/doc/4.7/qobject.html#static-public-members">QObject</a></li>
+<li class="fn">2 protected slots inherited from <a href="http://qt.nokia.com/doc/4.7/qstyle.html#protected-slots">QStyle</a></li>
+<li class="fn">2 protected variables inherited from <a href="http://qt.nokia.com/doc/4.7/qobject.html#protected-variables">QObject</a></li>
+</ul>
+<a name="details"></a>
+<!-- $$$OfficeStyle-description -->
+<div class="descr">
+<h2>Detailed Description</h2>
+<p>OfficeStyle class implements the style of Microsoft Office 2007 and Microsoft Office 2010 for Qt. The styles are available for Windows, Linux and <a href="http://qt.nokia.com/doc/4.7/winsystem.html">MacOSX</a> without restrictions. To change the appearance of your application to the Microsoft Office 2007 style, you must initialize it using this line of code: QApplication::setStyle(new Qtitan::OfficeStyle()); Style OfficeStyle supports 8 themes - Office2007Blue, Office2007Black, Office2007Silver, Office2007Aqua, Windows7Scenic, Office2010Blue, Office2010Black, Office2010Silver.</p>
+</div>
+<!-- @@@OfficeStyle -->
+<div class="types">
+<h2>Member Type Documentation</h2>
+<!-- $$$OptionsStyle$$$OS_OFFICE2007BLUE$$$OS_OFFICE2007BLACK$$$OS_OFFICE2007SILVER$$$OS_OFFICE2007AQUA$$$OS_WINDOWS7SCENIC$$$OS_OFFICE2010SILVER$$$OS_OFFICE2010BLUE$$$OS_OFFICE2010BLACK$$$OS_STYLEBLUE$$$OS_STYLEBLACK$$$OS_STYLESILVER$$$OS_STYLEAQUA$$$OS_STYLESCENIC$$$OS_STYLEWHITE -->
+<h3 class="fn"><a name="OptionsStyle-enum"></a>enum OfficeStyle::OptionsStyle</h3>
+<!-- @@@OptionsStyle -->
+</div>
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$OfficeStyle[overload1]$$$OfficeStyle -->
+<h3 class="fn"><a name="OfficeStyle"></a>OfficeStyle::OfficeStyle ()</h3>
+<!-- @@@OfficeStyle -->
+<!-- $$$~OfficeStyle[overload1]$$$~OfficeStyle -->
+<h3 class="fn"><a name="dtor.OfficeStyle"></a>OfficeStyle::~OfficeStyle ()<tt> [virtual]</tt></h3>
+<!-- @@@~OfficeStyle -->
+<!-- $$$cached[overload1]$$$cachedconstQString& -->
+<h3 class="fn"><a name="cached"></a><a href="http://qt.nokia.com/doc/4.7/qpixmap.html">QPixmap</a> OfficeStyle::cached ( const <a href="http://qt.nokia.com/doc/4.7/qstring.html">QString</a> &amp; <i>img</i> ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@cached -->
+<!-- $$$drawComboBox[overload1]$$$drawComboBoxconstQStyleOptionComplex*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawComboBox"></a>bool OfficeStyle::drawComboBox ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoptioncomplex.html">QStyleOptionComplex</a> * <i>opt</i>, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> * <i>p</i>, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>w</i> ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawComboBox -->
+<!-- $$$drawControlEdit[overload1]$$$drawControlEditconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawControlEdit"></a>bool OfficeStyle::drawControlEdit ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> * <i>opt</i>, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> * <i>p</i>, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>w</i> ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawControlEdit -->
+<!-- $$$drawDockWidgetTitle[overload1]$$$drawDockWidgetTitleconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawDockWidgetTitle"></a>bool OfficeStyle::drawDockWidgetTitle ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawDockWidgetTitle -->
+<!-- $$$drawDropDownGlyph[overload1]$$$drawDropDownGlyphQPainter*QPointboolboolboolbool -->
+<h3 class="fn"><a name="drawDropDownGlyph"></a>void OfficeStyle::drawDropDownGlyph ( <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, <a href="http://qt.nokia.com/doc/4.7/qpoint.html">QPoint</a> <i>pt</i>, bool <i>selected</i>, bool <i>popuped</i>, bool <i>enabled</i>, bool <i>vert</i> ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawDropDownGlyph -->
+<!-- $$$drawFrameDefaultButton[overload1]$$$drawFrameDefaultButtonconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawFrameDefaultButton"></a>bool OfficeStyle::drawFrameDefaultButton ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawFrameDefaultButton -->
+<!-- $$$drawFrameLineEdit[overload1]$$$drawFrameLineEditconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawFrameLineEdit"></a>bool OfficeStyle::drawFrameLineEdit ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawFrameLineEdit -->
+<!-- $$$drawFrameMenu[overload1]$$$drawFrameMenuconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawFrameMenu"></a>bool OfficeStyle::drawFrameMenu ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> * <i>opt</i>, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> * <i>p</i>, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>w</i> ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawFrameMenu -->
+<!-- $$$drawFrameTabWidget[overload1]$$$drawFrameTabWidgetconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawFrameTabWidget"></a>bool OfficeStyle::drawFrameTabWidget ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawFrameTabWidget -->
+<!-- $$$drawGroupControlEntry[overload1]$$$drawGroupControlEntryconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawGroupControlEntry"></a>bool OfficeStyle::drawGroupControlEntry ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawGroupControlEntry -->
+<!-- $$$drawHeader[overload1]$$$drawHeaderconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawHeader"></a>bool OfficeStyle::drawHeader ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawHeader -->
+<!-- $$$drawHeaderEmptyArea[overload1]$$$drawHeaderEmptyAreaconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawHeaderEmptyArea"></a>bool OfficeStyle::drawHeaderEmptyArea ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawHeaderEmptyArea -->
+<!-- $$$drawHeaderSection[overload1]$$$drawHeaderSectionconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawHeaderSection"></a>bool OfficeStyle::drawHeaderSection ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawHeaderSection -->
+<!-- $$$drawIndicatorArrow[overload1]$$$drawIndicatorArrowPrimitiveElementconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawIndicatorArrow"></a>bool OfficeStyle::drawIndicatorArrow ( <a href="http://qt.nokia.com/doc/4.7/qstyle.html#PrimitiveElement-enum">PrimitiveElement</a>, const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawIndicatorArrow -->
+<!-- $$$drawIndicatorCheckRadioButton[overload1]$$$drawIndicatorCheckRadioButtonPrimitiveElementconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawIndicatorCheckRadioButton"></a>bool OfficeStyle::drawIndicatorCheckRadioButton ( <a href="http://qt.nokia.com/doc/4.7/qstyle.html#PrimitiveElement-enum">PrimitiveElement</a> <i>element</i>, const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawIndicatorCheckRadioButton -->
+<!-- $$$drawIndicatorDockWidgetResizeHandle[overload1]$$$drawIndicatorDockWidgetResizeHandleconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawIndicatorDockWidgetResizeHandle"></a>bool OfficeStyle::drawIndicatorDockWidgetResizeHandle ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawIndicatorDockWidgetResizeHandle -->
+<!-- $$$drawIndicatorHeaderArrow[overload1]$$$drawIndicatorHeaderArrowconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawIndicatorHeaderArrow"></a>bool OfficeStyle::drawIndicatorHeaderArrow ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawIndicatorHeaderArrow -->
+<!-- $$$drawIndicatorMenuCheckMark[overload1]$$$drawIndicatorMenuCheckMarkconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawIndicatorMenuCheckMark"></a>bool OfficeStyle::drawIndicatorMenuCheckMark ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawIndicatorMenuCheckMark -->
+<!-- $$$drawIndicatorToolBarHandle[overload1]$$$drawIndicatorToolBarHandleconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawIndicatorToolBarHandle"></a>bool OfficeStyle::drawIndicatorToolBarHandle ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawIndicatorToolBarHandle -->
+<!-- $$$drawIndicatorToolBarSeparator[overload1]$$$drawIndicatorToolBarSeparatorconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawIndicatorToolBarSeparator"></a>bool OfficeStyle::drawIndicatorToolBarSeparator ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawIndicatorToolBarSeparator -->
+<!-- $$$drawItemViewItem[overload1]$$$drawItemViewItemconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawItemViewItem"></a>bool OfficeStyle::drawItemViewItem ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawItemViewItem -->
+<!-- $$$drawLabelGallery[overload1]$$$drawLabelGalleryQPainter*RibbonGalleryItem*constQRect& -->
+<h3 class="fn"><a name="drawLabelGallery"></a>void OfficeStyle::drawLabelGallery ( <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> * <i>p</i>, <a href="qtitan-ribbongalleryitem.html">RibbonGalleryItem</a> * <i>item</i>, const <a href="http://qt.nokia.com/doc/4.7/qrect.html">QRect</a> &amp; <i>rect</i> )<tt> [virtual protected]</tt></h3>
+<!-- @@@drawLabelGallery -->
+<!-- $$$drawMdiControls[overload1]$$$drawMdiControlsconstQStyleOptionComplex*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawMdiControls"></a>bool OfficeStyle::drawMdiControls ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoptioncomplex.html">QStyleOptionComplex</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawMdiControls -->
+<!-- $$$drawMenuBarEmptyArea[overload1]$$$drawMenuBarEmptyAreaconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawMenuBarEmptyArea"></a>bool OfficeStyle::drawMenuBarEmptyArea ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawMenuBarEmptyArea -->
+<!-- $$$drawMenuBarItem[overload1]$$$drawMenuBarItemconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawMenuBarItem"></a>bool OfficeStyle::drawMenuBarItem ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawMenuBarItem -->
+<!-- $$$drawMenuItem[overload1]$$$drawMenuItemconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawMenuItem"></a>bool OfficeStyle::drawMenuItem ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawMenuItem -->
+<!-- $$$drawPanelButtonCommand[overload1]$$$drawPanelButtonCommandconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawPanelButtonCommand"></a>bool OfficeStyle::drawPanelButtonCommand ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawPanelButtonCommand -->
+<!-- $$$drawPanelButtonTool[overload1]$$$drawPanelButtonToolconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawPanelButtonTool"></a>bool OfficeStyle::drawPanelButtonTool ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawPanelButtonTool -->
+<!-- $$$drawPanelItemViewItem[overload1]$$$drawPanelItemViewItemconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawPanelItemViewItem"></a>bool OfficeStyle::drawPanelItemViewItem ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawPanelItemViewItem -->
+<!-- $$$drawPanelMenu[overload1]$$$drawPanelMenuconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawPanelMenu"></a>bool OfficeStyle::drawPanelMenu ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawPanelMenu -->
+<!-- $$$drawPanelStatusBar[overload1]$$$drawPanelStatusBarconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawPanelStatusBar"></a>bool OfficeStyle::drawPanelStatusBar ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawPanelStatusBar -->
+<!-- $$$drawPanelTipLabel[overload1]$$$drawPanelTipLabelconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawPanelTipLabel"></a>bool OfficeStyle::drawPanelTipLabel ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawPanelTipLabel -->
+<!-- $$$drawProgressBarGroove[overload1]$$$drawProgressBarGrooveconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawProgressBarGroove"></a>bool OfficeStyle::drawProgressBarGroove ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawProgressBarGroove -->
+<!-- $$$drawRectangle[overload1]$$$drawRectangleQPainter*constQRect&boolboolboolboolboolBarTypeBarPosition -->
+<h3 class="fn"><a name="drawRectangle"></a>void OfficeStyle::drawRectangle ( <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> * <i>p</i>, const <a href="http://qt.nokia.com/doc/4.7/qrect.html">QRect</a> &amp; <i>rect</i>, bool <i>selected</i>, bool <i>pressed</i>, bool <i>enabled</i>, bool <i>checked</i>, bool <i>popuped</i>, <a href="qtitan.html#BarType-enum">BarType</a> <i>barType</i>, <a href="qtitan.html#BarPosition-enum">BarPosition</a> <i>barPos</i> ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawRectangle -->
+<!-- $$$drawScrollBar[overload1]$$$drawScrollBarconstQStyleOptionComplex*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawScrollBar"></a>bool OfficeStyle::drawScrollBar ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoptioncomplex.html">QStyleOptionComplex</a> * <i>opt</i>, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> * <i>p</i>, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>w</i> ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawScrollBar -->
+<!-- $$$drawScrollBarLine[overload1]$$$drawScrollBarLineControlElementconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawScrollBarLine"></a>bool OfficeStyle::drawScrollBarLine ( <a href="http://qt.nokia.com/doc/4.7/qstyle.html#ControlElement-enum">ControlElement</a> <i>element</i>, const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> * <i>opt</i>, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> * <i>p</i>, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>w</i> ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawScrollBarLine -->
+<!-- $$$drawScrollBarPage[overload1]$$$drawScrollBarPageControlElementconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawScrollBarPage"></a>bool OfficeStyle::drawScrollBarPage ( <a href="http://qt.nokia.com/doc/4.7/qstyle.html#ControlElement-enum">ControlElement</a> <i>element</i>, const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawScrollBarPage -->
+<!-- $$$drawScrollBarSlider[overload1]$$$drawScrollBarSliderconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawScrollBarSlider"></a>bool OfficeStyle::drawScrollBarSlider ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawScrollBarSlider -->
+<!-- $$$drawShapedFrame[overload1]$$$drawShapedFrameconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawShapedFrame"></a>bool OfficeStyle::drawShapedFrame ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawShapedFrame -->
+<!-- $$$drawSizeGrip[overload1]$$$drawSizeGripconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawSizeGrip"></a>bool OfficeStyle::drawSizeGrip ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawSizeGrip -->
+<!-- $$$drawSlider[overload1]$$$drawSliderconstQStyleOptionComplex*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawSlider"></a>bool OfficeStyle::drawSlider ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoptioncomplex.html">QStyleOptionComplex</a> * <i>opt</i>, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> * <i>p</i>, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>w</i> ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawSlider -->
+<!-- $$$drawSpinBox[overload1]$$$drawSpinBoxconstQStyleOptionComplex*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawSpinBox"></a>bool OfficeStyle::drawSpinBox ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoptioncomplex.html">QStyleOptionComplex</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawSpinBox -->
+<!-- $$$drawTabBarTab[overload1]$$$drawTabBarTabconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawTabBarTab"></a>bool OfficeStyle::drawTabBarTab ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawTabBarTab -->
+<!-- $$$drawTabBarTabLabel[overload1]$$$drawTabBarTabLabelconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawTabBarTabLabel"></a>bool OfficeStyle::drawTabBarTabLabel ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawTabBarTabLabel -->
+<!-- $$$drawTabBarTabShape[overload1]$$$drawTabBarTabShapeconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawTabBarTabShape"></a>bool OfficeStyle::drawTabBarTabShape ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawTabBarTabShape -->
+<!-- $$$drawToolBar[overload1]$$$drawToolBarconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawToolBar"></a>bool OfficeStyle::drawToolBar ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawToolBar -->
+<!-- $$$drawToolBoxTab[overload1]$$$drawToolBoxTabconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawToolBoxTab"></a>bool OfficeStyle::drawToolBoxTab ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawToolBoxTab -->
+<!-- $$$drawToolBoxTabLabel[overload1]$$$drawToolBoxTabLabelconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawToolBoxTabLabel"></a>bool OfficeStyle::drawToolBoxTabLabel ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawToolBoxTabLabel -->
+<!-- $$$drawToolBoxTabShape[overload1]$$$drawToolBoxTabShapeconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawToolBoxTabShape"></a>bool OfficeStyle::drawToolBoxTabShape ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawToolBoxTabShape -->
+<!-- $$$drawToolButton[overload1]$$$drawToolButtonconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawToolButton"></a>bool OfficeStyle::drawToolButton ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawToolButton -->
+<!-- $$$drawToolButtonLabel[overload1]$$$drawToolButtonLabelconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawToolButtonLabel"></a>bool OfficeStyle::drawToolButtonLabel ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawToolButtonLabel -->
+<!-- $$$drawWidget[overload1]$$$drawWidgetconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawWidget"></a>bool OfficeStyle::drawWidget ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawWidget -->
+<!-- $$$drawWorkspace[overload1]$$$drawWorkspaceconstQStyleOption*QPainter*constQWidget* -->
+<h3 class="fn"><a name="drawWorkspace"></a>bool OfficeStyle::drawWorkspace ( const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> *, <a href="http://qt.nokia.com/doc/4.7/qpainter.html">QPainter</a> *, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@drawWorkspace -->
+<!-- $$$eventFilter[overload1]$$$eventFilterQObject*QEvent* -->
+<h3 class="fn"><a name="eventFilter"></a>bool OfficeStyle::eventFilter ( <a href="http://qt.nokia.com/doc/4.7/qobject.html">QObject</a> * <i>watched</i>, <a href="http://qt.nokia.com/doc/4.7/qevent.html">QEvent</a> * <i>event</i> )<tt> [virtual protected]</tt></h3>
+<!-- @@@eventFilter -->
+<!-- $$$getAllWidgets[overload1]$$$getAllWidgets -->
+<h3 class="fn"><a name="getAllWidgets"></a><a href="http://qt.nokia.com/doc/4.7/qwidget.html#QWidgetList-typedef">QWidgetList</a> OfficeStyle::getAllWidgets () const<tt> [virtual protected]</tt></h3>
+<!-- @@@getAllWidgets -->
+<!-- $$$getOptionStyle[overload1]$$$getOptionStyle -->
+<h3 class="fn"><a name="getOptionStyle"></a><a href="qtitan-officestyle.html#OptionsStyle-enum">OptionsStyle</a> OfficeStyle::getOptionStyle () const</h3>
+<!-- @@@getOptionStyle -->
+<!-- $$$getStyle[overload1]$$$getStyleconstQString& -->
+<h3 class="fn"><a name="getStyle"></a><a href="http://qt.nokia.com/doc/4.7/qstring.html">QString</a> OfficeStyle::getStyle ( const <a href="http://qt.nokia.com/doc/4.7/qstring.html">QString</a> &amp; <i>str</i> ) const<tt> [protected]</tt></h3>
+<!-- @@@getStyle -->
+<!-- $$$getTextColor[overload1]$$$getTextColorboolboolboolboolboolBarTypeBarPosition -->
+<h3 class="fn"><a name="getTextColor"></a><a href="http://qt.nokia.com/doc/4.7/qcolor.html">QColor</a> OfficeStyle::getTextColor ( bool <i>selected</i>, bool <i>pressed</i>, bool <i>enabled</i>, bool <i>checked</i>, bool <i>popuped</i>, <a href="qtitan.html#BarType-enum">BarType</a> <i>barType</i>, <a href="qtitan.html#BarPosition-enum">BarPosition</a> <i>barPosition</i> ) const<tt> [virtual protected]</tt></h3>
+<!-- @@@getTextColor -->
+<!-- $$$isStyle2010[overload1]$$$isStyle2010 -->
+<h3 class="fn"><a name="isStyle2010"></a>bool OfficeStyle::isStyle2010 () const<tt> [protected]</tt></h3>
+<!-- @@@isStyle2010 -->
+<!-- $$$pixelMetric[overload1]$$$pixelMetricPixelMetricconstQStyleOption*constQWidget* -->
+<h3 class="fn"><a name="pixelMetric"></a>int OfficeStyle::pixelMetric ( <a href="http://qt.nokia.com/doc/4.7/qstyle.html#PixelMetric-enum">PixelMetric</a> <i>pm</i>, const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> * <i>option</i> = Q_NULL, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>widget</i> = Q_NULL ) const<tt> [virtual]</tt></h3>
+<!-- @@@pixelMetric -->
+<!-- $$$polish[overload1]$$$polishQApplication* -->
+<h3 class="fn"><a name="polish"></a>void OfficeStyle::polish ( <a href="http://qt.nokia.com/doc/4.7/qapplication.html">QApplication</a> * )<tt> [virtual]</tt></h3>
+<!-- @@@polish -->
+<!-- $$$polish$$$polishQWidget* -->
+<h3 class="fn"><a name="polish-2"></a>void OfficeStyle::polish ( <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>widget</i> )<tt> [virtual]</tt></h3>
+<!-- @@@polish -->
+<!-- $$$polish$$$polishQPalette& -->
+<h3 class="fn"><a name="polish-3"></a>void OfficeStyle::polish ( <a href="http://qt.nokia.com/doc/4.7/qpalette.html">QPalette</a> &amp; <i>palette</i> )<tt> [virtual]</tt></h3>
+<!-- @@@polish -->
+<!-- $$$setOptionStyle[overload1]$$$setOptionStyleOptionsStyle -->
+<h3 class="fn"><a name="setOptionStyle"></a>void OfficeStyle::setOptionStyle ( <a href="qtitan-officestyle.html#OptionsStyle-enum">OptionsStyle</a> <i>style</i> )<tt> [virtual]</tt></h3>
+<!-- @@@setOptionStyle -->
+<!-- $$$sizeFromContents[overload1]$$$sizeFromContentsContentsTypeconstQStyleOption*constQSize&constQWidget* -->
+<h3 class="fn"><a name="sizeFromContents"></a><a href="http://qt.nokia.com/doc/4.7/qsize.html">QSize</a> OfficeStyle::sizeFromContents ( <a href="http://qt.nokia.com/doc/4.7/qstyle.html#ContentsType-enum">ContentsType</a> <i>ct</i>, const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> * <i>opt</i>, const <a href="http://qt.nokia.com/doc/4.7/qsize.html">QSize</a> &amp; <i>contentsSize</i>, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>widget</i> = Q_NULL ) const<tt> [virtual]</tt></h3>
+<!-- @@@sizeFromContents -->
+<!-- $$$styleHint[overload1]$$$styleHintStyleHintconstQStyleOption*constQWidget*QStyleHintReturn* -->
+<h3 class="fn"><a name="styleHint"></a>int OfficeStyle::styleHint ( <a href="http://qt.nokia.com/doc/4.7/qstyle.html#StyleHint-enum">StyleHint</a> <i>hint</i>, const <a href="http://qt.nokia.com/doc/4.7/qstyleoption.html">QStyleOption</a> * <i>opt</i> = Q_NULL, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>widget</i> = Q_NULL, <a href="http://qt.nokia.com/doc/4.7/qstylehintreturn.html">QStyleHintReturn</a> * <i>returnData</i> = Q_NULL ) const<tt> [virtual]</tt></h3>
+<!-- @@@styleHint -->
+<!-- $$$subControlRect[overload1]$$$subControlRectComplexControlconstQStyleOptionComplex*SubControlconstQWidget* -->
+<h3 class="fn"><a name="subControlRect"></a><a href="http://qt.nokia.com/doc/4.7/qrect.html">QRect</a> OfficeStyle::subControlRect ( <a href="http://qt.nokia.com/doc/4.7/qstyle.html#ComplexControl-enum">ComplexControl</a> <i>cc</i>, const <a href="http://qt.nokia.com/doc/4.7/qstyleoptioncomplex.html">QStyleOptionComplex</a> * <i>opt</i>, <a href="http://qt.nokia.com/doc/4.7/qstyle.html#SubControl-enum">SubControl</a> <i>sc</i>, const <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>widget</i> ) const<tt> [virtual]</tt></h3>
+<!-- @@@subControlRect -->
+<!-- $$$unpolish[overload1]$$$unpolishQApplication* -->
+<h3 class="fn"><a name="unpolish"></a>void OfficeStyle::unpolish ( <a href="http://qt.nokia.com/doc/4.7/qapplication.html">QApplication</a> * )<tt> [virtual]</tt></h3>
+<!-- @@@unpolish -->
+<!-- $$$unpolish$$$unpolishQWidget* -->
+<h3 class="fn"><a name="unpolish-2"></a>void OfficeStyle::unpolish ( <a href="http://qt.nokia.com/doc/4.7/qwidget.html">QWidget</a> * <i>widget</i> )<tt> [virtual]</tt></h3>
+<!-- @@@unpolish -->
+</div>
+        <!-- /div -->
+        <div class="feedback t_button">
+          </div>
+      </div>
+    </div>
+    <div class="ft">
+      <span></span>
+    </div>
+  </div> 
+  <div class="footer">
+    <p>
+      <acronym title="Copyright">&copy;</acronym> 2009-2012 Developer Machines<br><br>      Nokia, Qt and their respective logos are trademarks of Nokia Corporation 
+      in Finland and/or other countries worldwide.</p>
+    <p>
+      All other trademarks are property of their respective owners. <a title="Privacy Policy"
+        href="http://www.devmachines.com/company/privacy-policy.html">Privacy Policy</a></p>
+  </div>
+  <div id="blurpage">
+  </div>
+  <!--/div -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-17002018-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+  <script src="scripts/functions.js" type="text/javascript"></script>
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-17002018-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  </script>
+</body>
+</html>
