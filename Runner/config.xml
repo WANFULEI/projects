@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Ribbon>
+  <Page Name="Buttons" Use="true">
+    <Group Name="Large Buttons" OptionButtonVisible="true" Text="" ToolTip="Large Buttons" ControlsCentering="false" ControlsGrouping="false" Use="true">
+      <Connection Receiver="me" Signal="" Slot="slot_test()" Use="true"/>
+      <Item Type="Action" ObjectName="action1" Icon="res/largeButton.png" Text="Button" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        <Connection Receiver="me2" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="res/largeToggleButton.png" Text="Toggle Button" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="true" Checked="true" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Menu" ObjecctName="menu1" Icon="res/largeToggleButton.png" Text="Popup Button" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" Use="true">
+        <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Menu" ObjecctName="menu1" Icon="res/largeToggleButton.png" Text="Popup Button" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" Use="true">
+          <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+          <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+            <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+          </Item>
+          <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+            <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+          </Item>
+          <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+            <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+          </Item>
+        </Item>
+      </Item>
+      <Item Type="Menu" ObjecctName="menu1" Icon="res/largeSplitButton.png" Text="Split Button" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" Use="true">
+        <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+o" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+q" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+      </Item>
+    </Group>
+    <Group Name="Small Buttons" OptionButtonVisible="true" Text="Small" ToolTip="Small Buttons" ControlsCentering="false" ControlsGrouping="false">
+      <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+      <Item Type="Action" ObjectName="action1" Icon="res/smallButton.png" Text="Button" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextBesideIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Menu" ObjecctName="menu1" Icon="res/smallPopupButton.png" Text="Popup Button" ToolButtonStyle="Qt::ToolButtonTextBesideIcon" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" Use="true">
+        <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+      </Item>
+      <Item Type="Menu" ObjecctName="menu1" Icon="res/smallSplitButton.png" Text="Split Button" ToolButtonStyle="Qt::ToolButtonTextBesideIcon" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" Use="true">
+        <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="res/smallButton.png" Text="Button" ToolTip="" ToolButtonStyle="Qt::ToolButtonIconOnly" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Menu" ObjecctName="menu1" Icon="res/smallPopupButton.png" Text="Popup Button" ToolButtonStyle="Qt::ToolButtonIconOnly" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" Use="true">
+        <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+      </Item>
+      <Item Type="Menu" ObjecctName="menu1" Icon="res/smallSplitButton.png" Text="Split Button" ToolButtonStyle="Qt::ToolButtonIconOnly" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" Use="true">
+        <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="Ctrl+P" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+      </Item>
+    </Group>
+    <Group Name="Checkboxes Radio Buttons" OptionButtonVisible="true" Text="" ToolTip="Checkboxes Radio Buttons" ControlsCentering="true" ControlsGrouping="false">
+      <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+      <Item Type="CheckBox" ObjecctName="CheckBox" Icon="" Text="CheckBox 1" ToolTip="CheckBox 1" CheckState="Qt::UnChecked" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" AutoExclusive="" AutoRepeat="" AutoRepeatDelay="" AutoRepeatInterval="" Checkable="" Checked="" IconWidth="" IconHeight="" Shortcut="" Use="true">
+        <Connection Receiver="me" Signal="stateChanged ( int )" Slot="slot_stateChanged ( int )" Use="true"/>
+      </Item>
+      <Item Type="CheckBox" ObjecctName="CheckBox" Icon="" Text="CheckBox 2" ToolTip="CheckBox 1" CheckState="Qt::UnChecked" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" AutoExclusive="" AutoRepeat="" AutoRepeatDelay="" AutoRepeatInterval="" Checkable="" Checked="" IconWidth="" IconHeight="" Shortcut="" Use="true">
+        <Connection Receiver="me" Signal="stateChanged ( int )" Slot="slot_stateChanged ( int )" Use="true"/>
+      </Item>
+      <Item Type="CheckBox" ObjecctName="CheckBox" Icon="" Text="CheckBox 3" ToolTip="CheckBox 1" CheckState="Qt::Checked" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" AutoExclusive="" AutoRepeat="" AutoRepeatDelay="" AutoRepeatInterval="" Checkable="" Checked="" IconWidth="" IconHeight="" Shortcut="" Use="true">
+        <Connection Receiver="me" Signal="stateChanged ( int )" Slot="slot_stateChanged ( int )" Use="true"/>
+      </Item>
+      <Item Type="Separator"/>
+      <Item Type="RadioButton" ObjecctName="RadioButton" Icon="" Text="Radio Button 1" ToolTip="Radio Button 1" Checked="true" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" AutoExclusive="" AutoRepeat="" AutoRepeatDelay="" AutoRepeatInterval="" Checkable="" IconWidth="" IconHeight="" Shortcut="" Use="true">
+        <Connection Receiver="me" Signal="stateChanged ( int )" Slot="slot_stateChanged ( int )" Use="true"/>
+      </Item>
+      <Item Type="RadioButton" ObjecctName="RadioButton" Icon="" Text="Radio Button 2" ToolTip="Radio Button 2" Checked="false" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" AutoExclusive="" AutoRepeat="" AutoRepeatDelay="" AutoRepeatInterval="" Checkable="" IconWidth="" IconHeight="" Shortcut="" Use="true">
+        <Connection Receiver="me" Signal="stateChanged ( int )" Slot="slot_stateChanged ( int )" Use="true"/>
+      </Item>
+      <Item Type="RadioButton" ObjecctName="RadioButton" Icon="" Text="Radio Button 3" ToolTip="Radio Button 3" Checked="false" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" AutoExclusive="" AutoRepeat="" AutoRepeatDelay="" AutoRepeatInterval="" Checkable="" IconWidth="" IconHeight="" Shortcut="" Use="true">
+        <Connection Receiver="me" Signal="stateChanged ( int )" Slot="slot_stateChanged ( int )" Use="true"/>
+      </Item>
+    </Group>
+    <Group Name="Groups" OptionButtonVisible="false" Text="" ToolTip="Groups" ControlsCentering="true" ControlsGrouping="true">
+      <Item Type="Action" ObjectName="action1" Icon="res/smallNew.png" Text="New" ToolTip="Create a new document" ToolButtonStyle="Qt::ToolButtonIconOnly" Checkable="false" Checked="false" Visible="" StatusTip="" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="res/smallOpen.png" Text="Open" ToolTip="Open an existing document" ToolButtonStyle="Qt::ToolButtonIconOnly" Checkable="false" Checked="false" Visible="" StatusTip="" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="res/smallSave.png" Text="Save" ToolTip="Save the active document" ToolButtonStyle="Qt::ToolButtonIconOnly" Checkable="false" Checked="false" Visible="" StatusTip="" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="res/smallCut.png" Text="Cut" ToolTip="Cut the selection and put it on the Clipboard" ToolButtonStyle="Qt::ToolButtonIconOnly" Checkable="false" Checked="false" Visible="" StatusTip="" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="res/smallCopy.png" Text="Copy" ToolTip="Copy the selection and put it on the Clipboard" ToolButtonStyle="Qt::ToolButtonIconOnly" Checkable="false" Checked="false" Visible="" StatusTip="" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="res/smallClipboard.png" Text="Paste" ToolTip="Insert Clipboard contents" ToolButtonStyle="Qt::ToolButtonIconOnly" Checkable="false" Checked="false" Visible="" StatusTip="" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Separator"/>
+      <Item Type="Action" ObjectName="action1" Icon="res/smallUndo.png" Text="Undo" ToolTip="Undo the last action" ToolButtonStyle="Qt::ToolButtonIconOnly" Checkable="false" Checked="false" Visible="" StatusTip="" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="res/smallRedo.png" Text="Redo" ToolTip="Redo the previously undone action" ToolButtonStyle="Qt::ToolButtonIconOnly" Checkable="false" Checked="false" Visible="" StatusTip="" Enabled="true" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" IconText="" IconVisibleInMenu="false" Priority="" Shortcut="" ShortcutConText="" WhatsThis="" AutoRepeat="true" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" Enable="false" Icon="res/smallRedo.png" Text="Redo" ToolTip="Redo the previously undone action" ToolButtonStyle="Qt::ToolButtonIconOnly" Checkable="false" Checked="false" >
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()"/>
+      </Item>
+      <Item Type="Separator"/>
+      <Item Type="Action" Enable="false" Icon="res/smallPrint.png" Text="Print" ToolTip="Print the active document" ToolButtonStyle="Qt::ToolButtonIconOnly" Checkable="false" Checked="false" >
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()"/>
+      </Item>
+      <Item Type="Action" Enable="false" Icon="res/about.png" Text="About" ToolTip="Display program information, version number and copyright" ToolButtonStyle="Qt::ToolButtonIconOnly" Checkable="false" Checked="false" >
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()"/>
+      </Item>
+    </Group>
+  </Page>
+  <Page Name="Editors" Use="true">
+    <Group Name="Standard" OptionButtonVisible="false" Text="" ToolTip="Standard" ControlsCentering="false" ControlsGrouping="false" Use="true">
+      <Item Type="LineEdit" ObjecctName="LineEdit" Icon="" Text="Edit" ToolTip="Edit" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="150" MinimumHeight="" MinimumWidth="150" StatusTip="" StyleSheet="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" Alignment="" CursorMoveStyle="" DragEnabled="" EchoMode="" Frame="" InputMask="" MaxLength="" PlaceholderText="" ReadOnly="" RedoAvailable="" UndoAvailable="" Use="true">
+        <Connection Receiver="me" Signal="editingFinished ()" Slot="slot_editingFinished ()"/>
+      </Item>
+      <Item Type="ComboBox" ObjecctName="ComboBox" Icon="" Text="ComboBox" Editable="true" ToolTip="Combo" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="150" MinimumHeight="" MinimumWidth="150" StatusTip="" StyleSheet="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" CurrentIndex="" DuplicatesEnabled="" Frame="" IconWidth="" IconHeight="" InsertPolicy="" MaxCount="" MaxVisibleItems="" MinimumContentsLength="" SizeAdjustPolicy="" Use="true">
+        <Item Icon="" Text="Item 1" UserData=""/>
+        <Item Icon="" Text="Item 2" UserData=""/>
+        <Item Icon="" Text="Item 3" UserData=""/>
+        <Connection Receiver="me" Signal="currentIndexChanged ( int )" Slot="slot_currentIndexChanged ( int )"/>
+      </Item>
+      <Item Type="ComboBox" ObjecctName="ComboBox" Icon="" Text="ComboBox" Editable="true" ToolTip="Combo" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="150" MinimumHeight="" MinimumWidth="150" StatusTip="" StyleSheet="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" CurrentIndex="" DuplicatesEnabled="" Frame="" IconWidth="" IconHeight="" InsertPolicy="" MaxCount="" MaxVisibleItems="" MinimumContentsLength="" SizeAdjustPolicy="" Use="true">
+        <Item Icon="" Text="Item 1" UserData=""/>
+        <Item Icon="" Text="Item 2" UserData=""/>
+        <Connection Receiver="me" Signal="currentIndexChanged ( int )" Slot="slot_currentIndexChanged ( int )"/>
+      </Item>
+    </Group>
+    <Group Name="Extended" OptionButtonVisible="false" Text="" ToolTip="Extended" ControlsCentering="false" ControlsGrouping="false" Use="true">
+      <Item Type="SpinBox" ObjecctName="SpinBox" Icon="" Text="SpinBox" Maximum="" Minimum="" Prefix="" SingleStep="" Suffix="" Value="" ToolTip="SpinBox" AutoFillBackground="" Width="" Height="" Cursor="" Enabled="" FocusPolicy="" FontFamily="" FontPointSize="" FontWeight="" FontItalic="" MaximumHeight="" MaximumWidth="150" MinimumHeight="" MinimumWidth="150" StatusTip="" StyleSheet="" Visible="" WhatsThis="" WindowIcon="" WindowIconText="" WindowOpacity="" WindowTitle="" Use="true">
+        <Connection Receiver="me" Signal="valueChanged ( int )" Slot="slot_valueChanged ( int )"/>
+      </Item>
+    </Group>
+  </Page>
+</Ribbon>
