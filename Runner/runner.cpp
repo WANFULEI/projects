@@ -3,10 +3,22 @@
 #include "commonFunctions.h"
 #include <QStackedWidget>
 #include <QMessageBox>
+#include <QApplication>
+#include <qdesktopwidget.h>
+
+#define Prop_ContextColor   "ContextColor"
+
+#define Font_Default  "System Default"
+#define Font_Normal   "Normal"
+#define Font_Large    "Large"
+#define Font_ExLarge  "Extra Large"
+
 
 Runner::Runner(QWidget *parent, Qt::WFlags flags)
 	: RibbonMainWindow(parent, flags)
 {
+	m_defaultFont = 8;
+	m_actionDefault = 0;
 	setObjectName("me");
 	MyLog::Init("log");
 
@@ -16,6 +28,9 @@ Runner::Runner(QWidget *parent, Qt::WFlags flags)
 	}else{
 		LOG_ERROR << "配置文件config.xml不存在或格式不正确！";
 	}
+
+	ribbonBar()->setFrameThemeEnabled(true);
+	m_defaultFont = ribbonBar()->font().pointSize();
 }
 
 Runner::~Runner()
@@ -27,33 +42,59 @@ void Runner::loadUIFromXml(TiXmlElement *xmlNode)
 {
 	if(xmlNode == 0) return;
 	if(xmlNode->Value() != QString("Ribbon")) return;
-	TiXmlElement *pageNode = xmlNode->FirstChildElement("Page");
-	while(pageNode){
-		if(!isUse(pageNode)){
-			pageNode = pageNode->NextSiblingElement("Page");
+
+	ribbonBar()->addSystemButton(QIcon(xmlNode->Attribute("Logo")), xmlNode->Attribute(""));
+
+	TiXmlElement *childNode = xmlNode->FirstChildElement();
+	while(childNode){
+		if(!isUse(childNode)){
+			childNode = childNode->NextSiblingElement();
 			continue;
 		}
-		RibbonBar *pRibbonBar = ribbonBar();
-		RibbonPage *ribbonPage = ribbonBar()->addPage(pageNode->Attribute("Name"));
-		TiXmlElement *groupNode = pageNode->FirstChildElement("Group");
-		while(groupNode){
-			if(!isUse(groupNode)){
-			groupNode = groupNode->NextSiblingElement("Page");
-			continue;
+		if(childNode->Value() == QString("Page")){
+			RibbonPage *ribbonPage = ribbonBar()->addPage(childNode->Attribute("Name"));
+			TiXmlElement *groupNode = childNode->FirstChildElement("Group");
+			while(groupNode){
+				if(!isUse(groupNode)){
+					groupNode = groupNode->NextSiblingElement("Group");
+					continue;
+				}
+				RibbonGroup *ribbonGroup = ribbonPage->addGroup(groupNode->Attribute("Name"));
+				if(getAttribute(groupNode, "OptionButtonVisible", false)){
+					ribbonGroup->setOptionButtonVisible(true);
+					QAction *act = ribbonGroup->getOptionButtonAction();
+					act->setToolTip(getAttribute(groupNode, "ToolTip"));
+					connectSignals(groupNode, act, "triggered()");
+				}
+				ribbonGroup->setControlsCentering(getAttribute(groupNode, "ControlsCentering", false));
+				ribbonGroup->setControlsGrouping(getAttribute(groupNode, "ControlsGrouping", false));
+				loadItems(groupNode, ribbonGroup);
+				groupNode = groupNode->NextSiblingElement("Group");
 			}
-			RibbonGroup *ribbonGroup = ribbonPage->addGroup(groupNode->Attribute("Name"));
-			if(getAttribute(groupNode, "OptionButtonVisible", false)){
-				ribbonGroup->setOptionButtonVisible(true);
-				QAction *act = ribbonGroup->getOptionButtonAction();
-				act->setToolTip(getAttribute(groupNode, "ToolTip"));
-				connectSignals(groupNode, act, "triggered()");
+		}else if(childNode->Value() == QString("Item")){
+			QString type = childNode->Attribute("Type");
+			if(type.toLower() == "action"){
+				QAction *action = ribbonBar()->addAction(QIcon(childNode->Attribute("Icon")), childNode->Attribute("Text"), toToolButtonStyle(childNode->Attribute("ToolButtonStyle")));
+				connectSignals(childNode, action, "triggered()");
+			}else if(type.toLower() == "menu"){
+				QMenu *menu = loadMenu(childNode);
+				ribbonBar()->addAction(QIcon(childNode->Attribute("Icon")), childNode->Attribute("Text"), toToolButtonStyle(childNode->Attribute("ToolButtonStyle")), menu);
+			}else if(type.toLower() == "options"){
+				createOptions();
+			}else if(type.toLower() == "quickaccess"){
+				RibbonQuickAccessBar* quickAccessBar = ribbonBar()->getQuickAccessBar();
+				QAction* action = quickAccessBar->actionCustomizeButton();
+				action->setToolTip(tr("Customize Quick Access Bar"));
+				TiXmlElement *actionNode = childNode->FirstChildElement("Item");
+				while(actionNode){
+					QAction *action = loadAction(actionNode);
+					if(action) quickAccessBar->addAction(action);
+					actionNode = actionNode->NextSiblingElement("Item");
+				}
+				ribbonBar()->showQuickAccess(true);
 			}
-			ribbonGroup->setControlsCentering(getAttribute(groupNode, "ControlsCentering", false));
-			ribbonGroup->setControlsGrouping(getAttribute(groupNode, "ControlsGrouping", false));
-			loadItems(groupNode, ribbonGroup);
-			groupNode = groupNode->NextSiblingElement("Group");
 		}
-		pageNode = pageNode->NextSiblingElement("Page");
+		childNode = childNode->NextSiblingElement();
 	}
 }
 
@@ -507,4 +548,159 @@ RibbonSliderPane *Runner::loadRibbonSliderPane(TiXmlElement *xmlNode){
 	sliderPane->setScrollButtons(getAttribute(xmlNode, "ScrollButtons", true));
 	connectSignals(xmlNode, sliderPane, "valueChanged(int )");
 	return sliderPane;
+}
+
+void Runner::createOptions()
+{
+	Qtitan::RibbonStyle *ribbonStyle = qobject_cast<Qtitan::RibbonStyle*>(qApp->style());
+    Qtitan::RibbonStyle::OptionsStyle styleId = Qtitan::RibbonStyle::OS_OFFICE2007BLUE;
+    if (ribbonStyle)
+        styleId = ribbonStyle->getOptionStyle();
+
+    QMenu* menu = ribbonBar()->addMenu(tr("Options"));
+    QAction* actionStyle = menu->addAction(tr("Style"));
+
+    QMenu* menuStyle = new QMenu(ribbonBar());
+    QActionGroup* styleActions = new QActionGroup(this);
+
+    QAction* actionBlue = menuStyle->addAction(tr("Office 2007 Blue"));
+    actionBlue->setCheckable(true);
+    actionBlue->setChecked(styleId == Qtitan::RibbonStyle::OS_OFFICE2007BLUE);
+    actionBlue->setObjectName("OS_OFFICE2007BLUE");
+
+    QAction* actionBlack = menuStyle->addAction(tr("Office 2007 Black"));
+    actionBlack->setObjectName("OS_OFFICE2007BLACK");
+    actionBlack->setCheckable(true);
+    actionBlack->setChecked(styleId == Qtitan::RibbonStyle::OS_OFFICE2007BLACK);
+
+    QAction* actionSilver = menuStyle->addAction(tr("Office 2007 Silver"));
+    actionSilver->setObjectName("OS_OFFICE2007SILVER");
+    actionSilver->setCheckable(true);
+    actionSilver->setChecked(styleId == Qtitan::RibbonStyle::OS_OFFICE2007SILVER);
+
+    QAction* actionAqua = menuStyle->addAction(tr("Office 2007 Aqua"));
+    actionAqua->setObjectName("OS_OFFICE2007AQUA");
+    actionAqua->setCheckable(true);
+    actionAqua->setChecked(styleId == Qtitan::RibbonStyle::OS_OFFICE2007AQUA);
+
+    QAction* actionScenic = menuStyle->addAction(tr("Windows 7 Scenic"));
+    actionScenic->setObjectName("OS_WINDOWS7SCENIC");
+    actionScenic->setCheckable(true);
+    actionScenic->setChecked(styleId == Qtitan::RibbonStyle::OS_WINDOWS7SCENIC);
+
+    QAction* action2010Blue = menuStyle->addAction(tr("Office 2010 Blue"));
+    action2010Blue->setObjectName("OS_OFFICE2010BLUE");
+    action2010Blue->setCheckable(true);
+    action2010Blue->setChecked(styleId == Qtitan::RibbonStyle::OS_OFFICE2010BLUE);
+
+    QAction* action2010Silver = menuStyle->addAction(tr("Office 2010 Silver"));
+    action2010Silver->setObjectName("OS_OFFICE2010SILVER");
+    action2010Silver->setCheckable(true);
+    action2010Silver->setChecked(styleId == Qtitan::RibbonStyle::OS_OFFICE2010SILVER);
+
+    QAction* action2010Black = menuStyle->addAction(tr("Office 2010 Black"));
+    action2010Black->setObjectName("OS_OFFICE2010BLACK");
+    action2010Black->setCheckable(true);
+    action2010Black->setChecked(styleId == Qtitan::RibbonStyle::OS_OFFICE2010BLACK);
+
+    styleActions->addAction(actionBlue);
+    styleActions->addAction(actionBlack);
+    styleActions->addAction(actionSilver);
+    styleActions->addAction(actionAqua);
+    styleActions->addAction(actionScenic);
+    styleActions->addAction(action2010Blue);
+    styleActions->addAction(action2010Silver);
+    styleActions->addAction(action2010Black);
+
+    actionStyle->setMenu(menuStyle);
+    connect(styleActions, SIGNAL(triggered(QAction*)), this, SLOT(options(QAction*)));
+
+
+    QAction* actionMenu = menu->addAction(tr("Font"));
+
+    QMenu* menuFont = new QMenu(ribbonBar());
+    QActionGroup* fontActions = new QActionGroup(this);
+
+    m_actionDefault = menuFont->addAction(Font_Default);
+    m_actionDefault->setCheckable(true);
+    m_actionDefault->setChecked(true);
+    m_actionDefault->setObjectName(Font_Default);
+    fontActions->addAction(m_actionDefault);
+
+    menuFont->addSeparator();
+
+    QAction* actionNormal = menuFont->addAction(Font_Normal);
+    actionNormal->setCheckable(true);
+    actionNormal->setObjectName(Font_Normal);
+    fontActions->addAction(actionNormal);
+
+    QAction* actionLarge = menuFont->addAction(Font_Large);
+    actionLarge->setCheckable(true);
+    actionLarge->setObjectName(Font_Large);
+    fontActions->addAction(actionLarge);
+
+    QAction* actionExLarge = menuFont->addAction(Font_ExLarge);
+    actionExLarge->setCheckable(true);
+    actionExLarge->setObjectName(Font_ExLarge);
+    fontActions->addAction(actionExLarge);
+    actionMenu->setMenu(menuFont);
+    connect(fontActions, SIGNAL(triggered(QAction*)), this, SLOT(optionsFont(QAction*)));
+
+    menu->addSeparator();
+
+    QAction* actionCusomize = menu->addAction(tr("Cusomize..."));
+    actionCusomize->setEnabled(false);
+}
+
+void Runner::options(QAction* action)
+{
+	Qtitan::RibbonStyle *ribbonStyle = qobject_cast<Qtitan::RibbonStyle*>(qApp->style());
+    if (ribbonStyle)
+    {
+        Qtitan::RibbonStyle::OptionsStyle styleId = Qtitan::RibbonStyle::OS_OFFICE2007BLUE;
+        if (action->objectName() == tr("OS_OFFICE2007BLACK"))
+            styleId = Qtitan::RibbonStyle::OS_OFFICE2007BLACK;
+        else if (action->objectName() == tr("OS_OFFICE2007SILVER"))
+            styleId = Qtitan::RibbonStyle::OS_OFFICE2007SILVER;
+        else if (action->objectName() == tr("OS_OFFICE2007AQUA"))
+            styleId = Qtitan::RibbonStyle::OS_OFFICE2007AQUA;
+        else if (action->objectName() == tr("OS_WINDOWS7SCENIC"))
+            styleId = Qtitan::OfficeStyle::OS_WINDOWS7SCENIC;
+        else if (action->objectName() == tr("OS_OFFICE2010BLUE"))
+            styleId = Qtitan::OfficeStyle::OS_OFFICE2010BLUE;
+        else if (action->objectName() == tr("OS_OFFICE2010SILVER"))
+            styleId = Qtitan::OfficeStyle::OS_OFFICE2010SILVER;
+        else if (action->objectName() == tr("OS_OFFICE2010BLACK"))
+            styleId = Qtitan::OfficeStyle::OS_OFFICE2010BLACK;
+
+        if (QToolButton* button = ribbonBar()->getSystemButton())
+        {
+            if (styleId == Qtitan::OfficeStyle::OS_WINDOWS7SCENIC || 
+                styleId == Qtitan::OfficeStyle::OS_OFFICE2010BLUE ||
+                styleId == Qtitan::OfficeStyle::OS_OFFICE2010SILVER ||
+                styleId == Qtitan::OfficeStyle::OS_OFFICE2010BLACK)
+                button->setToolButtonStyle(Qt::ToolButtonTextOnly);
+            else
+                button->setToolButtonStyle(Qt::ToolButtonFollowStyle);
+        }
+
+        ribbonStyle->setOptionStyle(styleId);
+        m_actionDefault->setChecked(true);
+    }
+}
+
+void Runner::optionsFont(QAction* act)
+{
+    QFont fnt = ribbonBar()->font();
+
+    if (Font_Default == act->objectName())
+        fnt.setPointSize(m_defaultFont);
+    else if (Font_Normal == act->objectName())
+        fnt.setPointSize(8);
+    else if (Font_Large == act->objectName())
+        fnt.setPointSize(11);
+    else if (Font_ExLarge == act->objectName())
+        fnt.setPointSize(13);
+
+    ribbonBar()->setFont(fnt);
 }

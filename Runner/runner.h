@@ -4,6 +4,7 @@
 #include <QtGui/QMainWindow>
 #include "ui_runner.h"
 #include <Ribbon/include/QtitanRibbon.h>
+#include <Ribbon/include/QtnRibbonQuickAccessBar.h>
 #include <tinyxml.h>
 #include <QCheckBox>
 #include <QRadioButton>
@@ -57,8 +58,16 @@ private:
 	Qt::Orientation toOrientation(QString s);
 	QSlider::TickPosition toTickPosition(QString s);
 
+	void createOptions();
+
 private slots:
+	void options(QAction* action);
+	void optionsFont(QAction* act);
 	void slot_test();
+
+private:
+	int m_defaultFont;
+	QAction *m_actionDefault;
 };
 
 #endif // RUNNER_H
