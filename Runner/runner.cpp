@@ -65,11 +65,7 @@ QSize Runner::sizeHint() const
 bool Runner::isUse(TiXmlElement *xmlNode)
 {
 	if(xmlNode == 0) return false;
-	// 没有配置，默认使用
-	if(xmlNode->Attribute("Use") == 0) return true;
-	bool use = true;
-	xmlNode->QueryBoolAttribute("Use", &use);
-	return use;
+	return getAttribute(xmlNode, "Use", true);
 }
 
 void Runner::connectSignals(TiXmlElement *xmlNode, QObject *sender, QString defaultSignal){
@@ -132,7 +128,9 @@ void Runner::loadItems(TiXmlElement *xmlNode, RibbonGroup *group){
 			if(checkBox) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
 							"Align", true), checkBox);
 		}else if(type == "spinbox"){
-			
+			QSpinBox *spinBox = loadSpinBox(itemNode);
+			if(spinBox) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
+							"Align", true), spinBox);
 		}else if(type == "separator"){
 			group->addSeparator();
 		}else if(type == "radiobutton"){
@@ -140,9 +138,37 @@ void Runner::loadItems(TiXmlElement *xmlNode, RibbonGroup *group){
 			if(radioButton) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
 							"Align", true), radioButton);
 		}else if(type == "combobox"){
-		
+			QComboBox *comboBox = loadComboBox(itemNode);
+			if(comboBox) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
+							"Align", true), comboBox);
 		}else if(type == "lineedit"){
-			
+			QLineEdit *lineEdit = loadLineEdit(itemNode);
+			if(lineEdit) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
+							"Align", true), lineEdit);
+		}else if(type == "fontcombobox"){
+			QFontComboBox *comboBox = loadFontComboBox(itemNode);
+			if(comboBox) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
+							"Align", true), comboBox);
+		}else if(type == "label"){
+			QLabel *label = loadLable(itemNode);
+			if(label) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
+							"Align", true), label);
+		}else if(type == "progressbar"){
+			QProgressBar *progressBar = loadProgressBar(itemNode);
+			if(progressBar) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
+							"Align", true), progressBar);
+		}else if(type == "scrollbar"){
+			QScrollBar *scrollBar = loadScrollBar(itemNode);
+			if(scrollBar) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
+							"Align", true), scrollBar);
+		}else if(type == "slider"){
+			QSlider *slider = loadSlider(itemNode);
+			if(slider) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
+							"Align", true), slider);
+		}else if(type == "ribbonsliderpane"){
+			RibbonSliderPane *slider = loadRibbonSliderPane(itemNode);
+			if(slider) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
+							"Align", true), slider);
 		}
 		itemNode = itemNode->NextSiblingElement("Item");
 	}
@@ -153,51 +179,24 @@ QAction *Runner::loadAction(TiXmlElement *xmlNode){
 	if(!isUse(xmlNode)) return 0;
 	QString type = xmlNode->Attribute("Type");
 	if(type.toLower() != "action") return 0;
-	QAction *action = new QAction(0);
+	QAction *action = new QAction(this);
 	action->setObjectName(xmlNode->Attribute("ObjectName"));
 	action->setIcon(QIcon(xmlNode->Attribute("Icon")));
 	action->setText(xmlNode->Attribute("Text"));
 	action->setToolTip(xmlNode->Attribute("ToopTip"));
-	action->setVisible(getAttribute(xmlNode, "Visible", true));
+	bool visible = getAttribute(xmlNode, "Visible", true);
+	if(!visible) action->setVisible(false);
 	action->setStatusTip(xmlNode->Attribute("StatusTip"));
 	if(getAttribute(xmlNode, "Checkable", false)){
 		action->setCheckable(true);
 		action->setChecked(getAttribute(xmlNode, "Checked", false));
 	}
 	action->setEnabled(getAttribute(xmlNode, "Enabled", true));
-	QString fontName = xmlNode->Attribute("FontFamily");
-	int fontSize = getAttribute(xmlNode, "FontPointSize", 9);
-	int fontWeight = getAttribute(xmlNode, "FontWeight", -1);
-	bool fontItalic = getAttribute(xmlNode, "FontItalic", false);
-	if(!fontName.isEmpty()){
-		action->setFont(QFont(fontName, fontSize, fontWeight, fontItalic));
-	}
 	action->setIconText(xmlNode->Attribute("IconText"));
-	action->setIconVisibleInMenu(getAttribute(xmlNode, "IconVisibleInMenu", false));
-	action->setPriority(toActionPriority(xmlNode->Attribute("Priority")));
 	action->setShortcut(QKeySequence(xmlNode->Attribute("Shortcut")));
-	action->setShortcutContext(toShortcutContext(xmlNode->Attribute("ShortcutContext")));
 	action->setWhatsThis(xmlNode->Attribute("WhatsThis"));
-	action->setAutoRepeat(getAttribute(xmlNode, "AutoRepeat", false));
 	connectSignals(xmlNode, action, "triggered()");
 	return action;
-}
-
-QAction::Priority Runner::toActionPriority(QString s){
-	s = s.toLower();
-	if(s == "qaction::lowpriority" || s == "lowpriority" || s == "0") return QAction::LowPriority;
-	else if(s == "qaction::normalpriority" || s == "normalpriority" || s == "128") return QAction::NormalPriority;
-	else if(s == "qaction::highpriority" || s == "highpriority" || s == "256") return QAction::HighPriority;
-	else return QAction::NormalPriority;
-}
-
-Qt::ShortcutContext Runner::toShortcutContext(QString s){
-	s = s.toLower();
-	if(s == "qt::widgetshortcut" || s == "widgetshortcut" || s == "0") return Qt::WidgetShortcut;
-	else if(s == "qt::widgetwithchildrenshortcut" || s == "widgetwithchildrenshortcut" || s == "3") return Qt::WidgetWithChildrenShortcut;
-	else if(s == "qt::windowshortcut" || s == "windowshortcut" || s == "1") return Qt::WindowShortcut;
-	else if(s == "qt::applicationshortcut" || s == "applicationshortcut" || s == "2") return Qt::ApplicationShortcut;
-	else return Qt::WindowShortcut;
 }
 
 Qt::ToolButtonStyle Runner::toToolButtonStyle(QString s){
@@ -220,7 +219,7 @@ QMenu *Runner::loadMenu(TiXmlElement *xmlNode){
 	if(!isUse(xmlNode)) return 0;
 	QString type = xmlNode->Attribute("Type");
 	if(type.toLower() != "menu") return 0;
-	QMenu *menu = new QMenu(0);
+	QMenu *menu = new QMenu(this);
 	loadWidget(menu, xmlNode);
 	menu->setIcon(QIcon(xmlNode->Attribute("Icon")));
 	menu->setTitle(xmlNode->Attribute("Text"));
@@ -243,20 +242,10 @@ QMenu *Runner::loadMenu(TiXmlElement *xmlNode){
 void Runner::loadWidget(QWidget *widget, TiXmlElement *xmlNode){
 	if(widget == 0 || xmlNode == 0) return;
 	widget->setObjectName(xmlNode->Attribute("ObjectName"));
-	widget->setAutoFillBackground(getAttribute(xmlNode, "AutoFillBackground", false));
-	int width = getAttribute(xmlNode, "Width", 0);
-	int height = getAttribute(xmlNode, "Height", 0);
-	if(width > 0 && height > 0) widget->resize(width, height);
-	widget->setCursor(toCursorShape(xmlNode->Attribute("Cursor")));
+	//int width = getAttribute(xmlNode, "Width", 0);
+	//int height = getAttribute(xmlNode, "Height", 0);
+	//if(width > 0 && height > 0) widget->resize(width, height);
 	widget->setEnabled(getAttribute(xmlNode, "Enabled", true));
-	widget->setFocusPolicy(toFocusPolicy(xmlNode->Attribute("FocusPolicy")));
-	QString fontName = xmlNode->Attribute("FontFamily");
-	int fontSize = getAttribute(xmlNode, "FontPointSize", 9);
-	int fontWeight = getAttribute(xmlNode, "FontWeight", -1);
-	bool fontItalic = getAttribute(xmlNode, "FontItalic", false);
-	if(!fontName.isEmpty()){
-		widget->setFont(QFont(fontName, fontSize, fontWeight, fontItalic));
-	}
 	int maxH = getAttribute(xmlNode, "MaximumHeight", 0);
 	if(maxH > 0) widget->setMaximumHeight(maxH);
 	int maxW = getAttribute(xmlNode, "MaximumWidth", 0);
@@ -268,7 +257,8 @@ void Runner::loadWidget(QWidget *widget, TiXmlElement *xmlNode){
 	widget->setStatusTip(xmlNode->Attribute("StatusTip"));
 	widget->setStyleSheet(xmlNode->Attribute("StyleSheet"));
 	widget->setToolTip(xmlNode->Attribute("ToolTip"));
-	widget->setVisible(getAttribute(xmlNode, "Visible", true));
+	bool visible = getAttribute(xmlNode, "Visible", true);
+	if(!visible) widget->setVisible(false);
 	widget->setWhatsThis(xmlNode->Attribute("WhatsThis"));
 	widget->setWindowIcon(QIcon(xmlNode->Attribute("WindowIcon")));
 	widget->setWindowIconText(xmlNode->Attribute("WindowIconText"));
@@ -276,53 +266,15 @@ void Runner::loadWidget(QWidget *widget, TiXmlElement *xmlNode){
 	widget->setWindowTitle(xmlNode->Attribute("WindowTitle"));
 }
 
-Qt::CursorShape Runner::toCursorShape(QString s){
-	s = s.toLower();
-	if(s == "qt::arrowcursor" || s == "arrowcursor" || s == "0") return Qt::ArrowCursor;
-	else if(s == "qt::uparrowcursor" || s == "uparrowcursor" || s == "1") return Qt::UpArrowCursor;
-	else if(s == "qt::crosscursor" || s == "crosscursor" || s == "2") return Qt::CrossCursor;
-	else if(s == "qt::waitcursor" || s == "waitcursor" || s == "3") return Qt::WaitCursor;
-	else if(s == "qt::ibeamcursor" || s == "ibeamcursor" || s == "4") return Qt::IBeamCursor;
-	else if(s == "qt::sizevercursor" || s == "sizevercursor" || s == "5") return Qt::SizeVerCursor;
-	else if(s == "qt::sizehorcursor" || s == "sizehorcursor" || s == "6") return Qt::SizeHorCursor;
-	else if(s == "qt::sizebdiagcursor" || s == "sizebdiagcursor" || s == "7") return Qt::SizeBDiagCursor;
-	else if(s == "qt::sizefdiagcursor" || s == "sizefdiagcursor" || s == "8") return Qt::SizeFDiagCursor;
-	else if(s == "qt::sizeallcursor" || s == "sizeallcursor" || s == "9") return Qt::SizeAllCursor;
-	else if(s == "qt::blankcursor" || s == "blankcursor" || s == "10") return Qt::BlankCursor;
-	else if(s == "qt::splitvcursor" || s == "splitvcursor" || s == "11") return Qt::SplitVCursor;
-	else if(s == "qt::splithcursor" || s == "splithcursor" || s == "12") return Qt::SplitHCursor;
-	else if(s == "qt::pointinghandcursor" || s == "pointinghandcursor" || s == "13") return Qt::PointingHandCursor;
-	else if(s == "qt::forbiddencursor" || s == "forbiddencursor" || s == "14") return Qt::ForbiddenCursor;
-	else if(s == "qt::openhandcursor" || s == "openhandcursor" || s == "17") return Qt::OpenHandCursor;
-	else if(s == "qt::closedhandcursor" || s == "closedhandcursor" || s == "18") return Qt::ClosedHandCursor;
-	else if(s == "qt::whatsthiscursor" || s == "whatsthiscursor" || s == "15") return Qt::WhatsThisCursor;
-	else if(s == "qt::busycursor" || s == "busycursor" || s == "16") return Qt::BusyCursor;
-	else if(s == "qt::dragmovecursor" || s == "dragmovecursor" || s == "20") return Qt::DragMoveCursor;
-	else if(s == "qt::dragcopycursor" || s == "dragcopycursor" || s == "19") return Qt::DragCopyCursor;
-	else if(s == "qt::draglinkcursor" || s == "draglinkcursor" || s == "21") return Qt::DragLinkCursor;
-	else if(s == "qt::bitmapcursor" || s == "bitmapcursor" || s == "24") return Qt::BitmapCursor;
-	else return Qt::ArrowCursor;
-}
-
-Qt::FocusPolicy Runner::toFocusPolicy(QString s){
-	s = s.toLower();
-	if(s == "qt::tabfocus" || s == "tabfocus" || s == "1") return Qt::TabFocus;
-	else if(s == "qt::clickfocus" || s == "clickfocus" || s == "2") return Qt::ClickFocus;
-	else if(s == "qt::strongfocus" || s == "strongfocus" || s == "11") return Qt::StrongFocus;
-	else if(s == "qt::wheelfocus" || s == "wheelfocus" || s == "15") return Qt::WheelFocus;
-	else if(s == "qt::nofocus" || s == "nofocus" || s == "0") return Qt::NoFocus;
-	else return Qt::NoFocus;
-}
-
 QCheckBox *Runner::loadCheckBox(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
 	QString type = xmlNode->Attribute("Type");
 	if(type.toLower() != "checkbox") return 0;
-	QCheckBox *checkBox = new QCheckBox;
-	loadWidget(checkBox, xmlNode);
+	QCheckBox *checkBox = new QCheckBox(this);
 	loadAbstractButton(checkBox, xmlNode);
 	checkBox->setCheckState(toCheckState(xmlNode->Attribute("CheckState")));
+	connectSignals(xmlNode, checkBox, "stateChanged ( int )");
 	return checkBox;
 }
 
@@ -336,16 +288,11 @@ Qt::CheckState Runner::toCheckState(QString s){
 
 void Runner::loadAbstractButton(QAbstractButton *button, TiXmlElement *xmlNode){
 	if(button == 0 || xmlNode == 0) return;
-	button->setAutoExclusive(getAttribute(xmlNode, "AutoExclusize", false));
-	button->setAutoRepeat(getAttribute(xmlNode, "AutoRepeat", false));
-	button->setAutoRepeatDelay(getAttribute(xmlNode, "AutoRepeatDelay", 200));
-	button->setAutoRepeatInterval(getAttribute(xmlNode, "AutoRepeatInterval", 200));
+	loadWidget(button, xmlNode);
 	button->setCheckable(getAttribute(xmlNode, "Checkable", true));
 	button->setChecked(getAttribute(xmlNode, "Checked", false));
 	button->setIcon(QIcon(xmlNode->Attribute("Icon")));
-	int width = getAttribute(xmlNode, "IconWidth", 0);
-	int height = getAttribute(xmlNode, "IconHeight", 0);
-	if(width > 0 && height > 0) button->setIconSize(QSize(width, height));
+	button->setIconSize(QSize(getAttribute(xmlNode, "IconWidth", 24), getAttribute(xmlNode, "IconHeight", 24)));
 	button->setText(xmlNode->Attribute("Text"));
 }
 
@@ -354,9 +301,210 @@ QRadioButton *Runner::loadRadioButton(TiXmlElement *xmlNode){
 	if(!isUse(xmlNode)) return 0;
 	QString type = xmlNode->Attribute("Type");
 	if(type.toLower() != "radiobutton") return 0;
-	QRadioButton *radioButton = new QRadioButton;
-	loadWidget(radioButton, xmlNode);
+	QRadioButton *radioButton = new QRadioButton(this);
 	loadAbstractButton(radioButton, xmlNode);
-	radioButton->setAutoExclusive(getAttribute(xmlNode, "AutoExclusize", true));
+	connectSignals(xmlNode, radioButton, "clicked ( bool checked )");
 	return radioButton;
+}
+
+QLineEdit *Runner::loadLineEdit(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return 0;
+	if(!isUse(xmlNode)) return 0;
+	QString type = xmlNode->Attribute("Type");
+	if(type.toLower() != "lineedit") return 0;
+	QLineEdit *lineEdit = new QLineEdit(this);
+	loadWidget(lineEdit, xmlNode);
+	lineEdit->setReadOnly(getAttribute(xmlNode, "ReadOnly", false));
+	lineEdit->setAlignment(toAlignment(xmlNode->Attribute("Alignment")));
+	lineEdit->setFrame(getAttribute(xmlNode, "Frame", true));
+	lineEdit->setInputMask(xmlNode->Attribute("InputMask"));
+	lineEdit->setMaxLength(getAttribute(xmlNode, "MaxLength", -1));
+	connectSignals(xmlNode, lineEdit, "editingFinished ()");
+	return lineEdit;
+}
+
+Qt::Alignment Runner::toAlignment(QString s){
+	s = s.toLower();
+	if(s == "qt::alignleft" || s == "alignleft" || s == "1") return Qt::AlignLeft;
+	else if(s == "qt::alignright" || s == "alignright" || s == "2") return Qt::AlignRight;
+	else if(s == "qt::alignhcenter" || s == "alignhcenter" || s == "4") return Qt::AlignHCenter;
+	else if(s == "qt::alignjustify" || s == "alignjustify" || s == "8") return Qt::AlignJustify;
+	else return Qt::Alignment(s.toInt());
+}
+
+QComboBox *Runner::loadComboBox(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return 0;
+	if(!isUse(xmlNode)) return 0;
+	QString type = xmlNode->Attribute("Type");
+	if(type.toLower() != "combobox") return 0;
+	QComboBox *comboBox = new QComboBox(this);
+	loadWidget(comboBox, xmlNode);
+	comboBox->setEditable(getAttribute(xmlNode, "Editable", true));
+	TiXmlElement *itemNode = xmlNode->FirstChildElement("Item");
+	while(itemNode){
+		comboBox->addItem(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), itemNode->Attribute("UserData"));
+		itemNode = itemNode->NextSiblingElement("Item");
+	}
+	comboBox->setCurrentIndex(getAttribute(xmlNode, "CurrentIndex", 0));
+	comboBox->setDuplicatesEnabled(getAttribute(xmlNode, "DuplicatesEnabled", true));
+	comboBox->setFrame(getAttribute(xmlNode, "Frame", true));
+	comboBox->setIconSize(QSize(getAttribute(xmlNode, "IconWidth", 24), getAttribute(xmlNode, "IconHeight", 24)));
+	comboBox->setMaxCount(getAttribute(xmlNode, "MaxCount", -1));
+	comboBox->setMaxVisibleItems(getAttribute(xmlNode, "MaxVisibleItems", 24));
+	comboBox->setMinimumContentsLength(getAttribute(xmlNode, "MinimumContentsLength", 64));
+	connectSignals(xmlNode, comboBox, "currentIndexChanged ( int )");
+	return comboBox;
+}
+
+QSpinBox *Runner::loadSpinBox(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return 0;
+	if(!isUse(xmlNode)) return 0;
+	QString type = xmlNode->Attribute("Type");
+	if(type.toLower() != "spinbox") return 0;
+	QSpinBox *spinBox = new QSpinBox(this);
+	loadWidget(spinBox, xmlNode);
+	spinBox->setMinimum(getAttribute(xmlNode, "Minimum", 0));
+	spinBox->setMaximum(getAttribute(xmlNode, "Maximum", 100));
+	spinBox->setPrefix(xmlNode->Attribute("Prefix"));
+	spinBox->setSuffix(xmlNode->Attribute("Suffix"));
+	spinBox->setSingleStep(getAttribute(xmlNode, "SingleStep", 1));
+	spinBox->setValue(getAttribute(xmlNode, "Value", 0));
+	connectSignals(xmlNode, spinBox, "valueChanged ( int )");
+	return spinBox;
+}
+
+QFontComboBox *Runner::loadFontComboBox(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return 0;
+	if(!isUse(xmlNode)) return 0;
+	QString type = xmlNode->Attribute("Type");
+	if(type.toLower() != "fontcombobox") return 0;
+	QFontComboBox *fontCombo = new QFontComboBox(this);
+	loadWidget(fontCombo, xmlNode);
+	//fontCombo->setEditable(getAttribute(xmlNode, "Editable", true));
+	//fontCombo->setCurrentIndex(getAttribute(xmlNode, "CurrentIndex", 0));
+	fontCombo->setDuplicatesEnabled(getAttribute(xmlNode, "DuplicatesEnabled", true));
+	fontCombo->setFrame(getAttribute(xmlNode, "Frame", true));
+	fontCombo->setIconSize(QSize(getAttribute(xmlNode, "IconWidth", 24), getAttribute(xmlNode, "IconHeight", 24)));
+	//fontCombo->setMaxCount(getAttribute(xmlNode, "MaxCount", -1));
+	fontCombo->setMaxVisibleItems(getAttribute(xmlNode, "MaxVisibleItems", 24));
+	fontCombo->setMinimumContentsLength(getAttribute(xmlNode, "MinimumContentsLength", 64));
+
+	fontCombo->setFontFilters(toFontFilters(xmlNode->Attribute("FontFilters")));
+	connectSignals(xmlNode, fontCombo, "currentIndexChanged ( int )");
+	return fontCombo;
+}
+
+QFontComboBox::FontFilters Runner::toFontFilters(QString s){
+	s = s.toLower();
+	if(s == "qfontcombobox::allfonts" || s == "allfonts" || s == "0") return QFontComboBox::AllFonts;
+	else if(s == "qfontcombobox::scalablefonts" || s == "scalablefonts" || s == "1") return QFontComboBox::AllFonts;
+	else if(s == "qfontcombobox::nonscalablefonts" || s == "nonscalablefonts" || s == "2") return QFontComboBox::AllFonts;
+	else if(s == "qfontcombobox::monospacedfonts" || s == "monospacedfonts" || s == "4") return QFontComboBox::AllFonts;
+	else if(s == "qfontcombobox::proportionalfonts" || s == "proportionalfonts" || s == "8") return QFontComboBox::AllFonts;
+	else return QFontComboBox::FontFilters(s.toInt());
+}
+
+QLabel *Runner::loadLable(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return 0;
+	if(!isUse(xmlNode)) return 0;
+	QString type = xmlNode->Attribute("Type");
+	if(type.toLower() != "label") return 0;
+	QLabel *label = new QLabel(this);
+	loadWidget(label, xmlNode);
+	label->setAlignment(toAlignment(xmlNode->Attribute("Alignment")));
+	label->setOpenExternalLinks(getAttribute(xmlNode, "OpenExternalLinks", false));
+	QPixmap pixmap = QPixmap(xmlNode->Attribute("Pixmap"));
+	if(pixmap.isNull()) label->setText(xmlNode->Attribute("Text"));
+	else label->setPixmap(QPixmap(xmlNode->Attribute("Pixmap")));
+	label->setScaledContents(getAttribute(xmlNode, "ScaledContents", false));
+	label->setWordWrap(getAttribute(xmlNode, "WordWrap", false));
+	connectSignals(xmlNode, label, "linkActivated ( const QString & )");
+	return label;
+}
+
+QProgressBar *Runner::loadProgressBar(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return 0;
+	if(!isUse(xmlNode)) return 0;
+	QString type = xmlNode->Attribute("Type");
+	if(type.toLower() != "progressbar") return 0;
+	QProgressBar *progressBar = new QProgressBar(this);
+	loadWidget(progressBar, xmlNode);
+	//Alignment="" Minimum="" Maximum="" Orientation="" TextVisible="true" Value="" 
+	progressBar->setAlignment(toAlignment(xmlNode->Attribute("Alignment")));
+	progressBar->setMinimum(getAttribute(xmlNode, "Minimum", 0));
+	progressBar->setMaximum(getAttribute(xmlNode, "Maximum", 100));
+	progressBar->setOrientation(toOrientation(xmlNode->Attribute("Orientation")));
+	progressBar->setTextVisible(getAttribute(xmlNode, "TextVisible", true));
+	progressBar->setValue(getAttribute(xmlNode, "Value", 0));
+	connectSignals(xmlNode, progressBar, "valueChanged ( int )");
+	return progressBar;
+}
+
+Qt::Orientation Runner::toOrientation(QString s){
+	s = s.toLower();
+	if(s == "qt::horizontal" || s == "horizontal" || s == "1") return Qt::Horizontal;
+	else if(s == "qt::vertical" || s == "vertical" || s == "2") return Qt::Vertical;
+	else return Qt::Horizontal;
+}
+
+QScrollBar *Runner::loadScrollBar(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return 0;
+	if(!isUse(xmlNode)) return 0;
+	QString type = xmlNode->Attribute("Type");
+	if(type.toLower() != "scrollbar") return 0;
+	QScrollBar *scrollBar = new QScrollBar(this);
+	loadAbstractSlider(scrollBar, xmlNode);
+	connectSignals(xmlNode, scrollBar, "sliderReleased ()");
+	return scrollBar;
+}
+
+void Runner::loadAbstractSlider(QAbstractSlider *abstractSlider, TiXmlElement *xmlNode){
+	if(abstractSlider == 0 || xmlNode == 0) return;
+	loadWidget(abstractSlider, xmlNode);
+	abstractSlider->setMinimum(getAttribute(xmlNode, "Minimum", 0));
+	abstractSlider->setMaximum(getAttribute(xmlNode, "Maximum", 100));
+	abstractSlider->setOrientation(toOrientation(xmlNode->Attribute("Orientation")));
+	abstractSlider->setPageStep(getAttribute(xmlNode, "PageStep", 4));
+	abstractSlider->setSingleStep(getAttribute(xmlNode, "SingleStep", 1));
+	abstractSlider->setTracking(getAttribute(xmlNode, "Tracking", false));
+	abstractSlider->setValue(getAttribute(xmlNode, "Value", 0));
+}
+
+QSlider *Runner::loadSlider(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return 0;
+	if(!isUse(xmlNode)) return 0;
+	QString type = xmlNode->Attribute("Type");
+	if(type.toLower() != "slider") return 0;
+	QSlider *slider = new QSlider(this);
+	loadAbstractSlider(slider, xmlNode);
+	slider->setTickInterval(getAttribute(xmlNode, "TickInterval", 0));
+	slider->setTickPosition(toTickPosition(xmlNode->Attribute("TickPosition")));
+	connectSignals(xmlNode, slider, "sliderReleased ()");
+	return slider;
+}
+
+QSlider::TickPosition Runner::toTickPosition(QString s){
+	s = s.toLower();
+	if(s == "qslider::noticks" || s == "noticks" || s == "0") return QSlider::NoTicks;
+	else if(s == "qslider::ticksbothsides" || s == "ticksbothsides" || s == "3") return QSlider::TicksBothSides;
+	else if(s == "qslider::ticksabove" || s == "ticksabove" || s == "1") return QSlider::TicksAbove;
+	else if(s == "qslider::ticksbelow" || s == "ticksbelow" || s == "2") return QSlider::TicksBelow;
+	else if(s == "qslider::ticksleft" || s == "ticksleft" || s == "1") return QSlider::TicksLeft;
+	else if(s == "qslider::ticksright" || s == "ticksright" || s == "2") return QSlider::TicksRight;
+	else return QSlider::NoTicks;
+}
+
+RibbonSliderPane *Runner::loadRibbonSliderPane(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return 0;
+	if(!isUse(xmlNode)) return 0;
+	QString type = xmlNode->Attribute("Type");
+	if(type.toLower() != "ribbonsliderpane") return 0;
+	RibbonSliderPane *sliderPane = new RibbonSliderPane(this);
+	loadWidget(sliderPane, xmlNode);
+	sliderPane->setSingleStep(getAttribute(xmlNode, "SingleStep", 1));
+	sliderPane->setValue(getAttribute(xmlNode, "Value", 0));
+	sliderPane->setSliderPosition(getAttribute(xmlNode, "SliderPosition", 0));
+	sliderPane->setScrollButtons(getAttribute(xmlNode, "ScrollButtons", true));
+	connectSignals(xmlNode, sliderPane, "valueChanged(int )");
+	return sliderPane;
 }

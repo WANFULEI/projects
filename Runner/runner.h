@@ -7,6 +7,13 @@
 #include <tinyxml.h>
 #include <QCheckBox>
 #include <QRadioButton>
+#include <QLineEdit>
+#include <QComboBox>
+#include <QSpinBox>
+#include <QFontComboBox>
+#include <QProgressBar>
+#include <QScrollBar>
+#include <QSlider>
 
 class Runner : public RibbonMainWindow
 {
@@ -24,18 +31,31 @@ private:
 	bool isUse(TiXmlElement *xmlNode);
 	void connectSignals(TiXmlElement *xmlNode, QObject *sender, QString defaultSignal = "");
 	void loadItems(TiXmlElement *xmlNode, RibbonGroup *group);
-	QAction *loadAction(TiXmlElement *xmlNode);
-	QAction::Priority toActionPriority(QString s);
-	Qt::ShortcutContext toShortcutContext(QString s);
-	Qt::ToolButtonStyle toToolButtonStyle(QString s);
-	QMenu *loadMenu(TiXmlElement *xmlNode);
-	Qt::CursorShape toCursorShape(QString s);
-	Qt::FocusPolicy toFocusPolicy(QString s);
+
 	void loadWidget(QWidget *widget, TiXmlElement *xmlNode);
-	QCheckBox *loadCheckBox(TiXmlElement *xmlNode);
-	Qt::CheckState toCheckState(QString s);
 	void loadAbstractButton(QAbstractButton *button, TiXmlElement *xmlNode);
+	void loadAbstractSlider(QAbstractSlider *abstractSlider, TiXmlElement *xmlNode);
+
+	QAction *loadAction(TiXmlElement *xmlNode);
+	QMenu *loadMenu(TiXmlElement *xmlNode);
+	QCheckBox *loadCheckBox(TiXmlElement *xmlNode);
 	QRadioButton *loadRadioButton(TiXmlElement *xmlNode);
+	QLineEdit *loadLineEdit(TiXmlElement *xmlNode);
+	QComboBox *loadComboBox(TiXmlElement *xmlNode);
+	QSpinBox *loadSpinBox(TiXmlElement *xmlNode);
+	QFontComboBox *loadFontComboBox(TiXmlElement *xmlNode);
+	QLabel *loadLable(TiXmlElement *xmlNode);
+	QProgressBar *loadProgressBar(TiXmlElement *xmlNode);
+	QScrollBar *loadScrollBar(TiXmlElement *xmlNode);
+	QSlider *loadSlider(TiXmlElement *xmlNode);
+	RibbonSliderPane *loadRibbonSliderPane(TiXmlElement *xmlNode);
+
+	Qt::Alignment toAlignment(QString s);
+	Qt::CheckState toCheckState(QString s);
+	Qt::ToolButtonStyle toToolButtonStyle(QString s);
+	QFontComboBox::FontFilters toFontFilters(QString s);
+	Qt::Orientation toOrientation(QString s);
+	QSlider::TickPosition toTickPosition(QString s);
 
 private slots:
 	void slot_test();
