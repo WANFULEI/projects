@@ -32,6 +32,7 @@ private:
 	bool isUse(TiXmlElement *xmlNode);
 	void connectSignals(TiXmlElement *xmlNode, QObject *sender, QString defaultSignal = "");
 	void loadItems(TiXmlElement *xmlNode, RibbonGroup *group);
+	QObject *loadItem(TiXmlElement *itemNode);
 
 	void loadWidget(QWidget *widget, TiXmlElement *xmlNode);
 	void loadAbstractButton(QAbstractButton *button, TiXmlElement *xmlNode);

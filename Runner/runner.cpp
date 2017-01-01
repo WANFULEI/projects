@@ -43,8 +43,6 @@ void Runner::loadUIFromXml(TiXmlElement *xmlNode)
 	if(xmlNode == 0) return;
 	if(xmlNode->Value() != QString("Ribbon")) return;
 
-	ribbonBar()->addSystemButton(QIcon(xmlNode->Attribute("Logo")), xmlNode->Attribute(""));
-
 	TiXmlElement *childNode = xmlNode->FirstChildElement();
 	while(childNode){
 		if(!isUse(childNode)){
@@ -71,28 +69,71 @@ void Runner::loadUIFromXml(TiXmlElement *xmlNode)
 				loadItems(groupNode, ribbonGroup);
 				groupNode = groupNode->NextSiblingElement("Group");
 			}
-		}else if(childNode->Value() == QString("Item")){
-			QString type = childNode->Attribute("Type");
-			if(type.toLower() == "action"){
-				QAction *action = ribbonBar()->addAction(QIcon(childNode->Attribute("Icon")), childNode->Attribute("Text"), toToolButtonStyle(childNode->Attribute("ToolButtonStyle")));
-				connectSignals(childNode, action, "triggered()");
-			}else if(type.toLower() == "menu"){
-				QMenu *menu = loadMenu(childNode);
-				ribbonBar()->addAction(QIcon(childNode->Attribute("Icon")), childNode->Attribute("Text"), toToolButtonStyle(childNode->Attribute("ToolButtonStyle")), menu);
-			}else if(type.toLower() == "options"){
-				createOptions();
-			}else if(type.toLower() == "quickaccess"){
-				RibbonQuickAccessBar* quickAccessBar = ribbonBar()->getQuickAccessBar();
-				QAction* action = quickAccessBar->actionCustomizeButton();
-				action->setToolTip(tr("Customize Quick Access Bar"));
-				TiXmlElement *actionNode = childNode->FirstChildElement("Item");
-				while(actionNode){
-					QAction *action = loadAction(actionNode);
-					if(action) quickAccessBar->addAction(action);
-					actionNode = actionNode->NextSiblingElement("Item");
+		}else if(childNode->Value() == QString("RightAction")){
+			TiXmlElement *actionNode = childNode->FirstChildElement("Item");
+			while(actionNode){
+				QString type = actionNode->Attribute("Type");
+				if(type.toLower() == "action"){
+					QAction *action = ribbonBar()->addAction(QIcon(actionNode->Attribute("Icon")), actionNode->Attribute("Text"), toToolButtonStyle(actionNode->Attribute("ToolButtonStyle")));
+					connectSignals(actionNode, action, "triggered()");
+				}else if(type.toLower() == "menu"){
+					QMenu *menu = loadMenu(actionNode);
+					ribbonBar()->addAction(QIcon(actionNode->Attribute("Icon")), actionNode->Attribute("Text"), toToolButtonStyle(actionNode->Attribute("ToolButtonStyle")), menu);
+				}else if(type.toLower() == "options"){
+					createOptions();
 				}
-				ribbonBar()->showQuickAccess(true);
+				actionNode = actionNode->NextSiblingElement("Item");
 			}
+		}else if(childNode->Value() == QString("QuickAccess")){
+			RibbonQuickAccessBar* quickAccessBar = ribbonBar()->getQuickAccessBar();
+			QAction* action = quickAccessBar->actionCustomizeButton();
+			action->setToolTip(tr("Customize Quick Access Bar"));
+			TiXmlElement *actionNode = childNode->FirstChildElement("Item");
+			while(actionNode){
+				QAction *action = loadAction(actionNode);
+				if(action) quickAccessBar->addAction(action);
+				actionNode = actionNode->NextSiblingElement("Item");
+			}
+			ribbonBar()->showQuickAccess(true);
+		}else if(childNode->Value() == QString("StatusBar")){
+			TiXmlElement *itemNode = childNode->FirstChildElement("Item");
+			while(itemNode){
+				QObject *item = loadItem(itemNode);
+				if(dynamic_cast<QAction *>(item)){
+					statusBar()->addAction(dynamic_cast<QAction *>(item));
+				}else if(dynamic_cast<QWidget *>(item)){
+					if(getAttribute(itemNode, "PermanentWidget", true)){
+						statusBar()->addPermanentWidget(dynamic_cast<QWidget *>(item), getAttribute(itemNode, "Stretch", 0));
+					}else{
+						statusBar()->addWidget(dynamic_cast<QWidget *>(item), getAttribute(itemNode, "Stretch", 0));
+					}
+				}
+				itemNode = itemNode->NextSiblingElement("Item");
+			}
+
+		}else if(childNode->Value() == QString("MainButton")){
+			QAction *actionFile = ribbonBar()->addSystemButton(QIcon(childNode->Attribute("Logo")), childNode->Attribute(""));
+			Qtitan::RibbonSystemPopupBar* popupBar = qobject_cast<Qtitan::RibbonSystemPopupBar*>(actionFile->menu());
+			TiXmlElement *actionNode = childNode->FirstChildElement("Item");
+			while(actionNode){
+				QString type = actionNode->Attribute("Type");
+				if(type.toLower() == "action"){
+					QAction *action = loadAction(actionNode);
+					if(action){
+						if(getAttribute(actionNode, "PopupBarAction", false)){
+							popupBar->addPopupBarAction(action, toToolButtonStyle(actionNode->Attribute("ToolButtonStyle")));
+						}else{
+							popupBar->addAction(action);
+						}
+					}
+				}else if(type.toLower() == "menu"){
+					QMenu *menu = loadMenu(actionNode);
+					popupBar->addMenu(menu);
+				}
+				actionNode = actionNode->NextSiblingElement("Item");
+			}
+			RibbonPageSystemRecentFileList* pageRecentFile = popupBar->addPageRecentFile(tr(childNode->Attribute("PageRecentFile")));
+			pageRecentFile->setSize(getAttribute(childNode, "FileCount", 10));
 		}
 		childNode = childNode->NextSiblingElement();
 	}
@@ -154,64 +195,55 @@ void Runner::loadItems(TiXmlElement *xmlNode, RibbonGroup *group){
 	if(xmlNode == 0 || group == 0) return;
 	TiXmlElement *itemNode = xmlNode->FirstChildElement("Item");
 	while(itemNode){
-		QString type = QString(itemNode->Attribute("Type")).toLower();
-		if(type == "action"){
-			QAction *action = loadAction(itemNode);
-			if(action){
-				group->addAction(action, toToolButtonStyle(itemNode->Attribute("ToolButtonStyle")));
-			}
-		}else if(type == "menu"){
-			QMenu *menu = loadMenu(itemNode);
-			if(menu) group->addAction(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), 
-				toToolButtonStyle(itemNode->Attribute("ToolButtonStyle")), menu);
-		}else if(type == "checkbox"){
-			QCheckBox *checkBox = loadCheckBox(itemNode);
-			if(checkBox) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), checkBox);
-		}else if(type == "spinbox"){
-			QSpinBox *spinBox = loadSpinBox(itemNode);
-			if(spinBox) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), spinBox);
-		}else if(type == "separator"){
+		if(QString(itemNode->Attribute("Type")).toLower() == QString("separator")){
 			group->addSeparator();
-		}else if(type == "radiobutton"){
-			QRadioButton *radioButton = loadRadioButton(itemNode);
-			if(radioButton) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), radioButton);
-		}else if(type == "combobox"){
-			QComboBox *comboBox = loadComboBox(itemNode);
-			if(comboBox) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), comboBox);
-		}else if(type == "lineedit"){
-			QLineEdit *lineEdit = loadLineEdit(itemNode);
-			if(lineEdit) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), lineEdit);
-		}else if(type == "fontcombobox"){
-			QFontComboBox *comboBox = loadFontComboBox(itemNode);
-			if(comboBox) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), comboBox);
-		}else if(type == "label"){
-			QLabel *label = loadLable(itemNode);
-			if(label) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), label);
-		}else if(type == "progressbar"){
-			QProgressBar *progressBar = loadProgressBar(itemNode);
-			if(progressBar) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), progressBar);
-		}else if(type == "scrollbar"){
-			QScrollBar *scrollBar = loadScrollBar(itemNode);
-			if(scrollBar) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), scrollBar);
-		}else if(type == "slider"){
-			QSlider *slider = loadSlider(itemNode);
-			if(slider) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), slider);
-		}else if(type == "ribbonsliderpane"){
-			RibbonSliderPane *slider = loadRibbonSliderPane(itemNode);
-			if(slider) group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), slider);
+			itemNode = itemNode->NextSiblingElement("Item");
+			continue;
+		}
+		QObject *item = loadItem(itemNode);
+		if(dynamic_cast<QAction *>(item)){
+			group->addAction(dynamic_cast<QAction *>(item), toToolButtonStyle(itemNode->Attribute("ToolButtonStyle")));
+		}else if(dynamic_cast<QMenu *>(item)){
+			group->addAction(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), 
+				toToolButtonStyle(itemNode->Attribute("ToolButtonStyle")), dynamic_cast<QMenu *>(item));
+		}else if(dynamic_cast<QWidget *>(item)){
+			group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
+							"Align", true), dynamic_cast<QWidget *>(item));
 		}
 		itemNode = itemNode->NextSiblingElement("Item");
+	}
+}
+
+QObject *Runner::loadItem(TiXmlElement *itemNode){
+	QString type = QString(itemNode->Attribute("Type")).toLower();
+	if(type == "action"){
+		return loadAction(itemNode);
+	}else if(type == "menu"){
+		return loadMenu(itemNode);
+	}else if(type == "checkbox"){
+		return loadCheckBox(itemNode);
+	}else if(type == "spinbox"){
+		return loadSpinBox(itemNode);
+	}else if(type == "radiobutton"){
+		return loadRadioButton(itemNode);
+	}else if(type == "combobox"){
+		return loadComboBox(itemNode);
+	}else if(type == "lineedit"){
+		return loadLineEdit(itemNode);
+	}else if(type == "fontcombobox"){
+		return loadFontComboBox(itemNode);
+	}else if(type == "label"){
+		return loadLable(itemNode);
+	}else if(type == "progressbar"){
+		return loadProgressBar(itemNode);
+	}else if(type == "scrollbar"){
+		return loadScrollBar(itemNode);
+	}else if(type == "slider"){
+		return loadSlider(itemNode);
+	}else if(type == "ribbonsliderpane"){
+		return loadRibbonSliderPane(itemNode);
+	}else{
+		return 0;
 	}
 }
 
@@ -546,6 +578,7 @@ RibbonSliderPane *Runner::loadRibbonSliderPane(TiXmlElement *xmlNode){
 	sliderPane->setValue(getAttribute(xmlNode, "Value", 0));
 	sliderPane->setSliderPosition(getAttribute(xmlNode, "SliderPosition", 0));
 	sliderPane->setScrollButtons(getAttribute(xmlNode, "ScrollButtons", true));
+	sliderPane->setRange(getAttribute(xmlNode, "Minimum", 0), getAttribute(xmlNode, "Maximum", 100));
 	connectSignals(xmlNode, sliderPane, "valueChanged(int )");
 	return sliderPane;
 }

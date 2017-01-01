@@ -1,10 +1,84 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Ribbon Logo="res/qtitanlogo32x32.png" Text="File">
-  <Item Type="Action" ObjectName="action1" Icon="res/about.png" Text="About" ToolTip="About" ToolButtonStyle="Qt::ToolButtonIconOnly" Use="true">
-    <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
-  </Item>
-  <Item Type="Options"/>
-  <Item Type="QuickAccess">
+<Ribbon>
+  <MainButton Logo="res/qtitanlogo32x32.png" Text="File" PageRecentFile="Recent Documents" FileCount ="10">
+    <Item Type="Action" ObjectName="action1" Icon="res/largeButton.png" Text="New" ToolTip="New" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="Create a new document" Checkable="false" Checked="false" Enabled="false"     IconText=""   Shortcut="Ctrl+N" WhatsThis="" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+    <Item Type="Action" ObjectName="action1" Icon="res/open.png" Text="Open..." ToolTip="Open" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="Open an existing document" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+O" WhatsThis="" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+    <Item Type="Action" ObjectName="action1" Icon="res/save.png" Text="Save" ToolTip="Save" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="Save the active document" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+S" WhatsThis="" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+    <Item Type="Action" ObjectName="action1" Icon="" Text="Save As..." ToolTip="Save As" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="Save the active document with a new name" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="" WhatsThis="" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+    <Item Type="Menu" ObjecctName="menu1" Icon="res/largeToggleButton.png" Text="Popup Button" ToolButtonStyle="Qt::ToolButtonIconOnly"  Width="" Height=""  Enabled=""      MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis=""   Use="true">
+      <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+      <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Menu" ObjecctName="menu1" Icon="res/largeToggleButton.png" Text="Popup Button" ToolButtonStyle="Qt::ToolButtonTextUnderIcon"  Width="" Height=""  Enabled=""      MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis=""   Use="true">
+        <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+      </Item>
+    </Item>
+    <Item Type="Action" PopupBarAction="true" ObjectName="action1" Icon="res/smallclose.png" Text="Close" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextBesideIcon" Visible="true" StatusTip="Exit" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+C" WhatsThis="" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+    <Item Type="Action" PopupBarAction="true" ObjectName="action1" Icon="res/smalloption.png" Text="Option" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextBesideIcon" Visible="true" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="" WhatsThis="" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+  </MainButton>
+  <RightAction>
+    <Item Type="Action" ObjectName="action1" Icon="res/about.png" Text="About" ToolTip="About" ToolButtonStyle="Qt::ToolButtonIconOnly" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+    <Item Type="Options"/>
+    <Item Type="Action" ObjectName="action1" Icon="res/ribbonMinimize.png" Text="Minimize the Ribbon" ToolTip="About" ToolButtonStyle="Qt::ToolButtonIconOnly" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+    <Item Type="Menu" ObjecctName="menu1" Icon="res/largeToggleButton.png" Text="Popup Button" ToolButtonStyle="Qt::ToolButtonIconOnly"  Width="" Height=""  Enabled=""      MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis=""   Use="true">
+      <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+      <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+      </Item>
+      <Item Type="Menu" ObjecctName="menu1" Icon="res/largeToggleButton.png" Text="Popup Button" ToolButtonStyle="Qt::ToolButtonTextUnderIcon"  Width="" Height=""  Enabled=""      MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis=""   Use="true">
+        <Connection Receiver="me" Signal="" Slot="slot_test()"/>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+        <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
+          <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+        </Item>
+      </Item>
+    </Item>
+
+  </RightAction>
+  <QuickAccess>
     <Item Type="Action" ObjectName="action1" Icon="res/smallNew.png" Text="New" ToolTip="Create a new document" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
       <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
     </Item>
@@ -20,34 +94,7 @@
     <Item Type="Action" ObjectName="action1" Icon="res/smallRedo.png" Text="Redo" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+Y" WhatsThis="" Use="true">
       <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
     </Item>
-  </Item>
-  <Item Type="Action" ObjectName="action1" Icon="res/ribbonMinimize.png" Text="Minimize the Ribbon" ToolTip="About" ToolButtonStyle="Qt::ToolButtonIconOnly" Use="true">
-    <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
-  </Item>
-  <Item Type="Menu" ObjecctName="menu1" Icon="res/largeToggleButton.png" Text="Popup Button" ToolButtonStyle="Qt::ToolButtonIconOnly"  Width="" Height=""  Enabled=""      MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis=""   Use="true">
-    <Connection Receiver="me" Signal="" Slot="slot_test()"/>
-    <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
-      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
-    </Item>
-    <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
-      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
-    </Item>
-    <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
-      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
-    </Item>
-    <Item Type="Menu" ObjecctName="menu1" Icon="res/largeToggleButton.png" Text="Popup Button" ToolButtonStyle="Qt::ToolButtonTextUnderIcon"  Width="" Height=""  Enabled=""      MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis=""   Use="true">
-      <Connection Receiver="me" Signal="" Slot="slot_test()"/>
-      <Item Type="Action" ObjectName="action1" Icon="" Text="Option 1" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
-        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
-      </Item>
-      <Item Type="Action" ObjectName="action1" Icon="" Text="Option 2" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
-        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
-      </Item>
-      <Item Type="Action" ObjectName="action1" Icon="" Text="Option 3" ToolTip="" ToolButtonStyle="Qt::ToolButtonTextUnderIcon" Visible="" StatusTip="" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+P" WhatsThis="" Use="true">
-        <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
-      </Item>
-    </Item>
-  </Item>
+  </QuickAccess>
   <Page Name="Buttons" Use="true">
     <Group Name="Large Buttons" OptionButtonVisible="true" Text="" ToolTip="Large Buttons" ControlsCentering="false" ControlsGrouping="false" Use="true">
       <Connection Receiver="me" Signal="" Slot="slot_test()" Use="true"/>
@@ -282,7 +329,7 @@
       </Item>
     </Group>
     <Group Name="Slider" OptionButtonVisible="false" Text="" ToolTip="Slider" ControlsCentering="true" ControlsGrouping="false" Use="true">
-      <Item Type="RibbonSliderPane" ObjecctName="RibbonSliderPane" Icon="" Text="" ScrollButtons="true" SingleStep="10" SliderPosition="50" Width="" Height=""  Enabled=""      MaximumHeight="18" MaximumWidth="" MinimumHeight="" MinimumWidth="100" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis=""   Use="true">
+      <Item Type="RibbonSliderPane" ObjecctName="RibbonSliderPane" Icon="" Minimum="0" Maximum="100" Text="" ScrollButtons="true" SingleStep="10" SliderPosition="50" Width="" Height=""  Enabled=""      MaximumHeight="18" MaximumWidth="" MinimumHeight="" MinimumWidth="100" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis=""   Use="true">
       </Item>
       <Item Type="Slider" ObjecctName="Slider" Icon="" Text="" TickInterval="20" TickPosition="QSlider::TicksLeft" Minimum="0" Maximum="100" Orientation="" PageStep="" SingleStep="10" Tracking="" Value="50"  Width="" Height=""  Enabled=""      MaximumHeight="20" MaximumWidth="" MinimumHeight="" MinimumWidth="100" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis=""   Use="true">
       </Item>
@@ -323,4 +370,8 @@
       </Item>
     </Group>
   </Page>
+  <StatusBar>
+    <Item Type="RibbonSliderPane" PermanentWidget="true" Stretch="" Minimum="0" Maximum="100" ObjecctName="RibbonSliderPane" Icon="" Text="" ScrollButtons="true" SingleStep="10" SliderPosition="50" Width="" Height=""  Enabled=""      MaximumHeight="18" MaximumWidth="130" MinimumHeight="" MinimumWidth="100" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis=""   Use="true">
+    </Item>
+  </StatusBar>
 </Ribbon>
