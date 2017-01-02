@@ -23,7 +23,7 @@ Runner::Runner(QWidget *parent, Qt::WFlags flags)
 	MyLog::Init("log");
 
 	TiXmlDocument doc;
-	if(doc.LoadFile("config.xml")){
+	if(doc.LoadFile("config2.xml")){
 		loadUIFromXml(doc.FirstChildElement("Ribbon"));
 	}else{
 		LOG_ERROR << "配置文件config.xml不存在或格式不正确！";
@@ -31,6 +31,23 @@ Runner::Runner(QWidget *parent, Qt::WFlags flags)
 
 	ribbonBar()->setFrameThemeEnabled(true);
 	m_defaultFont = ribbonBar()->font().pointSize();
+}
+
+void Runner::test(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return;
+	TiXmlAttribute *attr = xmlNode->FirstAttribute();
+	while(attr){
+		TiXmlElement *tmp = (TiXmlElement *)xmlNode->InsertEndChild(TiXmlElement(attr->Name()));
+		tmp->InsertEndChild(TiXmlText(attr->Value()));
+		TiXmlAttribute *next = attr->Next();
+		xmlNode->RemoveAttribute(attr->Name());
+		attr = next;
+	}
+	TiXmlElement *ele = xmlNode->FirstChildElement();
+	while(ele){
+		test(ele);
+		ele = ele->NextSiblingElement();
+	}
 }
 
 Runner::~Runner()
@@ -50,93 +67,311 @@ void Runner::loadUIFromXml(TiXmlElement *xmlNode)
 			continue;
 		}
 		if(childNode->Value() == QString("Page")){
-			RibbonPage *ribbonPage = ribbonBar()->addPage(childNode->Attribute("Name"));
-			TiXmlElement *groupNode = childNode->FirstChildElement("Group");
-			while(groupNode){
-				if(!isUse(groupNode)){
-					groupNode = groupNode->NextSiblingElement("Group");
-					continue;
-				}
-				RibbonGroup *ribbonGroup = ribbonPage->addGroup(groupNode->Attribute("Name"));
-				if(getAttribute(groupNode, "OptionButtonVisible", false)){
-					ribbonGroup->setOptionButtonVisible(true);
-					QAction *act = ribbonGroup->getOptionButtonAction();
-					act->setToolTip(getAttribute(groupNode, "ToolTip"));
-					connectSignals(groupNode, act, "triggered()");
-				}
-				ribbonGroup->setControlsCentering(getAttribute(groupNode, "ControlsCentering", false));
-				ribbonGroup->setControlsGrouping(getAttribute(groupNode, "ControlsGrouping", false));
-				loadItems(groupNode, ribbonGroup);
-				groupNode = groupNode->NextSiblingElement("Group");
-			}
+			loadPage(childNode);
 		}else if(childNode->Value() == QString("RightAction")){
-			TiXmlElement *actionNode = childNode->FirstChildElement("Item");
-			while(actionNode){
-				QString type = actionNode->Attribute("Type");
-				if(type.toLower() == "action"){
-					QAction *action = ribbonBar()->addAction(QIcon(actionNode->Attribute("Icon")), actionNode->Attribute("Text"), toToolButtonStyle(actionNode->Attribute("ToolButtonStyle")));
-					connectSignals(actionNode, action, "triggered()");
-				}else if(type.toLower() == "menu"){
-					QMenu *menu = loadMenu(actionNode);
-					ribbonBar()->addAction(QIcon(actionNode->Attribute("Icon")), actionNode->Attribute("Text"), toToolButtonStyle(actionNode->Attribute("ToolButtonStyle")), menu);
-				}else if(type.toLower() == "options"){
-					createOptions();
-				}
-				actionNode = actionNode->NextSiblingElement("Item");
-			}
+			loadRightAction(childNode);
 		}else if(childNode->Value() == QString("QuickAccess")){
-			RibbonQuickAccessBar* quickAccessBar = ribbonBar()->getQuickAccessBar();
-			QAction* action = quickAccessBar->actionCustomizeButton();
-			action->setToolTip(tr("Customize Quick Access Bar"));
-			TiXmlElement *actionNode = childNode->FirstChildElement("Item");
-			while(actionNode){
-				QAction *action = loadAction(actionNode);
-				if(action) quickAccessBar->addAction(action);
-				actionNode = actionNode->NextSiblingElement("Item");
-			}
-			ribbonBar()->showQuickAccess(true);
+			loadQuickAccess(childNode);
 		}else if(childNode->Value() == QString("StatusBar")){
-			TiXmlElement *itemNode = childNode->FirstChildElement("Item");
-			while(itemNode){
-				QObject *item = loadItem(itemNode);
-				if(dynamic_cast<QAction *>(item)){
-					statusBar()->addAction(dynamic_cast<QAction *>(item));
-				}else if(dynamic_cast<QWidget *>(item)){
-					if(getAttribute(itemNode, "PermanentWidget", true)){
-						statusBar()->addPermanentWidget(dynamic_cast<QWidget *>(item), getAttribute(itemNode, "Stretch", 0));
-					}else{
-						statusBar()->addWidget(dynamic_cast<QWidget *>(item), getAttribute(itemNode, "Stretch", 0));
-					}
-				}
-				itemNode = itemNode->NextSiblingElement("Item");
-			}
-
+			loadStatusBar(childNode);
 		}else if(childNode->Value() == QString("MainButton")){
-			QAction *actionFile = ribbonBar()->addSystemButton(QIcon(childNode->Attribute("Logo")), childNode->Attribute(""));
-			Qtitan::RibbonSystemPopupBar* popupBar = qobject_cast<Qtitan::RibbonSystemPopupBar*>(actionFile->menu());
-			TiXmlElement *actionNode = childNode->FirstChildElement("Item");
-			while(actionNode){
-				QString type = actionNode->Attribute("Type");
-				if(type.toLower() == "action"){
-					QAction *action = loadAction(actionNode);
-					if(action){
-						if(getAttribute(actionNode, "PopupBarAction", false)){
-							popupBar->addPopupBarAction(action, toToolButtonStyle(actionNode->Attribute("ToolButtonStyle")));
-						}else{
-							popupBar->addAction(action);
-						}
-					}
-				}else if(type.toLower() == "menu"){
-					QMenu *menu = loadMenu(actionNode);
-					popupBar->addMenu(menu);
-				}
-				actionNode = actionNode->NextSiblingElement("Item");
-			}
-			RibbonPageSystemRecentFileList* pageRecentFile = popupBar->addPageRecentFile(tr(childNode->Attribute("PageRecentFile")));
-			pageRecentFile->setSize(getAttribute(childNode, "FileCount", 10));
+			loadMainButton(childNode);
+		}else if(childNode->Value() == QString("ToolBar")){
+			loadToolBar(childNode);
+		}else if(childNode->Value() == QString("DockWidget")){
+			loadDockWidget(childNode);
+		}else if(childNode->Value() == QString("TabCenterWidget")){
+			loadTabCenterWidget(childNode);
 		}
 		childNode = childNode->NextSiblingElement();
 	}
+}
+
+void Runner::loadTabCenterWidget(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return;
+	if(!isUse(xmlNode)) return;
+	QTabWidget *tab= new QTabWidget(this);
+	loadWidget(tab, xmlNode);
+	TiXmlElement *itemNode = xmlNode->FirstChildElement("Item");
+	while(itemNode){
+		QObject *item = loadItem(itemNode);
+		if(dynamic_cast<QWidget *>(item)){
+			QString icon, text;
+			getElementText(itemNode, "Icon", icon);
+			getElementText(itemNode, "Label", text);
+			tab->addTab(dynamic_cast<QWidget *>(item), QIcon(icon), text);
+		}
+		itemNode = itemNode->NextSiblingElement("Item");
+	}
+	int i, width, height;
+	bool b;
+	QString s;
+	if(getElementInt(xmlNode, "CurrentIndex", i)) tab->setCurrentIndex(i);
+	if(getElementInt(xmlNode, "IconWidth", width) && getElementInt(xmlNode, "IconHeight", height)) tab->setIconSize(QSize(width, height));
+	if(getElementBool(xmlNode, "DocumentMode", b)) tab->setDocumentMode(b);
+	if(getElementBool(xmlNode, "Movable", b)) tab->setMovable(b);
+	if(getElementBool(xmlNode, "TabsClosable", b)) tab->setTabsClosable(b);
+	if(getElementBool(xmlNode, "UsesScrollButtons", b)) tab->setUsesScrollButtons(b);
+	if(getElementText(xmlNode, "TabPosition", s)) tab->setTabPosition(toTabPosition(s));
+	if(getElementText(xmlNode, "TabShape", s)) tab->setTabShape(toTabShape(s));
+	setCentralWidget(tab);
+}
+
+QTabWidget::TabPosition Runner::toTabPosition(QString s){
+	s = s.toLower();
+	if(s == "qtabwidget::north" || s == "north" || s == "0") return QTabWidget::North;
+	else if(s == "qtabwidget::south" || s == "south" || s == "1") return QTabWidget::South;
+	else if(s == "qtabwidget::west" || s == "west" || s == "2") return QTabWidget::West;
+	else if(s == "qtabwidget::east" || s == "east" || s == "3") return QTabWidget::East;
+	else return QTabWidget::North;
+}
+
+QTabWidget::TabShape Runner::toTabShape(QString s){
+	s = s.toLower();
+	if(s == "qtabwidget::rounded" || s == "rounded" || s == "0") return QTabWidget::Rounded;
+	else if(s == "qtabwidget::triangular" || s == "triangular" || s == "1") return QTabWidget::Triangular;
+	else return QTabWidget::Rounded;
+}
+
+void Runner::loadToolBar(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return;
+	if(!isUse(xmlNode)) return;
+	QToolBar *toolbar = new QToolBar(this);
+	connectSignals(xmlNode, toolbar, "actionTriggered ( QAction * )");
+	loadToolBar(toolbar, xmlNode);
+	QString s;
+	getElementText(xmlNode, "ToolBarArea", s);
+	addToolBar(toToolBarArea(s), toolbar);
+}
+
+void Runner::loadToolBar(QToolBar *toolbar, TiXmlElement *xmlNode){
+	if(toolbar == 0 || xmlNode == 0) return;
+	loadWidget(toolbar, xmlNode);
+	int i, width, height;
+	bool b;
+	double d;
+	QString s;
+	if(getElementText(xmlNode, "AllowedAreas", s)) toolbar->setAllowedAreas(toToolBarAreas(s));
+	if(getElementText(xmlNode, "Orientation", s)) toolbar->setOrientation(toOrientation(s));
+	if(getElementText(xmlNode, "ToolButtonStyle", s)) toolbar->setToolButtonStyle(toToolButtonStyle(s));
+	if(getElementText(xmlNode, "WindowIcon", s)) toolbar->setWindowIcon(QIcon(s));
+	if(getElementText(xmlNode, "WindowIconText", s)) toolbar->setWindowIconText(s);
+	if(getElementText(xmlNode, "WindowTitle", s)) toolbar->setWindowTitle(s);
+	if(getElementBool(xmlNode, "Floatable", b)) toolbar->setFloatable(b);
+	if(getElementBool(xmlNode, "Movable", b)) toolbar->setMovable(b);
+	if(getElementDouble(xmlNode, "WindowOpacity", d)) toolbar->setWindowOpacity(d);
+	if(getElementInt(xmlNode, "IconWidth", width) && getElementInt(xmlNode, "IconHeight", height)) toolbar->setIconSize(QSize(width, height));
+	TiXmlElement *itemNode = xmlNode->FirstChildElement("Item");
+	while(itemNode){
+		QString type;
+		getElementText(itemNode, "Type", type);
+		if(type == QString("separator")){
+			toolbar->addSeparator();
+			itemNode = itemNode->NextSiblingElement("Item");
+			continue;
+		}
+		QObject *item = loadItem(itemNode);
+		if(dynamic_cast<QAction *>(item)){
+			toolbar->addAction(dynamic_cast<QAction *>(item));
+		}else if(dynamic_cast<QWidget *>(item)){
+			toolbar->addWidget(dynamic_cast<QWidget *>(item));
+		}
+		itemNode = itemNode->NextSiblingElement("Item");
+	}
+}
+
+Qt::ToolBarAreas Runner::toToolBarAreas(QString s){
+	s = s.toLower();
+	if(s == "qt::lefttoolbararea" || s == "lefttoolbararea" || s == "1") return Qt::LeftToolBarArea;
+	else if(s == "qt::righttoolbararea" || s == "righttoolbararea" || s == "2") return Qt::RightToolBarArea;
+	else if(s == "qt::toptoolbararea" || s == "toptoolbararea" || s == "4") return Qt::TopToolBarArea;
+	else if(s == "qt::bottomtoolbararea" || s == "bottomtoolbararea" || s == "8") return Qt::BottomToolBarArea;
+	else if(s == "qt::alltoolbarareas" || s == "alltoolbarareas" || s == "15") return Qt::AllToolBarAreas;
+	else {
+		int areas = s.toInt();
+		if(areas == 0) return Qt::AllToolBarAreas;
+		else return Qt::ToolBarAreas(areas);
+	}
+}
+
+Qt::ToolBarArea Runner::toToolBarArea(QString s){
+	s = s.toLower();
+	if(s == "qt::lefttoolbararea" || s == "lefttoolbararea" || s == "1") return Qt::LeftToolBarArea;
+	else if(s == "qt::righttoolbararea" || s == "righttoolbararea" || s == "2") return Qt::RightToolBarArea;
+	else if(s == "qt::toptoolbararea" || s == "toptoolbararea" || s == "4") return Qt::TopToolBarArea;
+	else if(s == "qt::bottomtoolbararea" || s == "bottomtoolbararea" || s == "8") return Qt::BottomToolBarArea;
+//	else if(s == "qt::alltoolbarareas" || s == "alltoolbarareas" || s == "15") return Qt::AllToolBarAreas;
+	else return Qt::LeftToolBarArea;
+}
+
+void Runner::loadPage(TiXmlElement *xmlNode){
+	QString s;
+	getElementText(xmlNode, "Name", s);
+	RibbonPage *ribbonPage = ribbonBar()->addPage(s);
+	TiXmlElement *groupNode = xmlNode->FirstChildElement("Group");
+	while(groupNode){
+		if(!isUse(groupNode)){
+			groupNode = groupNode->NextSiblingElement("Group");
+			continue;
+		}
+		getElementText(groupNode, "Name", s);
+		RibbonGroup *ribbonGroup = ribbonPage->addGroup(s);
+		bool b;
+		if(getElementBool(groupNode, "OptionButtonVisible", b) && b){
+			ribbonGroup->setOptionButtonVisible(true);
+			QAction *act = ribbonGroup->getOptionButtonAction();
+			if(getElementText(groupNode, "ToolTip", s)) act->setToolTip(s);
+			connectSignals(groupNode, act, "triggered()");
+		}
+		if(getElementBool(groupNode, "ControlsCentering", b)) ribbonGroup->setControlsCentering(b);
+		if(getElementBool(groupNode, "ControlsGrouping", b)) ribbonGroup->setControlsGrouping(b);
+		loadItems(groupNode, ribbonGroup);
+		groupNode = groupNode->NextSiblingElement("Group");
+	}
+}
+
+void Runner::loadDockWidget(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return;
+	if(!isUse(xmlNode)) return;
+	QDockWidget *dock = new QDockWidget(this);
+	loadWidget(dock, xmlNode);
+	int i;
+	bool b;
+	QString s;
+	if(getElementText(xmlNode, "WindowIcon", s)) dock->setWindowIcon(QIcon(s));
+	if(getElementText(xmlNode, "WindowIconText", s)) dock->setWindowIconText(s);
+	if(getElementInt(xmlNode, "WindowOpacity", i)) dock->setWindowOpacity(i);
+	if(getElementText(xmlNode, "WindowTitle", s)) dock->setWindowTitle(s);
+	if(getElementText(xmlNode, "AllowedAreas", s)) dock->setAllowedAreas(toDockWidgetAreas(s));
+	if(getElementText(xmlNode, "Features", s)) dock->setFeatures(toDockWidgetFeatures(s));
+	if(getElementBool(xmlNode, "Floating", b)) dock->setFloating(b);
+	connectSignals(xmlNode, dock, "visibilityChanged ( bool )");
+	if(getElementText(xmlNode, "DockArea", s)) addDockWidget((Qt::DockWidgetArea)(int)toDockWidgetAreas(s), dock);
+	else addDockWidget(Qt::LeftDockWidgetArea, dock);
+}
+
+
+QDockWidget::DockWidgetFeatures Runner::toDockWidgetFeatures(QString s){
+	s = s.toLower();
+	if(s == "qt::dockwidgetclosable" || s == "dockwidgetclosable" || s == "1") return QDockWidget::DockWidgetClosable;
+	else if(s == "qt::dockwidgetmovable" || s == "dockwidgetmovable" || s == "2") return QDockWidget::DockWidgetMovable;
+	else if(s == "qt::dockwidgetfloatable" || s == "dockwidgetfloatable" || s == "4") return QDockWidget::DockWidgetFloatable;
+	else if(s == "qt::dockwidgetverticaltitlebar" || s == "dockwidgetverticaltitlebar" || s == "8") return QDockWidget::DockWidgetVerticalTitleBar;
+	else if(s == "qt::alldockwidgetfeatures" || s == "alldockwidgetfeatures" || s == "7") return QDockWidget::AllDockWidgetFeatures;
+	else {
+		int areas = s.toInt();
+		if(areas == 0) return QDockWidget::AllDockWidgetFeatures;
+		else return QDockWidget::DockWidgetFeatures(areas);
+	}
+}
+
+Qt::DockWidgetAreas Runner::toDockWidgetAreas(QString s){
+	s = s.toLower();
+	if(s == "qt::leftdockwidgetarea" || s == "leftdockwidgetarea" || s == "1") return Qt::LeftDockWidgetArea;
+	else if(s == "qt::rightdockwidgetarea" || s == "rightdockwidgetarea" || s == "2") return Qt::RightDockWidgetArea;
+	else if(s == "qt::topdockwidgetarea" || s == "topdockwidgetarea" || s == "4") return Qt::TopDockWidgetArea;
+	else if(s == "qt::bottomdockwidgetarea" || s == "bottomdockwidgetarea" || s == "8") return Qt::BottomDockWidgetArea;
+	else if(s == "qt::alldockwidgetareas" || s == "alldockwidgetareas" || s == "15") return Qt::AllDockWidgetAreas;
+	else {
+		int areas = s.toInt();
+		if(areas == 0) return Qt::AllDockWidgetAreas;
+		else return Qt::DockWidgetAreas(areas);
+	}
+}
+
+void Runner::loadRightAction(TiXmlElement *xmlNode){
+	TiXmlElement *actionNode = xmlNode->FirstChildElement("Item");
+	while(actionNode){
+		QString type;
+		getElementText(actionNode, "Type", type);
+		if(type.toLower() == "action"){
+			QString icon, text, buttonStyle;
+			getElementText(actionNode, "Icon", icon);
+			getElementText(actionNode, "Text", text);
+			getElementText(actionNode, "ToolButtonStyle", buttonStyle);
+			QAction *action = ribbonBar()->addAction(QIcon(icon), text, toToolButtonStyle(buttonStyle));
+			connectSignals(actionNode, action, "triggered()");
+		}else if(type.toLower() == "menu"){
+			QMenu *menu = loadMenu(actionNode);
+			QString icon, text, buttonStyle;
+			getElementText(actionNode, "Icon", icon);
+			getElementText(actionNode, "Text", text);
+			getElementText(actionNode, "ToolButtonStyle", buttonStyle);
+			QAction *action = ribbonBar()->addAction(QIcon(icon), text, toToolButtonStyle(buttonStyle), menu);
+		}else if(type.toLower() == "options"){
+			createOptions();
+		}
+		actionNode = actionNode->NextSiblingElement("Item");
+	}
+}
+
+void Runner::loadQuickAccess(TiXmlElement *xmlNode){
+	RibbonQuickAccessBar* quickAccessBar = ribbonBar()->getQuickAccessBar();
+	QAction* action = quickAccessBar->actionCustomizeButton();
+	action->setToolTip(tr("Customize Quick Access Bar"));
+	TiXmlElement *actionNode = xmlNode->FirstChildElement("Item");
+	while(actionNode){
+		QAction *action = loadAction(actionNode);
+		if(action) quickAccessBar->addAction(action);
+		actionNode = actionNode->NextSiblingElement("Item");
+	}
+	ribbonBar()->showQuickAccess(true);
+}
+
+void Runner::loadStatusBar(TiXmlElement *xmlNode){
+	TiXmlElement *itemNode = xmlNode->FirstChildElement("Item");
+	while(itemNode){
+		QObject *item = loadItem(itemNode);
+		if(dynamic_cast<QAction *>(item)){
+			statusBar()->addAction(dynamic_cast<QAction *>(item));
+		}else if(dynamic_cast<QWidget *>(item)){
+			int i;
+			bool b;
+			getElementInt(itemNode, "Stretch", i);
+			if(getElementBool(itemNode, "PermanentWidget", b) && b){
+				statusBar()->addPermanentWidget(dynamic_cast<QWidget *>(item), i);
+			}else{
+				statusBar()->addWidget(dynamic_cast<QWidget *>(item), i);
+			}
+		}
+		itemNode = itemNode->NextSiblingElement("Item");
+	}
+}
+
+void Runner::loadMainButton(TiXmlElement *xmlNode){
+	QString icon, text;
+	getElementText(xmlNode, "Logo", icon);
+	getElementText(xmlNode, "Text", text);
+	QAction *actionFile = ribbonBar()->addSystemButton(QIcon(icon), text);
+	Qtitan::RibbonSystemPopupBar* popupBar = qobject_cast<Qtitan::RibbonSystemPopupBar*>(actionFile->menu());
+	TiXmlElement *actionNode = xmlNode->FirstChildElement("Item");
+	while(actionNode){
+		QString type;
+		getElementText(actionNode, "Type", type);
+		if(type.toLower() == "action"){
+			QAction *action = loadAction(actionNode);
+			if(action){
+				bool b;
+				QString s;
+				getElementText(actionNode, "ToolButtonStyle", s);
+				if(getElementBool(actionNode, "PopupBarAction", b) && b){
+					popupBar->addPopupBarAction(action, toToolButtonStyle(s));
+				}else{
+					popupBar->addAction(action);
+				}
+			}
+		}else if(type.toLower() == "menu"){
+			QMenu *menu = loadMenu(actionNode);
+			popupBar->addMenu(menu);
+		}
+		actionNode = actionNode->NextSiblingElement("Item");
+	}
+	QString s = tr("Recent Files");
+	int i = 10;
+	getElementText(xmlNode, "PageRecentFile", s);
+	getElementInt(xmlNode, "FileCount", i);
+	RibbonPageSystemRecentFileList* pageRecentFile = popupBar->addPageRecentFile(s);
+	pageRecentFile->setSize(i);
 }
 
 QSize Runner::sizeHint() const
@@ -147,7 +382,8 @@ QSize Runner::sizeHint() const
 bool Runner::isUse(TiXmlElement *xmlNode)
 {
 	if(xmlNode == 0) return false;
-	return getAttribute(xmlNode, "Use", true);
+	bool b = true;
+	return !getElementBool(xmlNode, "Use", b) || b;
 }
 
 void Runner::connectSignals(TiXmlElement *xmlNode, QObject *sender, QString defaultSignal){
@@ -158,19 +394,22 @@ void Runner::connectSignals(TiXmlElement *xmlNode, QObject *sender, QString defa
 			connectionNode = connectionNode->NextSiblingElement("Connection");	
 			continue;
 		}
-		QString receiverName = getAttribute(connectionNode, "Receiver");
+		QString receiverName;
+		getElementText(connectionNode, "Receiver", receiverName);
 		if(receiverName.isEmpty()){
 			LOG_INFO << "row=" << QString::number(connectionNode->Row()).toStdString() << ",receiver is empty";
 			connectionNode = connectionNode->NextSiblingElement("Connection");
  			continue;
 		}
-		QString signalName = getAttribute(connectionNode, "Signal", defaultSignal);
+		QString signalName = defaultSignal;
+		getElementText(connectionNode, "Signal", signalName);
 		if(signalName.isEmpty()){
 			LOG_INFO << "row=" << QString::number(connectionNode->Row()).toStdString().c_str() << ",signal is empty";
 			connectionNode = connectionNode->NextSiblingElement("Connection");	
 			continue;
 		}
-		QString slotName = getAttribute(connectionNode, "Slot");
+		QString slotName;
+		getElementText(connectionNode, "Slot", slotName);
 		if(slotName.isEmpty()){
 			LOG_INFO << "row=" << QString::number(connectionNode->Row()).toStdString() << ",slot is empty";
 			connectionNode = connectionNode->NextSiblingElement("Connection");	
@@ -195,27 +434,41 @@ void Runner::loadItems(TiXmlElement *xmlNode, RibbonGroup *group){
 	if(xmlNode == 0 || group == 0) return;
 	TiXmlElement *itemNode = xmlNode->FirstChildElement("Item");
 	while(itemNode){
-		if(QString(itemNode->Attribute("Type")).toLower() == QString("separator")){
+		QString type;
+		getElementText(itemNode, "Type", type);
+		if(type.toLower() == QString("separator")){
 			group->addSeparator();
 			itemNode = itemNode->NextSiblingElement("Item");
 			continue;
 		}
 		QObject *item = loadItem(itemNode);
 		if(dynamic_cast<QAction *>(item)){
-			group->addAction(dynamic_cast<QAction *>(item), toToolButtonStyle(itemNode->Attribute("ToolButtonStyle")));
+			QString s;
+			getElementText(itemNode, "ToolButtonStyle", s);
+			group->addAction(dynamic_cast<QAction *>(item), toToolButtonStyle(s));
 		}else if(dynamic_cast<QMenu *>(item)){
-			group->addAction(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), 
-				toToolButtonStyle(itemNode->Attribute("ToolButtonStyle")), dynamic_cast<QMenu *>(item));
+			QString icon, text, buttonStyle;
+			getElementText(itemNode, "Icon", icon);
+			getElementText(itemNode, "Text", text);
+			getElementText(itemNode, "ToolButtonStyle", buttonStyle);
+			group->addAction(QIcon(icon), text, 
+				toToolButtonStyle(buttonStyle), dynamic_cast<QMenu *>(item));
 		}else if(dynamic_cast<QWidget *>(item)){
-			group->addWidget(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), getAttribute(itemNode,
-							"Align", true), dynamic_cast<QWidget *>(item));
+			QString icon, text;
+			bool align = true;
+			getElementText(itemNode, "Icon", icon);
+			getElementText(itemNode, "Text", text);
+			getElementBool(itemNode, "Align", align);
+			group->addWidget(QIcon(icon), text, align, dynamic_cast<QWidget *>(item));
 		}
 		itemNode = itemNode->NextSiblingElement("Item");
 	}
 }
 
 QObject *Runner::loadItem(TiXmlElement *itemNode){
-	QString type = QString(itemNode->Attribute("Type")).toLower();
+	QString type;
+	getElementText(itemNode, "Type", type);
+	type = type.toLower();
 	if(type == "action"){
 		return loadAction(itemNode);
 	}else if(type == "menu"){
@@ -242,6 +495,10 @@ QObject *Runner::loadItem(TiXmlElement *itemNode){
 		return loadSlider(itemNode);
 	}else if(type == "ribbonsliderpane"){
 		return loadRibbonSliderPane(itemNode);
+	}else if(type == "widget"){
+		QWidget *widget = new QWidget(this);
+		loadWidget(widget, itemNode);
+		return widget;
 	}else{
 		return 0;
 	}
@@ -250,24 +507,28 @@ QObject *Runner::loadItem(TiXmlElement *itemNode){
 QAction *Runner::loadAction(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	if(!getElementText(xmlNode, "Type", type)) return 0;
 	if(type.toLower() != "action") return 0;
 	QAction *action = new QAction(this);
-	action->setObjectName(xmlNode->Attribute("ObjectName"));
-	action->setIcon(QIcon(xmlNode->Attribute("Icon")));
-	action->setText(xmlNode->Attribute("Text"));
-	action->setToolTip(xmlNode->Attribute("ToopTip"));
-	bool visible = getAttribute(xmlNode, "Visible", true);
-	if(!visible) action->setVisible(false);
-	action->setStatusTip(xmlNode->Attribute("StatusTip"));
-	if(getAttribute(xmlNode, "Checkable", false)){
-		action->setCheckable(true);
-		action->setChecked(getAttribute(xmlNode, "Checked", false));
+	QString s;
+	bool b;
+	if(getElementText(xmlNode, "ObjectName", s)) action->setObjectName(s);
+	if(getElementText(xmlNode, "Icon", s)) action->setIcon(QIcon(s));
+	if(getElementText(xmlNode, "Text", s)) action->setText(s);
+	if(getElementText(xmlNode, "ToopTip", s)) action->setToolTip(s);
+	if(getElementBool(xmlNode, "Visible", b)){
+		if(!b) action->setVisible(false);
 	}
-	action->setEnabled(getAttribute(xmlNode, "Enabled", true));
-	action->setIconText(xmlNode->Attribute("IconText"));
-	action->setShortcut(QKeySequence(xmlNode->Attribute("Shortcut")));
-	action->setWhatsThis(xmlNode->Attribute("WhatsThis"));
+	if(getElementText(xmlNode, "StatusTip", s)) action->setStatusTip(s);
+	if(getElementBool(xmlNode, "Checkable", b)){
+		action->setCheckable(b);
+		if(getElementBool(xmlNode, "Checked", b)) action->setChecked(b);
+	}
+	if(getElementBool(xmlNode, "Enabled", b)) action->setEnabled(b);
+	if(getElementText(xmlNode, "IconText", s)) action->setIconText(QKeySequence(s));
+	if(getElementText(xmlNode, "Shortcut", s)) action->setShortcut(s);
+	if(getElementText(xmlNode, "WhatsThis", s)) action->setWhatsThis(s);
 	connectSignals(xmlNode, action, "triggered()");
 	return action;
 }
@@ -277,9 +538,9 @@ Qt::ToolButtonStyle Runner::toToolButtonStyle(QString s){
 	if(s == "qt::toolbuttonicononly" || s == "toolbuttonicononly" || s == "0") return Qt::ToolButtonIconOnly;
 	else if(s == "qt::toolbuttontextonly" || s == "toolbuttontextonly" || s == "1") return Qt::ToolButtonTextOnly;
 	else if(s == "qt::toolbuttontextbesideicon" || s == "toolbuttontextbesideicon" || s == "2") return Qt::ToolButtonTextBesideIcon;
-	else if(s == "qt::toolbuttontextundericon" || s == "toolbuttontextundericon" || s == "2") return Qt::ToolButtonTextUnderIcon;
-	else if(s == "qt::toolbuttonfollowstyle" || s == "toolbuttonfollowstyle" || s == "2") return Qt::ToolButtonFollowStyle;
-	else return Qt::ToolButtonTextUnderIcon;
+	else if(s == "qt::toolbuttontextundericon" || s == "toolbuttontextundericon" || s == "3") return Qt::ToolButtonTextUnderIcon;
+	else if(s == "qt::toolbuttonfollowstyle" || s == "toolbuttonfollowstyle" || s == "4") return Qt::ToolButtonFollowStyle;
+	else return Qt::ToolButtonIconOnly;
 }
 
 void Runner::slot_test(){
@@ -290,15 +551,18 @@ void Runner::slot_test(){
 QMenu *Runner::loadMenu(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	getElementText(xmlNode, "Type", type);
 	if(type.toLower() != "menu") return 0;
 	QMenu *menu = new QMenu(this);
 	loadWidget(menu, xmlNode);
-	menu->setIcon(QIcon(xmlNode->Attribute("Icon")));
-	menu->setTitle(xmlNode->Attribute("Text"));
+	QString s;
+	if(getElementText(xmlNode, "Icon", s)) menu->setIcon(QIcon(s));
+	if(getElementText(xmlNode, "Text", s)) menu->setTitle(s);
 	TiXmlElement *childNode = xmlNode->FirstChildElement("Item");
 	while(childNode){
-		QString childType = childNode->Attribute("Type");
+		QString childType;
+		getElementText(childNode, "Type", childType);
 		if(childType.toLower() == "action"){
 			QAction *action = loadAction(childNode);
 			if(action) menu->addAction(action);
@@ -314,39 +578,38 @@ QMenu *Runner::loadMenu(TiXmlElement *xmlNode){
 
 void Runner::loadWidget(QWidget *widget, TiXmlElement *xmlNode){
 	if(widget == 0 || xmlNode == 0) return;
-	widget->setObjectName(xmlNode->Attribute("ObjectName"));
-	//int width = getAttribute(xmlNode, "Width", 0);
-	//int height = getAttribute(xmlNode, "Height", 0);
-	//if(width > 0 && height > 0) widget->resize(width, height);
-	widget->setEnabled(getAttribute(xmlNode, "Enabled", true));
-	int maxH = getAttribute(xmlNode, "MaximumHeight", 0);
-	if(maxH > 0) widget->setMaximumHeight(maxH);
-	int maxW = getAttribute(xmlNode, "MaximumWidth", 0);
-	if(maxW > 0) widget->setMaximumWidth(maxW);
-	int minH = getAttribute(xmlNode, "MinimumHeight", 0);
-	if(minH > 0) widget->setMinimumHeight(minH);
-	int minW = getAttribute(xmlNode, "MinimumWidth", 0);
-	if(minW > 0) widget->setMinimumWidth(minW);
-	widget->setStatusTip(xmlNode->Attribute("StatusTip"));
-	widget->setStyleSheet(xmlNode->Attribute("StyleSheet"));
-	widget->setToolTip(xmlNode->Attribute("ToolTip"));
-	bool visible = getAttribute(xmlNode, "Visible", true);
-	if(!visible) widget->setVisible(false);
-	widget->setWhatsThis(xmlNode->Attribute("WhatsThis"));
-	widget->setWindowIcon(QIcon(xmlNode->Attribute("WindowIcon")));
-	widget->setWindowIconText(xmlNode->Attribute("WindowIconText"));
-	widget->setWindowOpacity(getAttribute(xmlNode, "WindowOpacity", 1.0));
-	widget->setWindowTitle(xmlNode->Attribute("WindowTitle"));
+	QString s;
+	int i;
+	bool b;
+	double d;
+	if(getElementText(xmlNode, "ObjectName", s)) widget->setObjectName(s);
+	if(getElementText(xmlNode, "StatusTip", s)) widget->setStatusTip(s);
+	if(getElementText(xmlNode, "StyleSheet", s)) widget->setStyleSheet(s);
+	if(getElementText(xmlNode, "ToolTip", s)) widget->setToolTip(s);
+	if(getElementText(xmlNode, "WhatsThis", s)) widget->setWhatsThis(s);
+	if(getElementText(xmlNode, "WindowIcon", s)) widget->setWindowIcon(QIcon(s));
+	if(getElementText(xmlNode, "WindowIconText", s)) widget->setWindowIconText(s);
+	if(getElementText(xmlNode, "WindowTitle", s)) widget->setWindowTitle(s);
+	if(getElementInt(xmlNode, "MinimumWidth", i)) widget->setMinimumWidth(i);
+	if(getElementInt(xmlNode, "MaximumWidth", i)) widget->setMaximumWidth(i);
+	if(getElementInt(xmlNode, "MinimumHeight", i)) widget->setMinimumHeight(i);
+	if(getElementInt(xmlNode, "MaximumHeight", i)) widget->setMaximumHeight(i);
+	if(getElementBool(xmlNode, "Enabled", b)) widget->setEnabled(b);
+	if(getElementBool(xmlNode, "Visible", b) && !b) widget->setVisible(false);
+	if(getElementDouble(xmlNode, "WindowOpacity", d)) widget->setWindowOpacity(d);
 }
 
 QCheckBox *Runner::loadCheckBox(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	if(!getElementText(xmlNode, "Type", type)) return 0;
 	if(type.toLower() != "checkbox") return 0;
 	QCheckBox *checkBox = new QCheckBox(this);
 	loadAbstractButton(checkBox, xmlNode);
-	checkBox->setCheckState(toCheckState(xmlNode->Attribute("CheckState")));
+	int i;
+	QString s;
+	if(getElementText(xmlNode, "CheckState", s)) checkBox->setCheckState(toCheckState(s));
 	connectSignals(xmlNode, checkBox, "stateChanged ( int )");
 	return checkBox;
 }
@@ -362,17 +625,21 @@ Qt::CheckState Runner::toCheckState(QString s){
 void Runner::loadAbstractButton(QAbstractButton *button, TiXmlElement *xmlNode){
 	if(button == 0 || xmlNode == 0) return;
 	loadWidget(button, xmlNode);
-	button->setCheckable(getAttribute(xmlNode, "Checkable", true));
-	button->setChecked(getAttribute(xmlNode, "Checked", false));
-	button->setIcon(QIcon(xmlNode->Attribute("Icon")));
-	button->setIconSize(QSize(getAttribute(xmlNode, "IconWidth", 24), getAttribute(xmlNode, "IconHeight", 24)));
-	button->setText(xmlNode->Attribute("Text"));
+	bool value = true;
+	if(getElementBool(xmlNode, "Checkable", value)) button->setCheckable(value);
+	if(getElementBool(xmlNode, "Checked", value)) button->setChecked(value);
+	QString s;
+	if(getElementText(xmlNode, "Icon", s)) button->setIcon(QIcon(s));
+	int width, height;
+	if(getElementInt(xmlNode, "IconWidth", width) && getElementInt(xmlNode, "IconHeight", height)) button->setIconSize(QSize(width, height));
+	if(getElementText(xmlNode, "Text", s)) button->setText(s);
 }
 
 QRadioButton *Runner::loadRadioButton(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	getElementText(xmlNode, "Type", type);
 	if(type.toLower() != "radiobutton") return 0;
 	QRadioButton *radioButton = new QRadioButton(this);
 	loadAbstractButton(radioButton, xmlNode);
@@ -383,15 +650,19 @@ QRadioButton *Runner::loadRadioButton(TiXmlElement *xmlNode){
 QLineEdit *Runner::loadLineEdit(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	if(!getElementText(xmlNode, "Type", type)) return 0;
 	if(type.toLower() != "lineedit") return 0;
 	QLineEdit *lineEdit = new QLineEdit(this);
 	loadWidget(lineEdit, xmlNode);
-	lineEdit->setReadOnly(getAttribute(xmlNode, "ReadOnly", false));
-	lineEdit->setAlignment(toAlignment(xmlNode->Attribute("Alignment")));
-	lineEdit->setFrame(getAttribute(xmlNode, "Frame", true));
-	lineEdit->setInputMask(xmlNode->Attribute("InputMask"));
-	lineEdit->setMaxLength(getAttribute(xmlNode, "MaxLength", -1));
+	bool b;
+	QString s;
+	int i;
+	if(getElementBool(xmlNode, "ReadOnly", b)) lineEdit->setReadOnly(b);
+	if(getElementBool(xmlNode, "Frame", b)) lineEdit->setFrame(b);
+	if(getElementInt(xmlNode, "MaxLength", i)) lineEdit->setMaxLength(i);
+	if(getElementText(xmlNode, "Alignment", s)) lineEdit->setAlignment(toAlignment(s));
+	if(getElementText(xmlNode, "InputMask", s)) lineEdit->setInputMask(s);
 	connectSignals(xmlNode, lineEdit, "editingFinished ()");
 	return lineEdit;
 }
@@ -408,23 +679,31 @@ Qt::Alignment Runner::toAlignment(QString s){
 QComboBox *Runner::loadComboBox(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	if(!getElementText(xmlNode, "Type", type)) return 0;
 	if(type.toLower() != "combobox") return 0;
 	QComboBox *comboBox = new QComboBox(this);
 	loadWidget(comboBox, xmlNode);
-	comboBox->setEditable(getAttribute(xmlNode, "Editable", true));
 	TiXmlElement *itemNode = xmlNode->FirstChildElement("Item");
 	while(itemNode){
-		comboBox->addItem(QIcon(itemNode->Attribute("Icon")), itemNode->Attribute("Text"), itemNode->Attribute("UserData"));
+		QString icon, text, userData;
+		getElementText(itemNode, "Icon", icon);
+		getElementText(itemNode, "Text", text);
+		getElementText(itemNode, "UserData", userData);
+		comboBox->addItem(QIcon(icon), text, userData);
 		itemNode = itemNode->NextSiblingElement("Item");
 	}
-	comboBox->setCurrentIndex(getAttribute(xmlNode, "CurrentIndex", 0));
-	comboBox->setDuplicatesEnabled(getAttribute(xmlNode, "DuplicatesEnabled", true));
-	comboBox->setFrame(getAttribute(xmlNode, "Frame", true));
-	comboBox->setIconSize(QSize(getAttribute(xmlNode, "IconWidth", 24), getAttribute(xmlNode, "IconHeight", 24)));
-	comboBox->setMaxCount(getAttribute(xmlNode, "MaxCount", -1));
-	comboBox->setMaxVisibleItems(getAttribute(xmlNode, "MaxVisibleItems", 24));
-	comboBox->setMinimumContentsLength(getAttribute(xmlNode, "MinimumContentsLength", 64));
+	bool b;
+	int i, width, height;
+	QString s;
+	if(getElementBool(xmlNode, "Editable", b)) comboBox->setEditable(b);
+	if(getElementInt(xmlNode, "CurrentIndex", i)) comboBox->setCurrentIndex(i);
+	if(getElementBool(xmlNode, "DuplicatesEnabled", b)) comboBox->setDuplicatesEnabled(b);
+	if(getElementBool(xmlNode, "Frame", b)) comboBox->setFrame(b);
+	if(getElementInt(xmlNode, "IconWidth", width) && getElementInt(xmlNode, "IconHeight", height)) comboBox->setIconSize(QSize(width, height));
+	if(getElementInt(xmlNode, "MaxCount", i)) comboBox->setMaxCount(i);
+	if(getElementInt(xmlNode, "MaxVisibleItems", i)) comboBox->setMaxVisibleItems(i);
+	if(getElementInt(xmlNode, "MinimumContentsLength", i)) comboBox->setMinimumContentsLength(i);
 	connectSignals(xmlNode, comboBox, "currentIndexChanged ( int )");
 	return comboBox;
 }
@@ -432,16 +711,19 @@ QComboBox *Runner::loadComboBox(TiXmlElement *xmlNode){
 QSpinBox *Runner::loadSpinBox(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	getElementText(xmlNode, "Type", type);
 	if(type.toLower() != "spinbox") return 0;
 	QSpinBox *spinBox = new QSpinBox(this);
 	loadWidget(spinBox, xmlNode);
-	spinBox->setMinimum(getAttribute(xmlNode, "Minimum", 0));
-	spinBox->setMaximum(getAttribute(xmlNode, "Maximum", 100));
-	spinBox->setPrefix(xmlNode->Attribute("Prefix"));
-	spinBox->setSuffix(xmlNode->Attribute("Suffix"));
-	spinBox->setSingleStep(getAttribute(xmlNode, "SingleStep", 1));
-	spinBox->setValue(getAttribute(xmlNode, "Value", 0));
+	int i;
+	QString s;
+	if(getElementInt(xmlNode, "Minimum", i)) spinBox->setMinimum(i);
+	if(getElementInt(xmlNode, "Maximum", i)) spinBox->setMaximum(i);
+	if(getElementInt(xmlNode, "SingleStep", i)) spinBox->setSingleStep(i);
+	if(getElementInt(xmlNode, "Value", i)) spinBox->setValue(i);
+	if(getElementText(xmlNode, "Prefix", s)) spinBox->setPrefix(s);
+	if(getElementText(xmlNode, "Suffix", s)) spinBox->setSuffix(s);
 	connectSignals(xmlNode, spinBox, "valueChanged ( int )");
 	return spinBox;
 }
@@ -449,20 +731,21 @@ QSpinBox *Runner::loadSpinBox(TiXmlElement *xmlNode){
 QFontComboBox *Runner::loadFontComboBox(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	if(!getElementText(xmlNode, "Type", type)) return 0;
 	if(type.toLower() != "fontcombobox") return 0;
 	QFontComboBox *fontCombo = new QFontComboBox(this);
 	loadWidget(fontCombo, xmlNode);
-	//fontCombo->setEditable(getAttribute(xmlNode, "Editable", true));
-	//fontCombo->setCurrentIndex(getAttribute(xmlNode, "CurrentIndex", 0));
-	fontCombo->setDuplicatesEnabled(getAttribute(xmlNode, "DuplicatesEnabled", true));
-	fontCombo->setFrame(getAttribute(xmlNode, "Frame", true));
-	fontCombo->setIconSize(QSize(getAttribute(xmlNode, "IconWidth", 24), getAttribute(xmlNode, "IconHeight", 24)));
-	//fontCombo->setMaxCount(getAttribute(xmlNode, "MaxCount", -1));
-	fontCombo->setMaxVisibleItems(getAttribute(xmlNode, "MaxVisibleItems", 24));
-	fontCombo->setMinimumContentsLength(getAttribute(xmlNode, "MinimumContentsLength", 64));
-
-	fontCombo->setFontFilters(toFontFilters(xmlNode->Attribute("FontFilters")));
+	bool b;
+	int i, width, height;
+	QString s;
+	if(getElementBool(xmlNode, "Editable", b)) fontCombo->setEditable(b);
+	if(getElementBool(xmlNode, "DuplicatesEnabled", b)) fontCombo->setDuplicatesEnabled(b);
+	if(getElementBool(xmlNode, "Frame", b)) fontCombo->setFrame(b);
+	if(getElementInt(xmlNode, "IconWidth", width) && getElementInt(xmlNode, "IconHeight", height)) fontCombo->setIconSize(QSize(width, height));
+	if(getElementInt(xmlNode, "MaxVisibleItems", i)) fontCombo->setMaxVisibleItems(i);
+	if(getElementInt(xmlNode, "MinimumContentsLength", i)) fontCombo->setMinimumContentsLength(i);
+	if(getElementText(xmlNode, "FontFilters", s)) fontCombo->setFontFilters(toFontFilters(s));
 	connectSignals(xmlNode, fontCombo, "currentIndexChanged ( int )");
 	return fontCombo;
 }
@@ -480,17 +763,24 @@ QFontComboBox::FontFilters Runner::toFontFilters(QString s){
 QLabel *Runner::loadLable(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	getElementText(xmlNode, "Type", type);
 	if(type.toLower() != "label") return 0;
 	QLabel *label = new QLabel(this);
 	loadWidget(label, xmlNode);
-	label->setAlignment(toAlignment(xmlNode->Attribute("Alignment")));
-	label->setOpenExternalLinks(getAttribute(xmlNode, "OpenExternalLinks", false));
-	QPixmap pixmap = QPixmap(xmlNode->Attribute("Pixmap"));
-	if(pixmap.isNull()) label->setText(xmlNode->Attribute("Text"));
-	else label->setPixmap(QPixmap(xmlNode->Attribute("Pixmap")));
-	label->setScaledContents(getAttribute(xmlNode, "ScaledContents", false));
-	label->setWordWrap(getAttribute(xmlNode, "WordWrap", false));
+	bool b;
+	QString s;
+	if(getElementText(xmlNode, "Align", s)) label->setAlignment(toAlignment(s));
+	if(getElementBool(xmlNode, "OpenExternalLinks", b)) label->setOpenExternalLinks(b);
+	if(getElementText(xmlNode, "Text", s)) label->setText(s);
+	if(getElementText(xmlNode, "Pixmap", s)){
+		QPixmap pixmap(s);
+		if(!pixmap.isNull()){
+			label->setPixmap(pixmap);
+		}
+	}
+	if(getElementBool(xmlNode, "ScaledContents", b)) label->setScaledContents(b);
+	if(getElementBool(xmlNode, "WordWrap", b)) label->setWordWrap(b);
 	connectSignals(xmlNode, label, "linkActivated ( const QString & )");
 	return label;
 }
@@ -498,17 +788,20 @@ QLabel *Runner::loadLable(TiXmlElement *xmlNode){
 QProgressBar *Runner::loadProgressBar(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	if(!getElementText(xmlNode, "Type", type)) return 0;
 	if(type.toLower() != "progressbar") return 0;
 	QProgressBar *progressBar = new QProgressBar(this);
 	loadWidget(progressBar, xmlNode);
-	//Alignment="" Minimum="" Maximum="" Orientation="" TextVisible="true" Value="" 
-	progressBar->setAlignment(toAlignment(xmlNode->Attribute("Alignment")));
-	progressBar->setMinimum(getAttribute(xmlNode, "Minimum", 0));
-	progressBar->setMaximum(getAttribute(xmlNode, "Maximum", 100));
-	progressBar->setOrientation(toOrientation(xmlNode->Attribute("Orientation")));
-	progressBar->setTextVisible(getAttribute(xmlNode, "TextVisible", true));
-	progressBar->setValue(getAttribute(xmlNode, "Value", 0));
+	QString s;
+	int i;
+	bool b;
+	if(getElementText(xmlNode, "Alignment", s)) progressBar->setAlignment(toAlignment(s));
+	if(getElementText(xmlNode, "Orientation", s)) progressBar->setOrientation(toOrientation(s));
+	if(getElementInt(xmlNode, "Minimum", i)) progressBar->setMinimum(i);
+	if(getElementInt(xmlNode, "Maximum", i)) progressBar->setMaximum(i);
+	if(getElementInt(xmlNode, "Value", i)) progressBar->setValue(i);
+	if(getElementBool(xmlNode, "TextVisible", b)) progressBar->setTextVisible(b);
 	connectSignals(xmlNode, progressBar, "valueChanged ( int )");
 	return progressBar;
 }
@@ -523,7 +816,8 @@ Qt::Orientation Runner::toOrientation(QString s){
 QScrollBar *Runner::loadScrollBar(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	getElementText(xmlNode, "Type", type);
 	if(type.toLower() != "scrollbar") return 0;
 	QScrollBar *scrollBar = new QScrollBar(this);
 	loadAbstractSlider(scrollBar, xmlNode);
@@ -534,24 +828,30 @@ QScrollBar *Runner::loadScrollBar(TiXmlElement *xmlNode){
 void Runner::loadAbstractSlider(QAbstractSlider *abstractSlider, TiXmlElement *xmlNode){
 	if(abstractSlider == 0 || xmlNode == 0) return;
 	loadWidget(abstractSlider, xmlNode);
-	abstractSlider->setMinimum(getAttribute(xmlNode, "Minimum", 0));
-	abstractSlider->setMaximum(getAttribute(xmlNode, "Maximum", 100));
-	abstractSlider->setOrientation(toOrientation(xmlNode->Attribute("Orientation")));
-	abstractSlider->setPageStep(getAttribute(xmlNode, "PageStep", 4));
-	abstractSlider->setSingleStep(getAttribute(xmlNode, "SingleStep", 1));
-	abstractSlider->setTracking(getAttribute(xmlNode, "Tracking", false));
-	abstractSlider->setValue(getAttribute(xmlNode, "Value", 0));
+	int i;
+	QString s;
+	bool b;
+	if(getElementInt(xmlNode, "Minimum", i)) abstractSlider->setMinimum(i);
+	if(getElementInt(xmlNode, "Maximum", i)) abstractSlider->setMaximum(i);
+	if(getElementText(xmlNode, "Orientation", s)) abstractSlider->setOrientation(toOrientation(s));
+	if(getElementInt(xmlNode, "PageStep", i)) abstractSlider->setPageStep(i);
+	if(getElementInt(xmlNode, "SingleStep", i)) abstractSlider->setSingleStep(i);
+	if(getElementBool(xmlNode, "Tracking", b)) abstractSlider->setTracking(b);
+	if(getElementInt(xmlNode, "Value", i)) abstractSlider->setValue(i);
 }
 
 QSlider *Runner::loadSlider(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	getElementText(xmlNode, "Type", type);
 	if(type.toLower() != "slider") return 0;
 	QSlider *slider = new QSlider(this);
 	loadAbstractSlider(slider, xmlNode);
-	slider->setTickInterval(getAttribute(xmlNode, "TickInterval", 0));
-	slider->setTickPosition(toTickPosition(xmlNode->Attribute("TickPosition")));
+	int i;
+	QString s;
+	if(getElementText(xmlNode, "TickPosition", s)) slider->setTickPosition(toTickPosition(s));
+	if(getElementInt(xmlNode, "TickInterval", i)) slider->setTickInterval(i);
 	connectSignals(xmlNode, slider, "sliderReleased ()");
 	return slider;
 }
@@ -570,15 +870,18 @@ QSlider::TickPosition Runner::toTickPosition(QString s){
 RibbonSliderPane *Runner::loadRibbonSliderPane(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;
 	if(!isUse(xmlNode)) return 0;
-	QString type = xmlNode->Attribute("Type");
+	QString type;
+	getElementText(xmlNode, "Type", type);
 	if(type.toLower() != "ribbonsliderpane") return 0;
 	RibbonSliderPane *sliderPane = new RibbonSliderPane(this);
 	loadWidget(sliderPane, xmlNode);
-	sliderPane->setSingleStep(getAttribute(xmlNode, "SingleStep", 1));
-	sliderPane->setValue(getAttribute(xmlNode, "Value", 0));
-	sliderPane->setSliderPosition(getAttribute(xmlNode, "SliderPosition", 0));
-	sliderPane->setScrollButtons(getAttribute(xmlNode, "ScrollButtons", true));
-	sliderPane->setRange(getAttribute(xmlNode, "Minimum", 0), getAttribute(xmlNode, "Maximum", 100));
+	int i, min, max;
+	bool b;
+	if(getElementInt(xmlNode, "SingleStep", i)) sliderPane->setSingleStep(i);
+	if(getElementInt(xmlNode, "Value", i)) sliderPane->setSingleStep(i);
+	if(getElementInt(xmlNode, "SliderPosition", i)) sliderPane->setSliderPosition(i);
+	if(getElementInt(xmlNode, "Minimum", min) && getElementInt(xmlNode, "Maximum", max)) sliderPane->setRange(min, max);
+	if(getElementBool(xmlNode, "ScrollButtons", b)) sliderPane->setScrollButtons(b);
 	connectSignals(xmlNode, sliderPane, "valueChanged(int )");
 	return sliderPane;
 }

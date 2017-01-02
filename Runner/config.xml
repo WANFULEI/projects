@@ -374,4 +374,28 @@
     <Item Type="RibbonSliderPane" PermanentWidget="true" Stretch="" Minimum="0" Maximum="100" ObjecctName="RibbonSliderPane" Icon="" Text="" ScrollButtons="true" SingleStep="10" SliderPosition="50" Width="" Height=""  Enabled=""      MaximumHeight="18" MaximumWidth="130" MinimumHeight="" MinimumWidth="100" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis=""   Use="true">
     </Item>
   </StatusBar>
+  <ToolBar AllowedAreas="" ToolBarArea="Qt::RightToolBarArea" Floatable="" IconWidth="" IconHeight="" Movable="" Orientation="Qt::Vertical" ToolButtonStyle="Qt::ToolButtonIconOnly" ObjcetName="" Width="" Height="" Enabled="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="res/open.png" WindowIconText="toolbar" WindowOpacity="0.5" WindowTitle="ToolBar" Use="true">
+    <Item Type="Action" ObjectName="action1" Icon="res/largeButton.png" Text="New" ToolTip="New" ToolButtonStyle="Qt::ToolButtonIconOnly" Visible="" StatusTip="Create a new document" Checkable="false" Checked="false" Enabled="false"     IconText=""   Shortcut="Ctrl+N" WhatsThis="" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+    <Item Type="Action" ObjectName="action1" Icon="res/open.png" Text="Open..." ToolTip="Open" ToolButtonStyle="Qt::ToolButtonIconOnly" Visible="" StatusTip="Open an existing document" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+O" WhatsThis="" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+    <Item Type="Action" ObjectName="action1" Icon="res/save.png" Text="Save" ToolTip="Save" ToolButtonStyle="Qt::ToolButtonIconOnly" Visible="" StatusTip="Save the active document" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="Ctrl+S" WhatsThis="" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+    <Item Type="Action" ObjectName="action1" Icon="res/save.png" Text="Save As..." ToolTip="Save As" ToolButtonStyle="Qt::ToolButtonIconOnly" Visible="" StatusTip="Save the active document with a new name" Checkable="false" Checked="false" Enabled="true"     IconText=""   Shortcut="" WhatsThis="" Use="true">
+      <Connection Receiver="me" Signal="triggered()" Slot="slot_test()" Use="true"/>
+    </Item>
+  </ToolBar>
+  <DockWidget AllowedAreas="" DockArea="Qt::LeftDockWidgetArea" Features="" Floating="" ObjcetName="" Width="" Height="" Enabled="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="res/open.png" WindowIconText="dock" WindowOpacity="0.5" WindowTitle="Dock" Use="true">
+  </DockWidget>
+  <TabCenterWidget CurrentIndex="0" DocumentMode="0" IconWidth="24" IconHeight="24" Movable="1" TabPosition="QTabWidget::North" TabShape="QTabWidget::Rounded" TabsClosable="0" UsesScrollButtons="1" ObjcetName="TabCenterWidget" Width="" Height="" Enabled="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="res/open.png" WindowIconText="dock" WindowOpacity="0.5" WindowTitle="Dock" Use="true">
+    <Item Type="Widget" Icon="" Label="2DMap" ObjcetName="Widget" Width="" Height="" Enabled="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="res/open.png" WindowIconText="dock" WindowOpacity="0.5" WindowTitle="2DMap" Use="true">
+      
+    </Item>
+    <Item Type="Widget" Icon="" Label="3DMap" ObjcetName="Widget" Width="" Height="" Enabled="" MaximumHeight="" MaximumWidth="" MinimumHeight="" MinimumWidth="" StatusTip="" StyleSheet="" ToolTip="" Visible="" WhatsThis="" WindowIcon="res/open.png" WindowIconText="dock" WindowOpacity="0.5" WindowTitle="3DMap" Use="true">
+      
+    </Item>
+  </TabCenterWidget>
 </Ribbon>

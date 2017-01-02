@@ -15,6 +15,9 @@
 #include <QProgressBar>
 #include <QScrollBar>
 #include <QSlider>
+#include <QDockWidget>
+#include <QStackedWidget>
+#include <QTabWidget>
 
 class Runner : public RibbonMainWindow
 {
@@ -33,10 +36,19 @@ private:
 	void connectSignals(TiXmlElement *xmlNode, QObject *sender, QString defaultSignal = "");
 	void loadItems(TiXmlElement *xmlNode, RibbonGroup *group);
 	QObject *loadItem(TiXmlElement *itemNode);
+	void loadMainButton(TiXmlElement *xmlNode);
+	void loadStatusBar(TiXmlElement *xmlNode);
+	void loadQuickAccess(TiXmlElement *xmlNode);
+	void loadRightAction(TiXmlElement *xmlNode);
+	void loadPage(TiXmlElement *xmlNode);
+	void loadToolBar(TiXmlElement *xmlNode);
+	void loadDockWidget(TiXmlElement *xmlNode);
+	void loadTabCenterWidget(TiXmlElement *xmlNode);
 
 	void loadWidget(QWidget *widget, TiXmlElement *xmlNode);
 	void loadAbstractButton(QAbstractButton *button, TiXmlElement *xmlNode);
 	void loadAbstractSlider(QAbstractSlider *abstractSlider, TiXmlElement *xmlNode);
+	void loadToolBar(QToolBar *toolbar, TiXmlElement *xmlNode);
 
 	QAction *loadAction(TiXmlElement *xmlNode);
 	QMenu *loadMenu(TiXmlElement *xmlNode);
@@ -58,8 +70,15 @@ private:
 	QFontComboBox::FontFilters toFontFilters(QString s);
 	Qt::Orientation toOrientation(QString s);
 	QSlider::TickPosition toTickPosition(QString s);
+	Qt::ToolBarAreas toToolBarAreas(QString s);
+	Qt::ToolBarArea toToolBarArea(QString s);
+	Qt::DockWidgetAreas toDockWidgetAreas(QString s);
+	QDockWidget::DockWidgetFeatures toDockWidgetFeatures(QString s);
+	QTabWidget::TabPosition toTabPosition(QString s);
+	QTabWidget::TabShape toTabShape(QString s);
 
 	void createOptions();
+	void test(TiXmlElement *xmlNode);
 
 private slots:
 	void options(QAction* action);
