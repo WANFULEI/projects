@@ -18,6 +18,7 @@
 #include <QDockWidget>
 #include <QStackedWidget>
 #include <QTabWidget>
+#include "component.h"
 
 class Runner : public RibbonMainWindow
 {
@@ -80,6 +81,8 @@ private:
 	void createOptions();
 	void test(TiXmlElement *xmlNode);
 
+	void loadComponents(TiXmlElement *xmlNode);
+
 private slots:
 	void options(QAction* action);
 	void optionsFont(QAction* act);
@@ -88,6 +91,8 @@ private slots:
 private:
 	int m_defaultFont;
 	QAction *m_actionDefault;
+	QObjectList m_components;
+	
 };
 
 #endif // RUNNER_H

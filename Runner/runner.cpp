@@ -5,6 +5,8 @@
 #include <QMessageBox>
 #include <QApplication>
 #include <qdesktopwidget.h>
+#include <QLibrary>
+#include "globalInstance.h"
 
 #define Prop_ContextColor   "ContextColor"
 
@@ -14,9 +16,12 @@
 #define Font_ExLarge  "Extra Large"
 
 
+typedef const char *(*QT_PLUGIN_QUERY_VERIFICATION_DATA)();
+
 Runner::Runner(QWidget *parent, Qt::WFlags flags)
 	: RibbonMainWindow(parent, flags)
 {
+	GlobalInstance::getInstance()->setMainWindow(this);
 	m_defaultFont = 8;
 	m_actionDefault = 0;
 	setObjectName("me");
@@ -24,7 +29,17 @@ Runner::Runner(QWidget *parent, Qt::WFlags flags)
 
 	TiXmlDocument doc;
 	if(doc.LoadFile("config2.xml")){
-		loadUIFromXml(doc.FirstChildElement("Ribbon"));
+		TiXmlElement *rootNode = doc.RootElement();
+		loadComponents(rootNode->FirstChildElement("Components"));
+		loadUIFromXml(rootNode->FirstChildElement("Ribbon"));
+		auto iter = m_components.begin();
+		while(iter != m_components.end()){
+			Component *com = dynamic_cast<Component *>(*iter);
+			if(com){
+				com->initialize();
+			}
+			++iter;
+		}
 	}else{
 		LOG_ERROR << "配置文件config.xml不存在或格式不正确！";
 	}
@@ -1039,4 +1054,52 @@ void Runner::optionsFont(QAction* act)
         fnt.setPointSize(13);
 
     ribbonBar()->setFont(fnt);
+}
+
+typedef QObject * Q_STANDARD_CALL (*QT_PLUGIN_INSTANCE)();
+
+void Runner::loadComponents(TiXmlElement *xmlNode){
+	if(xmlNode == 0) return;
+	if(xmlNode->Value() != QString("Components")) return;
+	TiXmlElement *comNode = xmlNode->FirstChildElement("Component");
+	while(comNode){
+		QString sLib;
+		if(!getElementText(comNode, "Library", sLib)){
+			LOG_INFO << tr("component not config Library, row number=").toStdString() << comNode->Row();
+			comNode = comNode->NextSiblingElement("Component");
+			continue;
+		}
+		QLibrary lib("components\\" + sLib + ".dll");
+		if(!lib.load()){
+			LOG_INFO << tr("load library %1 failed").arg(sLib).toStdString();
+			comNode = comNode->NextSiblingElement("Component");
+			continue;
+		}
+		QT_PLUGIN_INSTANCE func = (QT_PLUGIN_INSTANCE)lib.resolve("qt_plugin_instance");
+		if(func == 0){
+			LOG_INFO << tr("can not find qt_plugin_instance, maybe not write Q_EXPORT_PLUGIN2 in a cpp").toStdString();
+			comNode = comNode->NextSiblingElement("Component");
+			lib.unload();
+			continue;
+		}
+		QObject *com = func();
+		if(com == 0){
+			LOG_INFO << tr("can not create instance").toStdString();
+			comNode = comNode->NextSiblingElement("Component");
+			lib.unload();
+			continue;
+		}
+		if(m_components.contains(com)){
+			LOG_INFO << tr("config component lib=%1 more than once, row number=%2").arg(sLib).arg(comNode->Row()).toStdString();
+			comNode = comNode->NextSiblingElement("Component");
+			continue;	
+		}
+		QString name;
+		if(getElementText(comNode, "ObjectName", name)){
+			com->setObjectName(name);
+		}
+		m_components << com;
+		com->setParent(this);
+		comNode = comNode->NextSiblingElement("Component");
+	}
 }
