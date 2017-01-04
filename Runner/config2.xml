@@ -9,6 +9,10 @@
       <ObjectName>Map2D</ObjectName>
       <Library>Map2D</Library>
     </Component>
+    <Component>
+      <ObjectName>Map3D</ObjectName>
+      <Library>Map3D</Library>
+    </Component>
   </Components>
   <Ribbon>
     <MainButton>
