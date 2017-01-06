@@ -1,5 +1,5 @@
 #include "runner.h"
-#include "myLog.h"
+#include "Log.h"
 #include "commonFunctions.h"
 #include <QStackedWidget>
 #include <QMessageBox>
@@ -25,7 +25,7 @@ Runner::Runner(QWidget *parent, Qt::WFlags flags)
 	m_defaultFont = 8;
 	m_actionDefault = 0;
 	setObjectName("me");
-	MyLog::Init("log");
+	Log::init("log");
 
 	TiXmlDocument doc;
 	if(doc.LoadFile("config2.xml")){
@@ -67,7 +67,7 @@ void Runner::test(TiXmlElement *xmlNode){
 
 Runner::~Runner()
 {
-
+	
 }
 
 void Runner::loadUIFromXml(TiXmlElement *xmlNode)
@@ -445,7 +445,7 @@ void Runner::connectSignals(TiXmlElement *xmlNode, QObject *sender, QString defa
 	}
 }
 
-void Runner::loadItems(TiXmlElement *xmlNode, RibbonGroup *group){
+void Runner::loadItems(TiXmlElement *xmlNode, RibbonGroup *group, QActionGroup *actionGroup){
 	if(xmlNode == 0 || group == 0) return;
 	TiXmlElement *itemNode = xmlNode->FirstChildElement("Item");
 	while(itemNode){
@@ -461,6 +461,7 @@ void Runner::loadItems(TiXmlElement *xmlNode, RibbonGroup *group){
 			QString s;
 			getElementText(itemNode, "ToolButtonStyle", s);
 			group->addAction(dynamic_cast<QAction *>(item), toToolButtonStyle(s));
+			if(actionGroup) actionGroup->addAction(dynamic_cast<QAction *>(item));
 		}else if(dynamic_cast<QMenu *>(item)){
 			QString icon, text, buttonStyle;
 			getElementText(itemNode, "Icon", icon);
@@ -475,6 +476,9 @@ void Runner::loadItems(TiXmlElement *xmlNode, RibbonGroup *group){
 			getElementText(itemNode, "Text", text);
 			getElementBool(itemNode, "Align", align);
 			group->addWidget(QIcon(icon), text, align, dynamic_cast<QWidget *>(item));
+		}else if(dynamic_cast<QActionGroup *>(item)){
+			QActionGroup *actionGroup = dynamic_cast<QActionGroup *>(item);
+			loadItems(itemNode, group, actionGroup);
 		}
 		itemNode = itemNode->NextSiblingElement("Item");
 	}
@@ -514,6 +518,14 @@ QObject *Runner::loadItem(TiXmlElement *itemNode){
 		QWidget *widget = new QWidget(this);
 		loadWidget(widget, itemNode);
 		return widget;
+	}else if(type == "actiongroup"){
+		QActionGroup *group = new QActionGroup(this);
+		bool exclusive = true;
+		getElementBool(itemNode, "Exclusive", exclusive);
+		group->setExclusive(exclusive);
+		QString s;
+		if(getElementText(itemNode, "ObjectName", s)) group->setObjectName(s);
+		return group;
 	}else{
 		return 0;
 	}

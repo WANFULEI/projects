@@ -3,6 +3,8 @@
 
 GlobalInstance::GlobalInstance(void)
 {
+	m_map2D = 0;
+	m_map3D = 0;
 }
 
 

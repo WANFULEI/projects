@@ -9,14 +9,42 @@
 
 #include "qgsmapcanvas.h"
 
-class MAP2D_EXPORT Map2D : public Component 
+class Map2D : public Component 
 {
+	Q_OBJECT
 public:
 	Map2D();
 	~Map2D();
 
+	class Tools
+	{
+	public:
+		QgsMapTool *m_zoomIn;
+        QgsMapTool *m_zoomOut;
+        QgsMapTool *m_pan;
+		QgsMapTool *m_select;
+		Tools(){
+			m_zoomIn = 0;
+			m_zoomOut = 0;
+			m_pan = 0;
+			m_select = 0;
+		}
+		~Tools(){
+			
+		}
+	}m_tools;
+
 protected:
 	void initialize();
+
+private:
+	void initTools();
+
+private slots:
+	void slotPan();
+	void slotZoomIn();
+	void slotZoomOut();
+	void slotReset();
 
 private:
 	QgsMapCanvas *m_mapCanvas;

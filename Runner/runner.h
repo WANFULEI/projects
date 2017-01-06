@@ -35,7 +35,7 @@ private:
 	void loadUIFromXml(TiXmlElement *xmlNode);
 	bool isUse(TiXmlElement *xmlNode);
 	void connectSignals(TiXmlElement *xmlNode, QObject *sender, QString defaultSignal = "");
-	void loadItems(TiXmlElement *xmlNode, RibbonGroup *group);
+	void loadItems(TiXmlElement *xmlNode, RibbonGroup *group, QActionGroup *actionGroup = 0);
 	QObject *loadItem(TiXmlElement *itemNode);
 	void loadMainButton(TiXmlElement *xmlNode);
 	void loadStatusBar(TiXmlElement *xmlNode);

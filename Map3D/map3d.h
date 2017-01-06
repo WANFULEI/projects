@@ -4,8 +4,15 @@
 #include "map3d_global.h"
 #include "component.h"
 
-class MAP3D_EXPORT Map3D : public Component
+namespace osgEarth{
+	namespace Util{
+		class EarthManipulator;
+	}
+}
+class QgsMapCanvas;
+class Map3D : public Component
 {
+	Q_OBJECT
 public:
 	Map3D();
 	~Map3D();
@@ -13,7 +20,11 @@ public:
 	void initialize();
 
 private:
+	QgsMapCanvas *m_mapCanvas;
+	osgEarth::Util::EarthManipulator *m_manip;
 
+private slots:
+	void slot_extentsChanged();
 };
 
 #endif // MAP3D_H

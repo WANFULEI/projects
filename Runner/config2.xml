@@ -1,10 +1,6 @@
-ï»¿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="gb2312" ?>
 <Application>
   <Components>
-    <Component>
-      <ObjectName>tt2</ObjectName>
-      <Library>tt2</Library>
-    </Component>
     <Component>
       <ObjectName>Map2D</ObjectName>
       <Library>Map2D</Library>
@@ -689,6 +685,117 @@
         <Use>true</Use>
       </Item>
     </QuickAccess>
+    <Page>
+      <Group>
+        <Connection>
+          <Receiver>tt2</Receiver>
+          <Signal></Signal>
+          <Slot>slot_test()</Slot>
+          <Use>true</Use>
+        </Connection>
+        <Item>
+          <Connection>
+            <Receiver>Map2D</Receiver>
+            <Signal>triggered()</Signal>
+            <Slot>slotPan()</Slot>
+            <Use>true</Use>
+          </Connection>
+          <Type>Action</Type>
+          <ObjectName>Pan</ObjectName>
+          <Icon>res/largeButton.png</Icon>
+          <Text>ÂþÓÎ</Text>
+          <ToolTip>ÂþÓÎ</ToolTip>
+          <ToolButtonStyle>Qt::ToolButtonTextUnderIcon</ToolButtonStyle>
+          <Visible></Visible>
+          <StatusTip>ÂþÓÎ</StatusTip>
+          <Checkable>true</Checkable>
+          <Checked>true</Checked>
+          <Enabled>true</Enabled>
+          <IconText></IconText>
+          <Shortcut></Shortcut>
+          <WhatsThis></WhatsThis>
+          <Use>true</Use>
+        </Item>
+        <Item>
+          <Connection>
+            <Receiver>Map2D</Receiver>
+            <Signal>triggered()</Signal>
+            <Slot>slotZoomIn()</Slot>
+            <Use>true</Use>
+          </Connection>
+          <Type>Action</Type>
+          <ObjectName>ZoomIn</ObjectName>
+          <Icon>..\images\themes\default\mActionZoomIn.svg</Icon>
+          <Text>·Å´ó</Text>
+          <ToolTip>·Å´ó</ToolTip>
+          <ToolButtonStyle>Qt::ToolButtonTextUnderIcon</ToolButtonStyle>
+          <Visible></Visible>
+          <StatusTip>·Å´ó</StatusTip>
+          <Checkable>true</Checkable>
+          <Checked>true</Checked>
+          <Enabled>true</Enabled>
+          <IconText></IconText>
+          <Shortcut></Shortcut>
+          <WhatsThis></WhatsThis>
+          <Use>true</Use>
+        </Item>
+        <Item>
+          <Connection>
+            <Receiver>Map2D</Receiver>
+            <Signal>triggered()</Signal>
+            <Slot>slotZoomOut()</Slot>
+            <Use>true</Use>
+          </Connection>
+          <Type>Action</Type>
+          <ObjectName>ZoomOut</ObjectName>
+          <Icon>..\images\themes\default\mActionZoomFullExtent.svg</Icon>
+          <Text>ËõÐ¡</Text>
+          <ToolTip>ËõÐ¡</ToolTip>
+          <ToolButtonStyle>Qt::ToolButtonTextUnderIcon</ToolButtonStyle>
+          <Visible></Visible>
+          <StatusTip>ËõÐ¡</StatusTip>
+          <Checkable>true</Checkable>
+          <Checked>true</Checked>
+          <Enabled>true</Enabled>
+          <IconText></IconText>
+          <Shortcut></Shortcut>
+          <WhatsThis></WhatsThis>
+          <Use>true</Use>
+        </Item>
+        <Item>
+          <Connection>
+            <Receiver>Map2D</Receiver>
+            <Signal>triggered()</Signal>
+            <Slot>slotReset()</Slot>
+            <Use>true</Use>
+          </Connection>
+          <Type>Action</Type>
+          <ObjectName>Reset</ObjectName>
+          <Icon>..\images\themes\default\mActionZoomFullExtent.svg</Icon>
+          <Text>¸´Î»</Text>
+          <ToolTip>¸´Î»</ToolTip>
+          <ToolButtonStyle>Qt::ToolButtonTextUnderIcon</ToolButtonStyle>
+          <Visible></Visible>
+          <StatusTip>¸´Î»</StatusTip>
+          <Checkable>false</Checkable>
+          <Checked>true</Checked>
+          <Enabled>true</Enabled>
+          <IconText></IconText>
+          <Shortcut></Shortcut>
+          <WhatsThis></WhatsThis>
+          <Use>true</Use>
+        </Item>
+        <Name>Large Buttons</Name>
+        <OptionButtonVisible>true</OptionButtonVisible>
+        <Text></Text>
+        <ToolTip>Large Buttons</ToolTip>
+        <ControlsCentering>false</ControlsCentering>
+        <ControlsGrouping>false</ControlsGrouping>
+        <Use>true</Use>
+      </Group>
+      <Name>µØÍ¼²Ù×÷</Name>
+      <Use>true</Use>
+    </Page>
     <Page>
       <Group>
         <Connection>
@@ -3105,7 +3212,7 @@
         <Type>Widget</Type>
         <Icon></Icon>
         <Label>3DMap</Label>
-        <ObjectName>Widget</ObjectName>
+        <ObjectName>Map3DWidget</ObjectName>
         <Width></Width>
         <Height></Height>
         <Enabled></Enabled>
