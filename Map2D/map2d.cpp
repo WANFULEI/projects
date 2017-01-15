@@ -23,6 +23,7 @@
 #include "tinyxml.h"
 #include "MenuProvider.h"
 #include "QgsMeasureTool.h"
+#include "qgsvectorlayer.h"
 
 Map2D::Map2D()
 {
@@ -320,6 +321,32 @@ bool Map2D::addRasterLayer(QString layerName, QString rasterFilePath)
 		return false;
 	}
 	QgsRasterLayer *layer = new QgsRasterLayer(rasterFilePath, layerName);
+	QgsMapLayerRegistry::instance()->addMapLayer(layer);
+	m_rootGroup->insertLayer(0, layer);
+	return true;
+}
+
+bool Map2D::addVectorLayer(QString layerName, QString filePath)
+{
+	if(m_rootGroup == 0){
+		LOG_ERROR << "m_rootGrou=0, maybe Map2D component not load.";
+		return false;
+	}
+	if(!QFile::exists(filePath)){
+		LOG_ERROR << tr("vector file=%1 not exist.").arg(filePath).toStdString();
+		return false;
+	}
+	if(layerName.isEmpty()){
+		LOG_ERROR << "addVectorLayer with a empty layer name is not allowed.";
+		return false;
+	}
+	QgsVectorLayer *layer = new QgsVectorLayer(filePath, layerName, "ogr", false);
+	if(!layer->isValid()){
+		QString msg = tr( "%1 is not a valid or recognized data source" ).arg( filePath );
+		LOG_ERROR << msg.toStdString();
+		delete layer;
+		return false;
+	}
 	QgsMapLayerRegistry::instance()->addMapLayer(layer);
 	m_rootGroup->insertLayer(0, layer);
 	return true;

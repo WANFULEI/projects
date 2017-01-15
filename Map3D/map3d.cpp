@@ -1,53 +1,13 @@
+ï»¿#include "stdafx.h"
 #include "map3d.h"
-#include <osg/Notify>
-#include <osgGA/GUIEventHandler>
-#include <osgGA/StateSetManipulator>
-#include <osgViewer/Viewer>
-
-#include <osgEarth/MapNode>
-
-#include <osgEarthUtil/ExampleResources>
-#include <osgEarthUtil/EarthManipulator>
-#include <osgEarthUtil/AutoClipPlaneHandler>
-#include <osgEarthUtil/LogarithmicDepthBuffer>
-
-#include <osgEarthDrivers/tms/TMSOptions>
-#include <osgEarthDrivers/xyz/XYZOptions>
-#include <osgEarthDrivers/feature_ogr/OGRFeatureOptions>
-#include <osgEarthDrivers/model_feature_geom/FeatureGeomModelOptions>
-#include <osgEarthDrivers/gdal/GDALOptions>
-
-#include <osgViewer/CompositeViewer>
-#include <osgEarthQt/ViewerWidget>
 #include "GlobalInstance.h"
-#include <QHBoxLayout>
-
-#define CORE_EXPORT __declspec(dllimport)
-#define GUI_EXPORT __declspec(dllimport)
-#define APP_EXPORT __declspec(dllimport)
-
-#include "qgsmapcanvas.h"
-#include "QgsMapLayerRegistry.h"
-#include "tinyxml.h"
-#include "log.h"
-#include <QFile>
-#undef min
-#undef max
-#include "QgsRasterLayer.h"
-#include "qgsvectorlayer.h"
-
-using namespace osgEarth;
-using namespace osgEarth::Drivers;
-using namespace osgEarth::Features;
-using namespace osgEarth::Symbology;
-using namespace osgEarth::Util;
-using namespace osgEarth::QtGui;
-
+#include <osgEarth/ElevationQuery>
 
 Map3D::Map3D()
 {
 	m_mapCanvas = 0;
 	m_manip = 0;
+
 	m_map = 0;
 }
 
@@ -63,7 +23,7 @@ void Map3D::loadMap(){
 	QString mapConfigFile = qApp->applicationDirPath() + "/../config/mapConfig.xml";
 	TiXmlDocument doc(mapConfigFile.toStdString().c_str());
 	if(!doc.LoadFile()){
-		LOG_ERROR << tr("Component=Map3D£¬¼ÓÔØµØÍ¼ÅäÖÃÎÄ¼þ%1Ê§°Ü£¡").arg(mapConfigFile).toStdString();
+		LOG_ERROR << tr("Component=Map3Dï¼ŒåŠ è½½åœ°å›¾é…ç½®æ–‡ä»¶%1å¤±è´¥ï¼").arg(mapConfigFile).toStdString();
 		return;
 	}
 	TiXmlElement *rootNode = doc.RootElement();
@@ -92,6 +52,12 @@ void Map3D::initialize(){
 	m_manip = new EarthManipulator();
 	viewer->setCameraManipulator( m_manip );
 
+	double height = 0;
+	mapNode->getTerrain()->getHeight(mapNode->getMapSRS(), 110, 50, &height);
+
+	LogarithmicDepthBuffer *buf = new LogarithmicDepthBuffer;
+	buf->install( viewer->getCamera() );
+
 	ViewerWidget *viewerWidget = new ViewerWidget(viewer);
 	QWidget *w = GlobalInstance::getInstance()->getMainWindow()->findChild<QWidget *>("Map3DWidget");
 	if(w) {
@@ -105,7 +71,7 @@ void Map3D::initialize(){
 	m_mapCanvas = GlobalInstance::getInstance()->getMap2D();
 	connect(m_mapCanvas, SIGNAL(extentsChanged()), this, SLOT(slot_extentsChanged()));
 	connect(m_mapCanvas, SIGNAL(layersChanged()), this, SLOT(slotLayersChanged()));
-	connect(QgsMapLayerRegistry::instance(), SIGNAL(layersRemoved(const QStringList&)), this, SLOT(slotLayersRemoved(const QStringList&)));
+	connect(QgsMapLayerRegistry::instance(), SIGNAL(layersWillBeRemoved(const QStringList&)), this, SLOT(slotLayersRemoved(const QStringList&)));
 }
 
 void Map3D::slot_extentsChanged(){
@@ -222,7 +188,7 @@ void Map3D::slotLayersChanged(){
 			ModelLayer *layer = m_map->getModelLayerAt(j);
 			if(layer == 0) continue;
 			if(layers[i].left(layer->getName().length()) == layer->getName().c_str()){
-				m_map->moveModelLayer(layer, m_map->getNumImageLayers() - (index++) - 1);
+				//m_map->moveModelLayer(layer, m_map->getNumImageLayers() - (index++) - 1);
 				break;
 			}
 		}
@@ -239,7 +205,30 @@ void Map3D::removeLayer(QString name){
 	for(int i=0; i<m_map->getNumImageLayers(); ++i){
 		ImageLayer *layer = m_map->getImageLayerAt(i);
 		if(name.left(layer->getName().length()) == layer->getName().c_str()){
-			m_map->removeImageLayer(layer);
+			QgsMapLayer *mapLayer = QgsMapLayerRegistry::instance()->mapLayer(name);
+			if(dynamic_cast<QgsRasterLayer *>(mapLayer)){
+				m_map->removeImageLayer(layer);
+			}
+			break;
+		}
+	}
+	for(int i=0; i<m_map->getNumElevationLayers(); ++i){
+		ElevationLayer *layer = m_map->getElevationLayerAt(i);
+		if(name.left(layer->getName().length()) == layer->getName().c_str()){
+			QgsMapLayer *mapLayer = QgsMapLayerRegistry::instance()->mapLayer(name);
+			if(dynamic_cast<QgsRasterLayer *>(mapLayer)){
+				m_map->removeElevationLayer(layer);
+			}
+			break;
+		}
+	}
+	for(int i=0; i<m_map->getNumModelLayers(); ++i){
+		ModelLayer *layer = m_map->getModelLayerAt(i);
+		if(name.left(layer->getName().length()) == layer->getName().c_str()){
+			QgsMapLayer *mapLayer = QgsMapLayerRegistry::instance()->mapLayer(name);
+			if(dynamic_cast<QgsVectorLayer *>(mapLayer)){
+				m_map->removeModelLayer(layer);
+			}
 			break;
 		}
 	}
@@ -270,11 +259,11 @@ void Map3D::loadLayer(TiXmlElement *xmlNode)
 	type = type.toLower();
 	path = qApp->applicationDirPath() + "/../" + path;
 	if(!QFile::exists(path)){
-		LOG_ERROR << tr("Component=Map3D£¬µØÍ¼ÎÄ¼þ%1²»´æÔÚ£¡Row=%2").arg(path).arg(xmlNode->Row()).toStdString();
+		LOG_ERROR << tr("Component=Map3Dï¼Œåœ°å›¾æ–‡ä»¶%1ä¸å­˜åœ¨ï¼Row=%2").arg(path).arg(xmlNode->Row()).toStdString();
 		return;
 	}
 	if(name.isEmpty()){
-		LOG_ERROR << tr("Component=Map3D£¬Í¼²ãÃû³ÆÎª¿Õ£¬ÇëÖ¸¶¨Í¼²ãÃû³Æ£¡Row=%2").arg(path).arg(xmlNode->Row()).toStdString();
+		LOG_ERROR << tr("Component=Map3Dï¼Œå›¾å±‚åç§°ä¸ºç©ºï¼Œè¯·æŒ‡å®šå›¾å±‚åç§°ï¼Row=%2").arg(path).arg(xmlNode->Row()).toStdString();
 		return;
 	}
 	if(type == "raster"){
@@ -334,4 +323,73 @@ QStringList Map3D::mapLayers2Layers(QMap<QString, QgsMapLayer *> mapLayers)
 		layers << iter.key();
 	}
 	return layers;
+}
+
+bool Map3D::addVectorLayer(QString layerName, QString filePath)
+{
+	if(m_map == 0){
+		LOG_ERROR << "m_map=0, maybe Map3D component not load.";
+		return false;
+	}
+	if(!QFile::exists(filePath)){
+		LOG_ERROR << tr("vector file=%1 not exist.").arg(filePath).toStdString();
+		return false;
+	}
+	if(layerName.isEmpty()){
+		LOG_ERROR << "addVectorLayer with a empty layer name is not allowed.";
+		return false;
+	}
+
+	Style style;
+	GDALDataset *poDS = (GDALDataset *)GDALOpenEx( filePath.toStdString().c_str(), GDAL_OF_VECTOR, 0, 0, 0 );
+	if(poDS == 0) return false;
+	OGRLayer *layer = poDS->GetLayer(0);
+	if(layer == 0) return false;
+	layer->ResetReading();
+	OGRFeature *feature = layer->GetNextFeature();
+	if(feature == 0) return false;
+	if(wkbFlatten(feature->GetGeometryRef()->getGeometryType()) == wkbPoint){
+// 		PointSymbol *pointSymbol = style.getOrCreateSymbol<PointSymbol>();
+// 		pointSymbol->fill()->color() = Color::Red;
+// 		pointSymbol->size() = 12;
+
+		osg::Image *image = osgDB::readImageFile("c:\\osgeo4w\\images\\flags\\vi.png");
+		IconSymbol *markerSymbol = style.getOrCreateSymbol<IconSymbol>();
+		//markerSymbol->setImage(image);
+		markerSymbol->placement() = IconSymbol::PLACEMENT_VERTEX;
+		markerSymbol->url() = StringExpression("c:\\osgeo4w\\images\\flags\\vi.png");
+//		osg::Node *node = osgDB::readNodeFile("D:\\osg-file-path\\cow.osgt");
+// 		markerSymbol->setModel(node);
+// 		markerSymbol->alignment() = MarkerSymbol::ALIGN_CENTER_CENTER;
+// 		markerSymbol->scale() = 1000;
+	}else{
+		LineSymbol *lineSymbol = style.getOrCreateSymbol<LineSymbol>();
+		lineSymbol->stroke()->color() = Color::Yellow;
+		lineSymbol->stroke()->width() = 1.0f;
+	}
+	OGRFeature::DestroyFeature(feature);
+	GDALClose( poDS );
+
+	TextSymbol* text = style.getOrCreateSymbol<TextSymbol>();
+	text->font() = "é»‘ä½“";
+	text->encoding()= osgEarth::Symbology::TextSymbol::ENCODING_UTF8;
+	text->content() = StringExpression( "[name]" );
+	//text->priority() = NumericExpression( "[pop_cntry]" );
+	text->removeDuplicateLabels() = true;
+	text->size() = 12;
+	text->alignment() = TextSymbol::ALIGN_CENTER_CENTER;
+	text->fill()->color() = Color::White;
+	text->halo()->color() = Color::Black;
+	
+	OGRFeatureOptions featureOptions;
+	featureOptions.url() = filePath.toStdString();
+
+	FeatureGeomModelOptions geomOptions;
+	geomOptions.featureOptions() = featureOptions;
+	geomOptions.styles() = new StyleSheet();
+	geomOptions.styles()->addStyle(style);
+
+
+	m_map->addModelLayer(new ModelLayer(layerName.toStdString(), geomOptions));
+	return true;
 }

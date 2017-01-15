@@ -76,6 +76,8 @@ private:
 
 	virtual bool addRasterLayer(QString layerName, QString rasterFilePath);
 
+	virtual bool addVectorLayer(QString layerName, QString filePath);
+
 };
 
 #endif // MAP2D_H

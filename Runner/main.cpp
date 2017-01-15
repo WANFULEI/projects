@@ -15,6 +15,8 @@ int main(int argc, char *argv[])
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("system"));
 
 	QgsApplication a(argc, argv, true, "");
+	a.setOrganizationName("weiqing.leiqian");
+	a.setApplicationName("runner");
 
 	QTranslator translatorQGis;
 	translatorQGis.load(qApp->applicationDirPath() + "/../i18n/qgis_zh-Hans.qm");
