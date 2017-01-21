@@ -2,6 +2,7 @@
 #include "map3d.h"
 #include "GlobalInstance.h"
 #include <osgEarth/ElevationQuery>
+#include "QGraphicsLineItem"
 
 Map3D::Map3D()
 {
@@ -197,11 +198,11 @@ void Map3D::slotLayersChanged(){
 
 void Map3D::slotLayersRemoved( const QStringList& layers){
 	for(int i=0; i<layers.size(); ++i){
-		removeLayer(layers[i]);
+		myRemoveLayer(layers[i]);
 	}
 }
 
-void Map3D::removeLayer(QString name){
+void Map3D::myRemoveLayer(QString name){
 	for(int i=0; i<m_map->getNumImageLayers(); ++i){
 		ImageLayer *layer = m_map->getImageLayerAt(i);
 		if(name.left(layer->getName().length()) == layer->getName().c_str()){
@@ -257,7 +258,9 @@ void Map3D::loadLayer(TiXmlElement *xmlNode)
 	QString name = xmlNode->Attribute("Name");
 	QString path = xmlNode->Attribute("Path");
 	type = type.toLower();
-	path = qApp->applicationDirPath() + "/../" + path;
+	if(!QFile::exists(path)){
+		path = qApp->applicationDirPath() + "/../" + path;
+	}
 	if(!QFile::exists(path)){
 		LOG_ERROR << tr("Component=Map3D，地图文件%1不存在！Row=%2").arg(path).arg(xmlNode->Row()).toStdString();
 		return;
@@ -392,4 +395,14 @@ bool Map3D::addVectorLayer(QString layerName, QString filePath)
 
 	m_map->addModelLayer(new ModelLayer(layerName.toStdString(), geomOptions));
 	return true;
+}
+
+bool Map3D::createLayer(QString layerName)
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+bool Map3D::removeLayer(QString layerName)
+{
+	throw std::logic_error("The method or operation is not implemented.");
 }

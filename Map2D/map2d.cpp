@@ -208,7 +208,9 @@ void Map2D::loadLayer(TiXmlElement *xmlNode, QgsLayerTreeGroup *group)
 	QString name = xmlNode->Attribute("Name");
 	QString path = xmlNode->Attribute("Path");
 	type = type.toLower();
-	path = qApp->applicationDirPath() + "/../" + path;
+	if(!QFile::exists(path)){
+		path = qApp->applicationDirPath() + "/../" + path;
+	}
 	if(!QFile::exists(path)){
 		LOG_ERROR << tr("Component=Map2D，地图文件%1不存在！Row=%2").arg(path).arg(xmlNode->Row()).toStdString();
 		return;
@@ -350,4 +352,14 @@ bool Map2D::addVectorLayer(QString layerName, QString filePath)
 	QgsMapLayerRegistry::instance()->addMapLayer(layer);
 	m_rootGroup->insertLayer(0, layer);
 	return true;
+}
+
+bool Map2D::createLayer(QString layerName)
+{
+	return false;
+}
+
+bool Map2D::removeLayer(QString layerName)
+{
+	return false;
 }

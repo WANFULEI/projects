@@ -23,7 +23,7 @@ short Dem::getHeight(double lon, double lat)
 	int col = (m_geoTransform[5] * (lon - m_geoTransform[0]) - m_geoTransform[2] * (lat - m_geoTransform[3])) / temp + 0.5;
 	int row = (m_geoTransform[1] * (lat - m_geoTransform[3]) - m_geoTransform[4] * (lon - m_geoTransform[0])) / temp + 0.5;
 	short value = 0;
-	m_pBand->RasterIO(GF_Read, col, row, 1, 1, &value, 1, 1, GDT_Int16, 0, 0);
+	CPLErr err = m_pBand->RasterIO(GF_Read, col, row, 1, 1, &value, 1, 1, GDT_Int16, 0, 0);
 	return value;
 } 
 

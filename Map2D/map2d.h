@@ -78,6 +78,11 @@ private:
 
 	virtual bool addVectorLayer(QString layerName, QString filePath);
 
+	virtual bool createLayer(QString layerName);
+
+	virtual bool removeLayer(QString layerName);
+
+
 };
 
 #endif // MAP2D_H

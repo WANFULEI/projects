@@ -36,7 +36,7 @@ private slots:
 	void slotLayersRemoved( const QStringList& layers);
 
 private:
-	void removeLayer(QString name);
+	void myRemoveLayer(QString name);
 	void loadMap();
 	void loadGroup(TiXmlElement *xmlNode);
 	void loadLayer(TiXmlElement *xmlNode);
@@ -46,6 +46,10 @@ private:
 	virtual bool addRasterLayer(QString layerName, QString rasterFilePath);
 
 	virtual bool addVectorLayer(QString layerName, QString filePath);
+
+	virtual bool createLayer(QString layerName);
+
+	virtual bool removeLayer(QString layerName);
 
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
 #include "component_global.h"
+#include "QMainWindow"
 
 class QgsMapCanvas;
 namespace osgEarth{
@@ -14,8 +15,8 @@ public:
 	~GlobalInstance(void);
 
 	static GlobalInstance *getInstance();
-	QObject *getMainWindow() const { return m_mainWindow; }
-	void setMainWindow(QObject *mainWindow) { m_mainWindow = mainWindow; }
+	QMainWindow *getMainWindow() const { return m_mainWindow; }
+	void setMainWindow(QMainWindow *mainWindow) { m_mainWindow = mainWindow; }
 
 	QgsMapCanvas *getMap2D() const { return m_map2D; }
 	void setMap2D(QgsMapCanvas *map2D) { m_map2D = map2D; }
@@ -27,9 +28,10 @@ public:
 	void setLayerTreeRoot(QgsLayerTreeGroup *root) { m_layerTreeRoot = root; }
 
 private:
-	QObject *m_mainWindow;
+	QMainWindow *m_mainWindow;
 	QgsMapCanvas *m_map2D;
 	osgEarth::Map *m_map3D;
 	QgsLayerTreeGroup *m_layerTreeRoot;
 };
 
+#define global GlobalInstance::getInstance()
