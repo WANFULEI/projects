@@ -1,0 +1,12 @@
+#ifndef DRAWEDITOR_GLOBAL_H
+#define DRAWEDITOR_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#ifdef DRAWEDITOR_LIB
+# define DRAWEDITOR_EXPORT Q_DECL_EXPORT
+#else
+# define DRAWEDITOR_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // DRAWEDITOR_GLOBAL_H
