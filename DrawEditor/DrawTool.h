@@ -11,7 +11,5 @@ public:
 
 	GraphicLayer *getActiveLayer() const;
 
-	virtual void onActive() {}
-	virtual void onDeActive() {}
 };
 

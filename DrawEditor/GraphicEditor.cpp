@@ -3,6 +3,7 @@
 
 GraphicEditor::GraphicEditor(void)
 {
+	m_editingItem = 0;
 }
 
 

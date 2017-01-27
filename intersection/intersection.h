@@ -1,3 +1,5 @@
+#pragma once
+
 #ifdef INTERSECTION_EXPORTS
 #define INTERSECTION_API __declspec(dllexport)
 #else

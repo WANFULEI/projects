@@ -2,7 +2,6 @@
 #define RUNNER_H
 
 #include <QtGui/QMainWindow>
-#include "ui_runner.h"
 #include <Ribbon/include/QtitanRibbon.h>
 #include <Ribbon/include/QtnRibbonQuickAccessBar.h>
 #include <tinyxml.h>
@@ -18,7 +17,7 @@
 #include <QDockWidget>
 #include <QStackedWidget>
 #include <QTabWidget>
-#include "component.h"
+#include "component/component.h"
 
 class Runner : public RibbonMainWindow
 {
@@ -86,7 +85,6 @@ private:
 private slots:
 	void options(QAction* action);
 	void optionsFont(QAction* act);
-	void slot_test();
 
 private:
 	int m_defaultFont;

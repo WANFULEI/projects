@@ -2,6 +2,7 @@
 #include "drawtool.h"
 #include "IconDlg.h"
 #include "QObject"
+#include "osg\Image"
 
 class DrawKeypointTool : public QObject,
 	public DrawTool
@@ -24,5 +25,6 @@ private:
 	int m_iconWidth;
 	int m_iconHeight;
 	QImage m_cache;
+	osg::ref_ptr<osg::Image> m_image;
 };
 

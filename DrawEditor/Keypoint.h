@@ -1,5 +1,7 @@
 #pragma once
 #include "graphicitem.h"
+
+class KeypointEditor;
 class Keypoint :
 	public GraphicItem
 {
@@ -7,10 +9,9 @@ public:
 	Keypoint(void);
 	~Keypoint(void);
 
-	virtual QgsPoint getVertex();
-	void setVertex(QgsPoint pt) { m_pt = pt; }
+	virtual bool isSelect(QgsMapMouseEvent *event);
 
 private:
-	QgsPoint m_pt;
+	static KeypointEditor *m_defaultEditor;
 };
 

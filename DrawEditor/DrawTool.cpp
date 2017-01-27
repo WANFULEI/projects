@@ -1,5 +1,5 @@
 #include "DrawTool.h"
-#include "GlobalInstance.h"
+#include "component/GlobalInstance.h"
 #include "qgsmapcanvas.h"
 #include "QgsMapLayerRegistry.h"
 #include "GraphicLayer.h"

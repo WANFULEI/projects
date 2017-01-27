@@ -1,8 +1,10 @@
 #pragma once
 
 #include "QgsPluginLayer.h"
+#include "GraphicItem.h"
+#include <osg/Group>
 
-class GraphicItem;
+
 class GraphicLayer : public QgsPluginLayer
 {
 public:
@@ -12,7 +14,9 @@ public:
 	template<class T>
 	T *createGraphic(){
 		T *p = new T;
+		p->setLayer(this);
 		m_graphics << p;
+		m_group->addChild(p->getFeatureNode());
 		return p;
 	}
 	void addGraphic(GraphicItem *gra);
@@ -20,6 +24,8 @@ public:
 	void removeGraphic(QString ID);
 	GraphicItem *getGraphic(QString ID);
 	QList<GraphicItem *> getAll() const { return m_graphics; }
+
+	osg::Group *getGroup() const { return m_group; }
 
 protected:
 	virtual bool draw(QgsRenderContext& rendererContext);
@@ -34,5 +40,6 @@ protected:
 
 private:
 	QList<GraphicItem *> m_graphics;
+	osg::Group *m_group;
 };
 

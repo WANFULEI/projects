@@ -1,15 +1,23 @@
-﻿#include "stdafx.h"
-#include "map3d.h"
-#include "GlobalInstance.h"
-#include <osgEarth/ElevationQuery>
-#include "QGraphicsLineItem"
+﻿#include "map3d.h"
+#include "component/GlobalInstance.h"
+#include "osgEarth/Map"
+#include "Component/log.h"
+#include "osgEarth/MapNode"
+#include "QBoxLayout"
+#include "osgEarthUtil/VerticalScale"
+#include "QgsMapLayerRegistry.h"
+#include "osgEarth/TerrainEngineNode"
+#include "osgEarth/Viewpoint"
+#include "osgEarthUtil/Sky"
+#include "Map3DOptions.h"
+#include "QgsRasterLayer.h"
+#include "qgsvectorlayer.h"
+#include "osgEarthQt/ViewerWidget"
+#include "osgEarthDrivers/gdal/GDALOptions"
 
 Map3D::Map3D()
 {
-	m_mapCanvas = 0;
-	m_manip = 0;
-
-	m_map = 0;
+	m_map3DOptionsDlg = 0;
 }
 
 Map3D::~Map3D()
@@ -20,7 +28,8 @@ Map3D::~Map3D()
 Q_EXPORT_PLUGIN2(Map3D, Map3D)
 
 void Map3D::loadMap(){
-	m_map = new Map;
+	global->setMap3D(new osgEarth::Map);
+
 	QString mapConfigFile = qApp->applicationDirPath() + "/../config/mapConfig.xml";
 	TiXmlDocument doc(mapConfigFile.toStdString().c_str());
 	if(!doc.LoadFile()){
@@ -38,29 +47,28 @@ void Map3D::loadMap(){
 		}
 		xmlNode = xmlNode->NextSiblingElement();
 	}
-
-	GlobalInstance::getInstance()->setMap3D(m_map);
 }
 
 
 void Map3D::initialize(){
 	osgViewer::Viewer *viewer = new osgViewer::Viewer;
+	global->setViewer(viewer);
 	osg::Group* root = new osg::Group();
 	viewer->setSceneData( root );
+	global->setRoot(root);
 	loadMap();
-	MapNode *mapNode = new MapNode(m_map);
+	osgEarth::MapNode *mapNode = new osgEarth::MapNode(global->getMap3D());
     root->addChild( mapNode );
-	m_manip = new EarthManipulator();
-	viewer->setCameraManipulator( m_manip );
+	global->setMapNode(mapNode);
 
-	double height = 0;
-	mapNode->getTerrain()->getHeight(mapNode->getMapSRS(), 110, 50, &height);
+	global->setManipulator(new osgEarth::Util::EarthManipulator);
+	viewer->setCameraManipulator(global->getManipulator());
 
-	LogarithmicDepthBuffer *buf = new LogarithmicDepthBuffer;
-	buf->install( viewer->getCamera() );
+// 	LogarithmicDepthBuffer *buf = new LogarithmicDepthBuffer;
+// 	buf->install( viewer->getCamera() );
 
-	ViewerWidget *viewerWidget = new ViewerWidget(viewer);
-	QWidget *w = GlobalInstance::getInstance()->getMainWindow()->findChild<QWidget *>("Map3DWidget");
+	auto viewerWidget = new osgEarth::QtGui::ViewerWidget(viewer);
+	QWidget *w = global->getMainWindow()->findChild<QWidget *>("Map3DWidget");
 	if(w) {
 		QHBoxLayout *hBox = new QHBoxLayout;
 		hBox->addWidget(viewerWidget);
@@ -69,17 +77,21 @@ void Map3D::initialize(){
 		w->show();
 	}
 
-	m_mapCanvas = GlobalInstance::getInstance()->getMap2D();
-	connect(m_mapCanvas, SIGNAL(extentsChanged()), this, SLOT(slot_extentsChanged()));
-	connect(m_mapCanvas, SIGNAL(layersChanged()), this, SLOT(slotLayersChanged()));
+	auto verticalScale = new osgEarth::Util::VerticalScale;
+	verticalScale->setScale(1);
+	global->getMapNode()->getTerrainEngine()->addEffect(verticalScale);
+
+	connect(global->getMap2D(), SIGNAL(extentsChanged()), this, SLOT(slot_extentsChanged()));
+	connect(global->getMap2D(), SIGNAL(layersChanged()), this, SLOT(slotLayersChanged()));
 	connect(QgsMapLayerRegistry::instance(), SIGNAL(layersWillBeRemoved(const QStringList&)), this, SLOT(slotLayersRemoved(const QStringList&)));
+
+	addSky();
 }
 
 void Map3D::slot_extentsChanged(){
-	if(m_mapCanvas == 0 || m_manip == 0) return;
-	QgsPoint centerPt = m_mapCanvas->center();
-	QgsRectangle extent = m_mapCanvas->extent();
-	m_manip->setViewpoint( Viewpoint(
+	QgsPoint centerPt = global->getMap2D()->center();
+	QgsRectangle extent = global->getMap2D()->extent();
+	global->getManipulator()->setViewpoint( osgEarth::Viewpoint(
         "Viewpoint",
         centerPt.x(), centerPt.y(), 0,   // longitude, latitude, altitude
 		0, -21.6, extent.width() * 80000), // heading, pitch, range
@@ -87,13 +99,13 @@ void Map3D::slot_extentsChanged(){
 }
 
 void Map3D::slotLayersChanged(){
-	if(m_mapCanvas == 0 || m_map == 0) return;
- 	QStringList layers = getTypeLayers(m_mapCanvas->mapSettings().layers(), "raster");
-	for(int i=0; i<m_map->getNumImageLayers(); ++i){
-		ImageLayer *layer = m_map->getImageLayerAt(i);
+	if(global->getMap3D() == 0) return;
+ 	QStringList layers = getTypeLayers(global->getMap2D()->mapSettings().layers(), "raster");
+	for(int i=0; i<global->getMap3D()->getNumImageLayers(); ++i){
+		osgEarth::ImageLayer *layer = global->getMap3D()->getImageLayerAt(i);
 		bool find = false;
 		for(int j=0; j<layers.size(); ++j){
-			if(layers[j].left(layer->getName().length()) == layer->getName().c_str()){
+			if(layers[j] == convertEarthLayerName(layer->getName().c_str())){
 				find = true;
 				break;
 			}
@@ -103,7 +115,7 @@ void Map3D::slotLayersChanged(){
 		}else{
 			QStringList layers = getTypeLayers(mapLayers2Layers(QgsMapLayerRegistry::instance()->mapLayers()), "raster");
 			for(int j=0; j<layers.size(); ++j){
-				if(layers[j].left(layer->getName().length()) == layer->getName().c_str()){
+				if(layers[j] == convertEarthLayerName(layer->getName().c_str())){
 					find = true;
 					break;
 				}
@@ -112,11 +124,11 @@ void Map3D::slotLayersChanged(){
 		}
 	}
 
-	for(int i=0; i<m_map->getNumElevationLayers(); ++i){
-		ElevationLayer *layer = m_map->getElevationLayerAt(i);
+	for(int i=0; i<global->getMap3D()->getNumElevationLayers(); ++i){
+		osgEarth::ElevationLayer *layer = global->getMap3D()->getElevationLayerAt(i);
 		bool find = false;
 		for(int j=0; j<layers.size(); ++j){
-			if(layers[j].left(layer->getName().length()) == layer->getName().c_str()){
+			if(layers[j] == convertEarthLayerName(layer->getName().c_str())){
 				find = true;
 				break;
 			}
@@ -126,7 +138,7 @@ void Map3D::slotLayersChanged(){
 		}else{
 			QStringList layers = getTypeLayers(mapLayers2Layers(QgsMapLayerRegistry::instance()->mapLayers()), "raster");
 			for(int j=0; j<layers.size(); ++j){
-				if(layers[j].left(layer->getName().length()) == layer->getName().c_str()){
+				if(layers[j] == convertEarthLayerName(layer->getName().c_str())){
 					find = true;
 					break;
 				}
@@ -137,11 +149,13 @@ void Map3D::slotLayersChanged(){
 
 	int index = 0;
 	for(int i=0; i<layers.size(); ++i){
-		for(int j=0; j<m_map->getNumImageLayers(); ++j){
-			ImageLayer *layer = m_map->getImageLayerAt(j);
+		for(int j=0; j<global->getMap3D()->getNumImageLayers(); ++j){
+			osgEarth::ImageLayer *layer = global->getMap3D()->getImageLayerAt(j);
 			if(layer == 0) continue;
-			if(layers[i].left(layer->getName().length()) == layer->getName().c_str()){
-				m_map->moveImageLayer(layer, m_map->getNumImageLayers() - (index++) - 1);
+			if(layers[i] == convertEarthLayerName(layer->getName().c_str())){
+				int pos = global->getMap3D()->getNumImageLayers() - (index++) - 1;
+				if(pos >=0 && pos < global->getMap3D()->getNumImageLayers())
+					global->getMap3D()->moveImageLayer(layer, pos);
 				break;
 			}
 		}
@@ -149,22 +163,24 @@ void Map3D::slotLayersChanged(){
 
 	index = 0;
 	for(int i=0; i<layers.size(); ++i){
-		for(int j=0; j<m_map->getNumElevationLayers(); ++j){
-			ElevationLayer *layer = m_map->getElevationLayerAt(j);
+		for(int j=0; j<global->getMap3D()->getNumElevationLayers(); ++j){
+			osgEarth::ElevationLayer *layer = global->getMap3D()->getElevationLayerAt(j);
 			if(layer == 0) continue;
-			if(layers[i].left(layer->getName().length()) == layer->getName().c_str()){
-				m_map->moveElevationLayer(layer, m_map->getNumImageLayers() - (index++) - 1);
+			if(layers[i] == convertEarthLayerName(layer->getName().c_str())){
+				int pos = global->getMap3D()->getNumElevationLayers() - (index++) - 1;
+				if(pos >=0 && pos < global->getMap3D()->getNumElevationLayers())
+					global->getMap3D()->moveElevationLayer(layer, pos);
 				break;
 			}
 		}
 	}
 
-	layers = getTypeLayers(m_mapCanvas->mapSettings().layers(), "vector");
-	for(int i=0; i<m_map->getNumModelLayers(); ++i){
-		ModelLayer *layer = m_map->getModelLayerAt(i);
+	layers = getTypeLayers(global->getMap2D()->mapSettings().layers(), "vector");
+	for(int i=0; i<global->getMap3D()->getNumModelLayers(); ++i){
+		osgEarth::ModelLayer *layer = global->getMap3D()->getModelLayerAt(i);
 		bool find = false;
 		for(int j=0; j<layers.size(); ++j){
-			if(layers[j].left(layer->getName().length()) == layer->getName().c_str()){
+			if(layers[j] == convertEarthLayerName(layer->getName().c_str())){
 				find = true;
 				break;
 			}
@@ -174,7 +190,7 @@ void Map3D::slotLayersChanged(){
 		}else{
 			QStringList layers = getTypeLayers(mapLayers2Layers(QgsMapLayerRegistry::instance()->mapLayers()), "vector");
 			for(int j=0; j<layers.size(); ++j){
-				if(layers[j].left(layer->getName().length()) == layer->getName().c_str()){
+				if(layers[j] == convertEarthLayerName(layer->getName().c_str())){
 					find = true;
 					break;
 				}
@@ -185,11 +201,13 @@ void Map3D::slotLayersChanged(){
 
 	index = 0;
 	for(int i=0; i<layers.size(); ++i){
-		for(int j=0; j<m_map->getNumModelLayers(); ++j){
-			ModelLayer *layer = m_map->getModelLayerAt(j);
+		for(int j=0; j<global->getMap3D()->getNumModelLayers(); ++j){
+			osgEarth::ModelLayer *layer = global->getMap3D()->getModelLayerAt(j);
 			if(layer == 0) continue;
-			if(layers[i].left(layer->getName().length()) == layer->getName().c_str()){
-				//m_map->moveModelLayer(layer, m_map->getNumImageLayers() - (index++) - 1);
+			if(layers[i] == convertEarthLayerName(layer->getName().c_str())){
+				int pos = global->getMap3D()->getNumModelLayers() - (index++) - 1;
+				if(pos >=0 && pos < global->getMap3D()->getNumModelLayers())
+					global->getMap3D()->moveModelLayer(layer, pos);
 				break;
 			}
 		}
@@ -203,32 +221,32 @@ void Map3D::slotLayersRemoved( const QStringList& layers){
 }
 
 void Map3D::myRemoveLayer(QString name){
-	for(int i=0; i<m_map->getNumImageLayers(); ++i){
-		ImageLayer *layer = m_map->getImageLayerAt(i);
+	for(int i=0; i<global->getMap3D()->getNumImageLayers(); ++i){
+		osgEarth::ImageLayer *layer = global->getMap3D()->getImageLayerAt(i);
 		if(name.left(layer->getName().length()) == layer->getName().c_str()){
 			QgsMapLayer *mapLayer = QgsMapLayerRegistry::instance()->mapLayer(name);
 			if(dynamic_cast<QgsRasterLayer *>(mapLayer)){
-				m_map->removeImageLayer(layer);
+				global->getMap3D()->removeImageLayer(layer);
 			}
 			break;
 		}
 	}
-	for(int i=0; i<m_map->getNumElevationLayers(); ++i){
-		ElevationLayer *layer = m_map->getElevationLayerAt(i);
+	for(int i=0; i<global->getMap3D()->getNumElevationLayers(); ++i){
+		osgEarth::ElevationLayer *layer = global->getMap3D()->getElevationLayerAt(i);
 		if(name.left(layer->getName().length()) == layer->getName().c_str()){
 			QgsMapLayer *mapLayer = QgsMapLayerRegistry::instance()->mapLayer(name);
 			if(dynamic_cast<QgsRasterLayer *>(mapLayer)){
-				m_map->removeElevationLayer(layer);
+				global->getMap3D()->removeElevationLayer(layer);
 			}
 			break;
 		}
 	}
-	for(int i=0; i<m_map->getNumModelLayers(); ++i){
-		ModelLayer *layer = m_map->getModelLayerAt(i);
+	for(int i=0; i<global->getMap3D()->getNumModelLayers(); ++i){
+		osgEarth::ModelLayer *layer = global->getMap3D()->getModelLayerAt(i);
 		if(name.left(layer->getName().length()) == layer->getName().c_str()){
 			QgsMapLayer *mapLayer = QgsMapLayerRegistry::instance()->mapLayer(name);
 			if(dynamic_cast<QgsVectorLayer *>(mapLayer)){
-				m_map->removeModelLayer(layer);
+				global->getMap3D()->removeModelLayer(layer);
 			}
 			break;
 		}
@@ -270,35 +288,15 @@ void Map3D::loadLayer(TiXmlElement *xmlNode)
 		return;
 	}
 	if(type == "raster"){
-		GDALOptions gdal;
+		osgEarth::Drivers::GDALOptions gdal;
 		gdal.url() = path.toStdString();
-		ImageLayer *layer = new ImageLayer(name.toStdString(), gdal);
-		m_map->addImageLayer(layer);
+		osgEarth::ImageLayer *layer = new osgEarth::ImageLayer(name.toStdString(), gdal);
+		global->getMap3D()->addImageLayer(layer);
 	}else if(type == "vector"){
 
 	}
 }
 
-bool Map3D::addRasterLayer(QString layerName, QString rasterFilePath)
-{
-	if(m_map == 0){
-		LOG_ERROR << "m_map=0, maybe Map3D component not load.";
-		return false;
-	}
-	if(layerName.isEmpty()){
-		LOG_ERROR << "addRasterLayer with a empty layer name is not allowed.";
-		return false;
-	}
-	if(!QFile::exists(rasterFilePath)){
-		LOG_ERROR << tr("raster file=%1 not exist.").arg(rasterFilePath).toStdString();
-		return false;
-	}
-	GDALOptions gdal;
-	gdal.url() = rasterFilePath.toStdString();
-	ImageLayer *layer = new ImageLayer(layerName.toStdString(), gdal);
-	m_map->insertImageLayer(layer, m_map->getNumImageLayers());
-	return true;
-}
 
 QStringList Map3D::getTypeLayers(QStringList layers, QString type)
 {
@@ -307,16 +305,20 @@ QStringList Map3D::getTypeLayers(QStringList layers, QString type)
 			if(dynamic_cast<QgsRasterLayer *>(QgsMapLayerRegistry::instance()->mapLayer(layers[i])) == 0)
 				layers.removeAt(i);
 		}
-		return layers;
+		//return layers;
 	}else if(type.toLower() == "vector"){
 		for(int i = layers.size()-1; i >= 0; --i){
 			if(dynamic_cast<QgsVectorLayer *>(QgsMapLayerRegistry::instance()->mapLayer(layers[i])) == 0)
 				layers.removeAt(i);
 		}
-		return layers;
+		//return layers;
 	}else{
-		return layers;
+		//return layers;
 	}
+	for(auto i = layers.begin(); i != layers.end(); ++i){
+		*i = (*i).left((*i).length() - 17);
+	}
+	return layers;
 }
 
 QStringList Map3D::mapLayers2Layers(QMap<QString, QgsMapLayer *> mapLayers)
@@ -328,81 +330,30 @@ QStringList Map3D::mapLayers2Layers(QMap<QString, QgsMapLayer *> mapLayers)
 	return layers;
 }
 
-bool Map3D::addVectorLayer(QString layerName, QString filePath)
+QString Map3D::convertEarthLayerName(QString name)
 {
-	if(m_map == 0){
-		LOG_ERROR << "m_map=0, maybe Map3D component not load.";
-		return false;
-	}
-	if(!QFile::exists(filePath)){
-		LOG_ERROR << tr("vector file=%1 not exist.").arg(filePath).toStdString();
-		return false;
-	}
-	if(layerName.isEmpty()){
-		LOG_ERROR << "addVectorLayer with a empty layer name is not allowed.";
-		return false;
-	}
-
-	Style style;
-	GDALDataset *poDS = (GDALDataset *)GDALOpenEx( filePath.toStdString().c_str(), GDAL_OF_VECTOR, 0, 0, 0 );
-	if(poDS == 0) return false;
-	OGRLayer *layer = poDS->GetLayer(0);
-	if(layer == 0) return false;
-	layer->ResetReading();
-	OGRFeature *feature = layer->GetNextFeature();
-	if(feature == 0) return false;
-	if(wkbFlatten(feature->GetGeometryRef()->getGeometryType()) == wkbPoint){
-// 		PointSymbol *pointSymbol = style.getOrCreateSymbol<PointSymbol>();
-// 		pointSymbol->fill()->color() = Color::Red;
-// 		pointSymbol->size() = 12;
-
-		osg::Image *image = osgDB::readImageFile("c:\\osgeo4w\\images\\flags\\vi.png");
-		IconSymbol *markerSymbol = style.getOrCreateSymbol<IconSymbol>();
-		//markerSymbol->setImage(image);
-		markerSymbol->placement() = IconSymbol::PLACEMENT_VERTEX;
-		markerSymbol->url() = StringExpression("c:\\osgeo4w\\images\\flags\\vi.png");
-//		osg::Node *node = osgDB::readNodeFile("D:\\osg-file-path\\cow.osgt");
-// 		markerSymbol->setModel(node);
-// 		markerSymbol->alignment() = MarkerSymbol::ALIGN_CENTER_CENTER;
-// 		markerSymbol->scale() = 1000;
-	}else{
-		LineSymbol *lineSymbol = style.getOrCreateSymbol<LineSymbol>();
-		lineSymbol->stroke()->color() = Color::Yellow;
-		lineSymbol->stroke()->width() = 1.0f;
-	}
-	OGRFeature::DestroyFeature(feature);
-	GDALClose( poDS );
-
-	TextSymbol* text = style.getOrCreateSymbol<TextSymbol>();
-	text->font() = "黑体";
-	text->encoding()= osgEarth::Symbology::TextSymbol::ENCODING_UTF8;
-	text->content() = StringExpression( "[name]" );
-	//text->priority() = NumericExpression( "[pop_cntry]" );
-	text->removeDuplicateLabels() = true;
-	text->size() = 12;
-	text->alignment() = TextSymbol::ALIGN_CENTER_CENTER;
-	text->fill()->color() = Color::White;
-	text->halo()->color() = Color::Black;
-	
-	OGRFeatureOptions featureOptions;
-	featureOptions.url() = filePath.toStdString();
-
-	FeatureGeomModelOptions geomOptions;
-	geomOptions.featureOptions() = featureOptions;
-	geomOptions.styles() = new StyleSheet();
-	geomOptions.styles()->addStyle(style);
-
-
-	m_map->addModelLayer(new ModelLayer(layerName.toStdString(), geomOptions));
-	return true;
+	return name.replace('-', '_');
 }
 
-bool Map3D::createLayer(QString layerName)
+void Map3D::slotMap3DOptions()
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	if(m_map3DOptionsDlg == 0){
+		m_map3DOptionsDlg = new Map3DOptions(global->getMainWindow());
+	}
+	m_map3DOptionsDlg->show();
 }
 
-bool Map3D::removeLayer(QString layerName)
+void Map3D::addSky()
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	auto sky = osgEarth::Extension::create("sky_simple", osgEarth::ConfigOptions());
+	global->getMapNode()->addExtension(sky);
+	auto parents = global->getMapNode()->getParents();
+	for(int i=0; i<parents.size(); ++i){
+		osgEarth::Util::SkyNode *sky = dynamic_cast<osgEarth::Util::SkyNode *>(parents[i]);
+		if(sky){
+			sky->setLighting(0);
+			break;
+		}
+	}
 }
+

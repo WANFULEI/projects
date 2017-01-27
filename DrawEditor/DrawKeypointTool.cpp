@@ -2,8 +2,13 @@
 #include "IconDlg.h"
 #include "Keypoint.h"
 #include "GraphicLayer.h"
-#include "GlobalInstance.h"
+#include "component/GlobalInstance.h"
 #include "qgsmapcanvas.h"
+#include "osgEarthSymbology\Geometry"
+#include "osgEarthFeatures\Feature"
+#include "osgEarthSymbology\Style"
+#include "draweditor_global.h"
+#include "osgEarthAnnotation\FeatureNode"
 
 DrawKeypointTool::DrawKeypointTool(QString path, QWidget *parent)
 {
@@ -30,8 +35,9 @@ void DrawKeypointTool::canvasReleaseEvent(QgsMapMouseEvent* e)
 		kp->setImage(m_cache);
 		kp->setIconWidth(m_iconWidth);
 		kp->setIconHeight(m_iconHeight);
-		kp->setVertex(e->mapPoint());
-		GlobalInstance::getInstance()->getMap2D()->refresh();
+		kp->setVertex(QgsPoint2Vec3d(e->mapPoint()));
+
+		layer->clearCacheImage();
 	}
 }
 
@@ -39,4 +45,6 @@ void DrawKeypointTool::slotSelect(QString path)
 {
 	m_path = path;
 	m_cache = QImage(m_path);
+	m_image = osgDB::readImageFile(path.toStdString());
+
 }

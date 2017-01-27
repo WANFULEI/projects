@@ -1,17 +1,14 @@
 #pragma once
 #include "graphicitem.h"
-
-class PolylineEditor;
-class Polyline :
+class Polygon :
 	public GraphicItem
 {
 public:
-	Polyline(void);
-	~Polyline(void);
+	Polygon(void);
+	~Polygon(void);
 
 	virtual bool isSelect(QgsMapMouseEvent *event);
 
 private:
-	static PolylineEditor *m_defaultEditor;
 };
 

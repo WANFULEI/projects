@@ -1,12 +1,12 @@
 #include "runner.h"
-#include "Log.h"
+#include "component/Log.h"
 #include "commonFunctions.h"
 #include <QStackedWidget>
 #include <QMessageBox>
 #include <QApplication>
 #include <qdesktopwidget.h>
 #include <QLibrary>
-#include "globalInstance.h"
+#include "component/globalInstance.h"
 
 #define Prop_ContextColor   "ContextColor"
 
@@ -21,7 +21,7 @@ typedef const char *(*QT_PLUGIN_QUERY_VERIFICATION_DATA)();
 Runner::Runner(QWidget *parent, Qt::WFlags flags)
 	: RibbonMainWindow(parent, flags)
 {
-	GlobalInstance::getInstance()->setMainWindow(this);
+	global->setMainWindow(this);
 	m_defaultFont = 8;
 	m_actionDefault = 0;
 	setObjectName("me");
@@ -569,11 +569,6 @@ Qt::ToolButtonStyle Runner::toToolButtonStyle(QString s){
 	else if(s == "qt::toolbuttonfollowstyle" || s == "toolbuttonfollowstyle" || s == "4") return Qt::ToolButtonFollowStyle;
 	else return Qt::ToolButtonIconOnly;
 }
-
-void Runner::slot_test(){
-	QMessageBox::warning(this, "test", "test");
-}
-
 
 QMenu *Runner::loadMenu(TiXmlElement *xmlNode){
 	if(xmlNode == 0) return 0;

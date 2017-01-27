@@ -1,8 +1,12 @@
 #include "DrawPolylineTool.h"
-#include "GlobalInstance.h"
+#include "component/GlobalInstance.h"
 #include "qgsmapcanvas.h"
 #include "Polyline.h"
 #include "GraphicLayer.h"
+#include "osgEarthSymbology\Geometry"
+#include "osgEarthFeatures\Feature"
+#include "draweditor_global.h"
+#include "osgEarthAnnotation\FeatureNode"
 
 
 DrawPolylineTool::DrawPolylineTool(QgsMapCanvas *map)
@@ -28,7 +32,7 @@ void DrawPolylineTool::canvasPressEvent(QgsMapMouseEvent* e)
 {
 	if(e->button() == Qt::LeftButton){
 		m_rubberBand->addPoint(e->mapPoint());
-		m_points << e->mapPoint();
+		m_points << QgsPoint2Vec3d(e->mapPoint(), 10000);
 	}
 }
 
@@ -39,8 +43,9 @@ void DrawPolylineTool::canvasReleaseEvent(QgsMapMouseEvent* e)
 		if(layer == 0) return;
 		Polyline *gra = layer->createGraphic<Polyline>();
 		gra->setVertexs(m_points);
+
 		m_points.clear();
 		m_rubberBand->reset(QGis::Line);
-		GlobalInstance::getInstance()->getMap2D()->refresh();
+		layer->clearCacheImage();
 	}
 }

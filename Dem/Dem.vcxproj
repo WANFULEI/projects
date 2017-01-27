@@ -75,6 +75,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>qtmain.lib;QtCore4.lib;gdal_i.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy *.h $(QTDIR)\include\dem\ /s /y
+xcopy $(OutDir)$(ProjectName).dll $(QTDIR)\bin\ /s /y
+xcopy $(OutDir)$(ProjectName).pdb $(QTDIR)\bin\ /s /y
+xcopy $(OutDir)$(ProjectName).lib $(QTDIR)\lib\ /s /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dem.cpp" />

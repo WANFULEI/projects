@@ -1,14 +1,14 @@
 #pragma once
 #include "drawtool.h"
-#include "QgsRubberBand.h"
 #include "osg\Vec3d"
 
-class DrawPolylineTool :
+class QgsRubberBand;
+class DrawPolygonTool :
 	public DrawTool
 {
 public:
-	DrawPolylineTool(QgsMapCanvas *map);
-	~DrawPolylineTool(void);
+	DrawPolygonTool(QgsMapCanvas *map);
+	~DrawPolygonTool(void);
 
 protected:
 	virtual void canvasMoveEvent(QgsMapMouseEvent* e);
@@ -21,4 +21,5 @@ private:
 	QgsRubberBand *m_rubberBand;
 	QVector<osg::Vec3d> m_points;
 };
+
 

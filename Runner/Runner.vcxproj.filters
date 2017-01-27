@@ -58,9 +58,6 @@
     <ClInclude Include="commonFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_runner.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="runner.h">
@@ -68,9 +65,6 @@
     </CustomBuild>
     <CustomBuild Include="runner.qrc">
       <Filter>Resource Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="runner.ui">
-      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="images\images.qrc">
       <Filter>Resource Files</Filter>

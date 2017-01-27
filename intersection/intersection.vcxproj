@@ -80,10 +80,12 @@
       <AdditionalDependencies>QtCore4.lib;QtGui4.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy *.h %QGIS_RUN_HOME%\include\$(ProjectName)\ /s /y
-xcopy $(OutDir)$(TargetName).lib %QGIS_RUN_HOME%\lib\ /s /y
-xcopy $(OutDir)$(TargetName).pdb %QGIS_RUN_HOME%\bin\ /s /y
-xcopy $(OutDir)$(TargetName)$(TargetExt) %QGIS_RUN_HOME%\bin\ /s /y
+      <Command>xcopy *.h $(QTDIR)\include\intersection\ /s /y
+xcopy $(OutDir)$(TargetName)$(TargetExt) $(QTDIR)\bin\ /s /y
+xcopy $(OutDir)$(TargetName).pdb $(QTDIR)\bin\ /s /y
+xcopy $(OutDir)$(TargetName).lib $(QTDIR)\lib\ /s /y
+
+
 
 </Command>
     </PostBuildEvent>

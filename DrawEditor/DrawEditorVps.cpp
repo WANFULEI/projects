@@ -1,5 +1,5 @@
 #include "DrawEditorVps.h"
-#include "GlobalInstance.h"
+#include "component/GlobalInstance.h"
 #include "qgsmapcanvas.h"
 #include "QgsMapLayerRegistry.h"
 #include "GraphicLayer.h"
@@ -26,6 +26,7 @@ void DrawEditorVps::canvasMoveEvent(QgsMapMouseEvent* e)
 
 void DrawEditorVps::canvasPressEvent(QgsMapMouseEvent* e)
 {
+	InputEvent *oldtransTo = m_transTo;
 	m_transTo = m_drawTool;
 	QStringList layers = GlobalInstance::getInstance()->getMap2D()->mapSettings().layers();
 	for(auto i = layers.begin(); i != layers.end(); ++i){
@@ -42,6 +43,10 @@ void DrawEditorVps::canvasPressEvent(QgsMapMouseEvent* e)
 		}
 	}
 out_label:
+	if(oldtransTo != m_transTo){
+		if(oldtransTo) oldtransTo->onDeActive();
+		if(m_transTo) m_transTo->onActive();
+	}
 	if(m_transTo) m_transTo->canvasPressEvent(e);
 }
 

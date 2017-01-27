@@ -1,17 +1,13 @@
 #ifndef MAP2D_H
 #define MAP2D_H
 
-#include "map2d_global.h"
-#include "component.h"
-#define CORE_EXPORT __declspec(dllimport)
-#define GUI_EXPORT __declspec(dllimport)
-#define APP_EXPORT __declspec(dllimport)
-
-#include "qgsmapcanvas.h"
+#include "component/component.h"
 #include "QgsLayerTreeView.h"
 #include "LayerInterface.h"
+#include "tinyxml.h"
+#include "qgsmaptool.h"
 
-class TiXmlElement;
+
 class Map2D : public Component, public LayerInterface
 {
 	Q_OBJECT
@@ -64,9 +60,7 @@ private slots:
 	void slotRemoveLayer();
 
 private:
-	QgsMapCanvas *m_map;
 	QgsLayerTreeView *m_layerTree;
-	QgsLayerTreeGroup *m_rootGroup;
 
 private:
 	void loadMap();
@@ -82,6 +76,7 @@ private:
 
 	virtual bool removeLayer(QString layerName);
 
+	virtual bool addElevationLayer(QString layerName, QString filePath);
 
 };
 

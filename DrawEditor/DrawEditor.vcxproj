@@ -40,7 +40,7 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\components\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -73,13 +73,18 @@
       <OutputFile>$(OutDir)\$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;component.lib;qgis_core.lib;qgis_gui.lib;QtSvg4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;component.lib;qgis_core.lib;qgis_gui.lib;QtSvg4.lib;intersection.lib;osgrd.lib;osgdbrd.lib;osgEarthrd.lib;osgEarthFeaturesrd.lib;osgEarthSymbologyrd.lib;osgEarthAnnotationrd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(OutDir)$(ProjectName).dll $(QTDIR)\bin\components\ /s /y
+xcopy $(OutDir)$(ProjectName).pdb $(QTDIR)\bin\components\ /s /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="draweditor.cpp" />
     <ClCompile Include="DrawEditorVps.cpp" />
     <ClCompile Include="DrawKeypointTool.cpp" />
+    <ClCompile Include="DrawPolygonTool.cpp" />
     <ClCompile Include="DrawPolylineTool.cpp" />
     <ClCompile Include="DrawTool.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_draweditor.cpp">
@@ -112,12 +117,21 @@
     <ClCompile Include="IconDlg.cpp" />
     <ClCompile Include="InputEvent.cpp" />
     <ClCompile Include="Keypoint.cpp" />
+    <ClCompile Include="KeypointEditor.cpp" />
+    <ClCompile Include="MyItem.cpp" />
+    <ClCompile Include="Polygon.cpp" />
     <ClCompile Include="Polyline.cpp" />
+    <ClCompile Include="PolylineEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DrawPolygonTool.h" />
     <ClInclude Include="DrawPolylineTool.h" />
     <ClInclude Include="Keypoint.h" />
+    <ClInclude Include="KeypointEditor.h" />
+    <ClInclude Include="MyItem.h" />
+    <ClInclude Include="Polygon.h" />
     <ClInclude Include="Polyline.h" />
+    <ClInclude Include="PolylineEditor.h" />
     <CustomBuild Include="DrawKeypointTool.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing DrawKeypointTool.h...</Message>

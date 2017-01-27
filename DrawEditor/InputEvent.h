@@ -17,5 +17,8 @@ public:
 
 	virtual void keyReleaseEvent(QKeyEvent* e) {}
 
+	virtual void onActive() {}
+	virtual void onDeActive() {}
+
 };
 

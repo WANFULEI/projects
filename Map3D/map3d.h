@@ -1,21 +1,14 @@
 #ifndef MAP3D_H
 #define MAP3D_H
 
-#include "map3d_global.h"
-#include "component.h"
-#include "../Map2D/LayerInterface.h"
-#include <QMap>
+#include "component/component.h"
+#include "LayerInterfaceImpl.h"
+#include "QMap"
+#include "tinyxml.h"
 
-namespace osgEarth{
-	namespace Util{
-		class EarthManipulator;
-	}
-	class Map;
-}
-class QgsMapCanvas;
-class TiXmlElement;
-class QgsMapLayer;
-class Map3D : public Component, public LayerInterface
+
+class Map3DOptions;
+class Map3D : public Component, public LayerInterfaceImpl
 {
 	Q_OBJECT
 	Q_INTERFACES(LayerInterface)
@@ -26,10 +19,10 @@ public:
 	void initialize();
 
 private:
-	QgsMapCanvas *m_mapCanvas;
-	osgEarth::Util::EarthManipulator *m_manip;
-	osgEarth::Map *m_map;
+	Map3DOptions *m_map3DOptionsDlg;
 
+public slots:
+	void slotMap3DOptions();
 private slots:
 	void slot_extentsChanged();
 	void slotLayersChanged();
@@ -42,15 +35,9 @@ private:
 	void loadLayer(TiXmlElement *xmlNode);
 	QStringList getTypeLayers(QStringList layers, QString type);
 	QStringList mapLayers2Layers(QMap<QString, QgsMapLayer *> mapLayers);
+	QString convertEarthLayerName(QString name);
 
-	virtual bool addRasterLayer(QString layerName, QString rasterFilePath);
-
-	virtual bool addVectorLayer(QString layerName, QString filePath);
-
-	virtual bool createLayer(QString layerName);
-
-	virtual bool removeLayer(QString layerName);
-
+	void addSky();
 };
 
 #endif // MAP3D_H
