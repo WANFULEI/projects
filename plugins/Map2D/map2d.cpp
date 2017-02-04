@@ -214,11 +214,9 @@ void Map2D::loadLayer(TiXmlElement *xmlNode, QgsLayerTreeGroup *group)
 		return;
 	}
 	if(type == "raster"){
-		QgsRasterLayer *layer = new QgsRasterLayer(path, name);
-		QgsMapLayerRegistry::instance()->addMapLayer(layer);
-		group->addLayer(layer);
+		group->addLayer((QgsMapLayer *)addRasterLayer(name, path));
 	}else if(type == "vector"){
-
+		group->addLayer((QgsMapLayer *)addVectorLayer(name, path));
 	}
 }
 
@@ -302,66 +300,6 @@ void Map2D::slotMeasureDist()
 	global->getMap2D()->setMapTool(m_tools.m_measureDist);
 }
 
-bool Map2D::addRasterLayer(QString layerName, QString rasterFilePath)
-{
-	if(global->getLayerTreeRoot() == 0){
-		LOG_ERROR << "m_rootGrou=0, maybe Map2D component not load.";
-		return false;
-	}
-	if(!QgsRasterLayer::isValidRasterFileName(rasterFilePath)){
-		LOG_ERROR << "invalid raster file=" << rasterFilePath.toStdString() << ".";
-		return false;
-	}
-	if(layerName.isEmpty()){
-		LOG_ERROR << "addRasterLayer with a empty layer name is not allowed.";
-		return false;
-	}
-	QgsRasterLayer *layer = new QgsRasterLayer(rasterFilePath, layerName);
-	QgsMapLayerRegistry::instance()->addMapLayer(layer);
-	global->getLayerTreeRoot()->insertLayer(0, layer);
-	return true;
-}
-
-bool Map2D::addVectorLayer(QString layerName, QString filePath)
-{
-	if(global->getLayerTreeRoot() == 0){
-		LOG_ERROR << "m_rootGrou=0, maybe Map2D component not load.";
-		return false;
-	}
-	if(!QFile::exists(filePath)){
-		LOG_ERROR << tr("vector file=%1 not exist.").arg(filePath).toStdString();
-		return false;
-	}
-	if(layerName.isEmpty()){
-		LOG_ERROR << "addVectorLayer with a empty layer name is not allowed.";
-		return false;
-	}
-	QgsVectorLayer *layer = new QgsVectorLayer(filePath, layerName, "ogr", false);
-	if(!layer->isValid()){
-		QString msg = tr( "%1 is not a valid or recognized data source" ).arg( filePath );
-		LOG_ERROR << msg.toStdString();
-		delete layer;
-		return false;
-	}
-	QgsMapLayerRegistry::instance()->addMapLayer(layer);
-	global->getLayerTreeRoot()->insertLayer(0, layer);
-	return true;
-}
-
-bool Map2D::createLayer(QString layerName)
-{
-	return false;
-}
-
-bool Map2D::removeLayer(QString layerName)
-{
-	return false;
-}
-
-bool Map2D::addElevationLayer(QString layerName, QString filePath)
-{
-	return addRasterLayer(layerName, filePath);
-}
 
 void Map2D::slotRightRotate()
 {

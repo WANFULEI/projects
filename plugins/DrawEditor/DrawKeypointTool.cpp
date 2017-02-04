@@ -4,11 +4,7 @@
 #include "GraphicLayer.h"
 #include "component/GlobalInstance.h"
 #include "qgsmapcanvas.h"
-#include "osgEarthSymbology\Geometry"
-#include "osgEarthFeatures\Feature"
-#include "osgEarthSymbology\Style"
 #include "draweditor_global.h"
-#include "osgEarthAnnotation\FeatureNode"
 
 DrawKeypointTool::DrawKeypointTool(QString path, QWidget *parent)
 {

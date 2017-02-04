@@ -24,29 +24,29 @@ LayerInterfaceImpl::~LayerInterfaceImpl(void)
 }
 
 
-bool LayerInterfaceImpl::addRasterLayer(QString layerName, QString filePath)
+int LayerInterfaceImpl::addRasterLayer(QString layerName, QString filePath)
 {
 	GDALOptions gdal;
 	gdal.url() = filePath.toStdString();
 	ImageLayer *layer = new ImageLayer(layerName.toStdString(), gdal);
 	if(!layer->open().isOK()){
 		delete layer;
-		return false;
+		return 0;
 	}
 	global->getMap3D()->addImageLayer(layer);
-	return true;
+	return (int)layer;
 }
 
-bool LayerInterfaceImpl::addVectorLayer(QString layerName, QString filePath)
+int LayerInterfaceImpl::addVectorLayer(QString layerName, QString filePath)
 {
 	Style style;
 	GDALDataset *poDS = (GDALDataset *)GDALOpenEx( filePath.toStdString().c_str(), GDAL_OF_VECTOR, 0, 0, 0 );
-	if(poDS == 0) return false;
+	if(poDS == 0) return 0;
 	OGRLayer *layer = poDS->GetLayer(0);
-	if(layer == 0) return false;
+	if(layer == 0) return 0;
 	layer->ResetReading();
 	OGRFeature *feature = layer->GetNextFeature();
-	if(feature == 0) return false;
+	if(feature == 0) return 0;
 	if(wkbFlatten(feature->GetGeometryRef()->getGeometryType()) == wkbPoint){
 		// 		PointSymbol *pointSymbol = style.getOrCreateSymbol<PointSymbol>();
 		// 		pointSymbol->fill()->color() = Color::Red;
@@ -88,12 +88,12 @@ bool LayerInterfaceImpl::addVectorLayer(QString layerName, QString filePath)
 	geomOptions.styles() = new StyleSheet();
 	geomOptions.styles()->addStyle(style);
 
-
-	global->getMap3D()->addModelLayer(new ModelLayer(layerName.toStdString(), geomOptions));
-	return true;
+	ModelLayer *layer2 = new ModelLayer(layerName.toStdString(), geomOptions);
+	global->getMap3D()->addModelLayer(layer2);
+	return (int)layer2;
 }
 
-bool LayerInterfaceImpl::addElevationLayer(QString layerName, QString filePath)
+int LayerInterfaceImpl::addElevationLayer(QString layerName, QString filePath)
 {
 	GDALOptions gdal;
 	gdal.url() = filePath.toStdString();
@@ -101,10 +101,10 @@ bool LayerInterfaceImpl::addElevationLayer(QString layerName, QString filePath)
 	string name = layer->getName();
 	if(!layer->open().isOK()){
 		delete layer;
-		return false;
+		return 0;
 	}
 	global->getMap3D()->addElevationLayer(layer);
-	return true;
+	return (int)layer;
 }
 
 bool LayerInterfaceImpl::createLayer(QString layerName)

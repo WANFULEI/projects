@@ -6,6 +6,10 @@
 #include "osgEarthAnnotation/LocalGeometryNode"
 #include "osgEarthAnnotation/ModelNode"
 
+using namespace osgEarth;
+using namespace osgEarth::Annotation;
+using namespace osgEarth::Symbology;
+
 GraphicItem::GraphicItem(GraphicType type)
 {
 	m_graphicType = None;
@@ -34,30 +38,30 @@ GraphicItem::~GraphicItem(void)
 void GraphicItem::setGraphicType(GraphicType type)
 {
 	m_graphicType = type;
-	osgEarth::Symbology::Geometry *geom = 0;
-	osgEarth::Symbology::Style geomStyle;
-	if(type == Point){
-		geom = new osgEarth::Symbology::PointSet;
-		geomStyle.getOrCreate<osgEarth::Symbology::IconSymbol>()->setImage(osgDB::readImageFile(m_iconPath.toStdString()));
-	}else if(type == Polyline){
-		geom = new osgEarth::Symbology::LineString;
-		geomStyle.getOrCreate<osgEarth::Symbology::LineSymbol>()->stroke()->color() = QColor2OsgEarthColor(m_borderColor);
-		geomStyle.getOrCreate<osgEarth::Symbology::LineSymbol>()->stroke()->width() = m_borderWidth;
-		geomStyle.getOrCreate<osgEarth::Symbology::LineSymbol>()->tessellationSize() = 75000;
-	}else if(type == Polygon){
-		geom = new osgEarth::Symbology::Polygon;
-		geomStyle.getOrCreate<osgEarth::Symbology::LineSymbol>()->stroke()->color() = QColor2OsgEarthColor(m_borderColor);
-		geomStyle.getOrCreate<osgEarth::Symbology::LineSymbol>()->stroke()->width() = m_borderWidth;
-		geomStyle.getOrCreate<osgEarth::Symbology::LineSymbol>()->tessellationSize() = 75000;
-		geomStyle.getOrCreate<osgEarth::Symbology::PolygonSymbol>()->fill() = QColor2OsgEarthColor(m_fillColor);
+	Geometry *geom = 0;
+	Style geomStyle;
+	if(type == GraphicItem::Point){
+		geom = new PointSet;
+		geomStyle.getOrCreate<IconSymbol>()->setImage(osgDB::readImageFile(m_iconPath.toStdString()));
+	}else if(type == GraphicItem::Polyline){
+		geom = new LineString;
+		geomStyle.getOrCreate<LineSymbol>()->stroke()->color() = QColor2OsgEarthColor(m_borderColor);
+		geomStyle.getOrCreate<LineSymbol>()->stroke()->width() = m_borderWidth;
+		geomStyle.getOrCreate<LineSymbol>()->tessellationSize() = 75000;
+	}else if(type == GraphicItem::Polygon){
+		geom = new Symbology::Polygon;
+		geomStyle.getOrCreate<LineSymbol>()->stroke()->color() = QColor2OsgEarthColor(m_borderColor);
+		geomStyle.getOrCreate<LineSymbol>()->stroke()->width() = m_borderWidth;
+		geomStyle.getOrCreate<LineSymbol>()->tessellationSize() = 75000;
+		geomStyle.getOrCreate<PolygonSymbol>()->fill() = QColor2OsgEarthColor(m_fillColor);
 	}
 	if(geom == 0) return;
 	for(int i=0; i<m_vertexs.size(); ++i){
 		geom->push_back(m_vertexs[i]);
 	}
-	osgEarth::Features::Feature* feature = new osgEarth::Features::Feature(geom, global->getMap3D()->getSRS());
+	Feature* feature = new Feature(geom, global->getMap3D()->getSRS());
 	feature->geoInterp() = osgEarth::GEOINTERP_GREAT_CIRCLE;
-	m_featureNode = new osgEarth::Annotation::FeatureNode(global->getMapNode(), feature, geomStyle);
+	m_featureNode = new FeatureNode(global->getMapNode(), feature, geomStyle);
 }
 
 void GraphicItem::setVertexs(QVector<osg::Vec3d> vertexs)
@@ -75,7 +79,7 @@ void GraphicItem::setBorderColor(QColor color)
 	m_borderColor = color;
 	if(m_featureNode){
 		auto geomStyle = m_featureNode->getStyle();
-		geomStyle.getOrCreate<osgEarth::Symbology::LineSymbol>()->stroke()->color() = QColor2OsgEarthColor(m_borderColor);
+		geomStyle.getOrCreate<LineSymbol>()->stroke()->color() = QColor2OsgEarthColor(m_borderColor);
 		m_featureNode->setStyle(geomStyle);
 		m_featureNode->init();
 	}
@@ -86,7 +90,7 @@ void GraphicItem::setBorderWidth(int width)
 	m_borderWidth = width;
 	if(m_featureNode){
 		auto geomStyle = m_featureNode->getStyle();
-		geomStyle.getOrCreate<osgEarth::Symbology::LineSymbol>()->stroke()->width() = m_borderWidth;
+		geomStyle.getOrCreate<LineSymbol>()->stroke()->width() = m_borderWidth;
 		m_featureNode->setStyle(geomStyle);
 		m_featureNode->init();
 	}
@@ -102,7 +106,7 @@ void GraphicItem::setFillColor(QColor color)
 	m_fillColor = color;
 	if(m_featureNode){
 		auto geomStyle = m_featureNode->getStyle();
-		geomStyle.getOrCreate<osgEarth::Symbology::PolygonSymbol>()->fill() = QColor2OsgEarthColor(m_fillColor);
+		geomStyle.getOrCreate<PolygonSymbol>()->fill() = QColor2OsgEarthColor(m_fillColor);
 		m_featureNode->setStyle(geomStyle);
 		m_featureNode->init();
 	}
@@ -113,7 +117,7 @@ void GraphicItem::setIconPath(QString path)
 	m_iconPath = path;
 	if(m_featureNode){
 		auto geomStyle = m_featureNode->getStyle();
-		geomStyle.getOrCreate<osgEarth::Symbology::IconSymbol>()->setImage(osgDB::readImageFile(m_iconPath.toStdString()));
+		geomStyle.getOrCreate<IconSymbol>()->setImage(osgDB::readImageFile(m_iconPath.toStdString()));
 		m_featureNode->setStyle(geomStyle);
 		m_featureNode->init();
 	}

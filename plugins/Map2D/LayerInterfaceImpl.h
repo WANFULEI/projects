@@ -1,8 +1,6 @@
 #pragma once
-#include "..\map2d\layerinterface.h"
-
-class LayerInterfaceImpl :
-	public LayerInterface
+#include "layerinterface.h"
+class LayerInterfaceImpl : public LayerInterface
 {
 public:
 	LayerInterfaceImpl(void);
@@ -15,4 +13,3 @@ public:
 	virtual bool removeLayer(QString layerName);
 
 };
-

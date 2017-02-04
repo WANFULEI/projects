@@ -3,10 +3,7 @@
 #include "qgsmapcanvas.h"
 #include "Polyline.h"
 #include "GraphicLayer.h"
-#include "osgEarthSymbology\Geometry"
-#include "osgEarthFeatures\Feature"
 #include "draweditor_global.h"
-#include "osgEarthAnnotation\FeatureNode"
 
 
 DrawPolylineTool::DrawPolylineTool(QgsMapCanvas *map)

@@ -7,9 +7,10 @@
 #include "LayerInterface.h"
 #include "tinyxml.h"
 #include "qgsmaptool.h"
+#include "LayerInterfaceImpl.h"
 
 
-class Map2D : public Component, public LayerInterface
+class Map2D : public Component, public LayerInterfaceImpl
 {
 	Q_OBJECT
 	Q_INTERFACES(LayerInterface)
@@ -71,16 +72,6 @@ private:
 	void loadGroup(TiXmlElement *xmlNode, QgsLayerTreeGroup *group);
 	void loadLayer(TiXmlElement *xmlNode, QgsLayerTreeGroup *group);
 	QList<QgsMapLayer *> getLayers(QgsLayerTreeNode *node);
-
-	virtual bool addRasterLayer(QString layerName, QString rasterFilePath);
-
-	virtual bool addVectorLayer(QString layerName, QString filePath);
-
-	virtual bool createLayer(QString layerName);
-
-	virtual bool removeLayer(QString layerName);
-
-	virtual bool addElevationLayer(QString layerName, QString filePath);
 
 };
 

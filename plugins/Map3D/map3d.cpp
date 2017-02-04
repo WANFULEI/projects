@@ -344,12 +344,9 @@ void Map3D::loadLayer(TiXmlElement *xmlNode)
 		return;
 	}
 	if(type == "raster"){
-		GDALOptions gdal;
-		gdal.url() = path.toStdString();
-		ImageLayer *layer = new ImageLayer(name.toStdString(), gdal);
-		global->getMap3D()->addImageLayer(layer);
+		addRasterLayer(name, path);
 	}else if(type == "vector"){
-
+		addVectorLayer(name, path);
 	}
 }
 

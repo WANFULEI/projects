@@ -24,6 +24,8 @@
 #include "osgEarth\Map"
 #include "osgEarthAnnotation\LocalGeometryNode"
 #include "osgEarthUtil\ContourMap"
+#include "osg\StateSet"
+#include "osg\Math"
 
 using namespace osgEarth;
 
@@ -123,41 +125,51 @@ void DrawEditor::slotDrawPolygon()
 
 void DrawEditor::MyMethod()
 {
-	return;
+
 	osg::AnimationPath* animationPath = new osg::AnimationPath;
-	animationPath->setLoopMode(osg::AnimationPath::NO_LOOPING);
+	animationPath->setLoopMode(osg::AnimationPath::LOOP);
 	osg::Vec3d position(0, 0, 0);
 	osg::Quat rotation(0, 0, 0, 0);
 	global->getMap3D()->getSRS()->getEllipsoid()->convertLatLongHeightToXYZ(osg::DegreesToRadians(10.0), osg::DegreesToRadians(10.0), 10000, position.x(), position.y(), position.z());
-	for(int i=0; i<100; ++i){
-		osg::Vec3d position(0, 0, 0);
-		global->getMap3D()->getSRS()->getEllipsoid()->convertLatLongHeightToXYZ(osg::DegreesToRadians(10.0 + i * 0.1), osg::DegreesToRadians(10.0 + i * 0.1), 10000, position.x(), position.y(), position.z());
-		animationPath->insert(i, osg::AnimationPath::ControlPoint(position,rotation));
+	//animationPath->insert(0, osg::AnimationPath::ControlPoint(position,rotation));
+	for(int i=1; i<100; ++i){
+		osg::Vec3d position2(0, 0, 0);
+		global->getMap3D()->getSRS()->getEllipsoid()->convertLatLongHeightToXYZ(osg::DegreesToRadians(10.0 + i * 0.1), osg::DegreesToRadians(10.0 + i * 0.1), 10000, position2.x(), position2.y(), position2.z());
+
+		osg::Vec3d tmp = position2-position;
+		animationPath->insert(i, osg::AnimationPath::ControlPoint(position2-position,rotation));
+		position = position2;
 	}
+
+	global->getMap3D()->getSRS()->getEllipsoid()->convertLatLongHeightToXYZ(osg::DegreesToRadians(10.0), osg::DegreesToRadians(10.0), 10000, position.x(), position.y(), position.z());
+
 
 	osg::Group* model = new osg::Group;
 	osg::Node* glider = osgDB::readNodeFile("glider.osgt");
-	osg::PositionAttitudeTransform* xform = new osg::PositionAttitudeTransform;
-	osg::AnimationPathCallback *callback = new osg::AnimationPathCallback(animationPath,0.0,1.0);
 
 // 	if (glider)
 // 	{
 		const osg::BoundingSphere& bs = glider->getBound();
 
 		//float size = radius/bs.radius()*0.3f;
-		osg::PositionAttitudeTransform* positioned = new osg::PositionAttitudeTransform;
+		osg::MatrixTransform* positioned = new osg::MatrixTransform;
 		positioned->setDataVariance(osg::Object::STATIC);
-		//positioned->setMatrix(/*osg::Matrix::translate(position) **/ osg::Matrix::scale(100000000,100000000,100000000) /** osg::Matrix::rotate(osg::inDegrees(-90.0f),0.0f,1.0f,0.0f)*/);
-		positioned->setScale(osg::Vec3d(100000, 100000, 100000));
-		xform->setAttitude(osg::Quat(osg::DegreesToRadians(45.0), osg::Vec3d(0, 1, 0)));
+		
+		
+		positioned->setMatrix(
+			osg::Matrix::scale(100000,100000,100000));
+		//positioned->setScale(osg::Vec3d(100000, 100000, 100000));
+		//xform->setAttitude(osg::Quat(osg::DegreesToRadians(45.0), osg::Vec3d(0, 1, 0)));
+		//positioned->postMult(osg::Matrix::rotate(osg::Quat(osg::inDegrees(90.0), osg::Vec3d(1, 0, 0), 0, osg::Vec3d(0, 1, 0), 0, osg::Vec3d(0, 0, 1))));
+		positioned->postMult(osg::Matrix::translate(position));
+		
 		
 		positioned->addChild(glider);
-		//model->setUpdateCallback(callback);
+
+		osg::PositionAttitudeTransform* xform = new osg::PositionAttitudeTransform;
+		xform->setUpdateCallback(new osg::AnimationPathCallback(animationPath,0.0,1.0));
 		xform->addChild(positioned);
-		
-		
-		xform->setPosition(position);
-		//xform->setUpdateCallback(callback);
+
 		model->addChild(xform);
 		
 //	}

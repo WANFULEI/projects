@@ -3,12 +3,7 @@
 #include "Polygon.h"
 #include "GraphicLayer.h"
 #include "qgsmapcanvas.h"
-#include "osgEarthSymbology\Geometry"
-#include "osgEarthFeatures\Feature"
 #include "component/GlobalInstance.h"
-#include "osgEarth\Map"
-#include "osgEarthSymbology\Style"
-#include <osgEarthAnnotation/FeatureNode>
 #include "draweditor_global.h"
 
 DrawPolygonTool::DrawPolygonTool(QgsMapCanvas *map)

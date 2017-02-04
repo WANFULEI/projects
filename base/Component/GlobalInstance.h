@@ -8,8 +8,8 @@
 #define GUI_EXPORT __declspec(dllimport)
 #define APP_EXPORT __declspec(dllimport)
 #define noexcept
-#include "qgsmapcanvas.h"
-#include "QgsLayerTreeGroup.h"
+#include "../apps/qgis/include/qgsmapcanvas.h"
+#include "../apps/qgis/include/qgslayertreegroup.h"
 #include "osg\Group"
 #include "osgEarth\Map"
 #include "osgEarth\MapNode"

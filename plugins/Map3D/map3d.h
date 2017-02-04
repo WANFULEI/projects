@@ -5,6 +5,8 @@
 #include "LayerInterfaceImpl.h"
 #include "QMap"
 #include "tinyxml.h"
+#include "qmath.h"
+#include "qgsmaplayer.h"
 
 
 class Map3DOptions;
